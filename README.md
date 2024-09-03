@@ -1,9 +1,11 @@
 # BigNumOmg
 
-## discript
+## About
 
-  development the operation and PKC with BigNum
+  development the operation and PKC with BigNumber
   
-## member
+## 👨‍💻Member
 
-  1. 김재효 (email : 
+  1. 김재효 (email : jejae0718@kookmin.ac.kr)
+  2. 김용재 (email : )
+  3. 오성빈 (email : )
