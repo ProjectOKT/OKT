@@ -2,10 +2,10 @@
 
 ## 📄About Project
 
-  development the operation and PKC with BigNumber
+  development the BigNumber operation and PKE
   
-## 👨‍💻Member
+## 👨‍💻Members
 
-  1. 김재효 (email : jejae0718@kookmin.ac.kr)
-  2. 김용재 (email : )
+  1. 김용재 (email : )
+  2. 김재효 (email : jejae0718@kookmin.ac.kr)
   3. 오성빈 (email : )
