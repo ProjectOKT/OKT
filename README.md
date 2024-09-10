@@ -1,6 +1,6 @@
 # OYIKT
 
-  Oh Yeah It's Kims Time!
+  Oh Yeah It's Kim Time!
 
 ## 📄About Project
 
