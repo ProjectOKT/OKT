@@ -1,10 +1,10 @@
-#include <stdio.h>
+// #include <stdio.h>
 
-int main(){
-    int a = 11;
-    unsigned char k = 0x22;
+// int main(){
+//     int a = 11;
+//     unsigned char k = 0x22;
 
-    printf("%d \n", a);
-    printf("%u", k);
-    return 0;
-}
+//     printf("%d \n", a);
+//     printf("%u", k);
+//     return 0;
+// } 
