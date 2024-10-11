@@ -19,7 +19,7 @@ msg bi_new(bigint** dst, int word_len);
 void array_init(word* a, int word_len);
 msg bi_delete(bigint** dst); // 반납시에 비밀값은 0으로 씌우고 지워야함
 
-msg bi_refine(bigint** dst);
+msg bi_refine(bigint* dst);
 
 /* tmp <- x */
-msg bi_assign(bigint** dst, bigint** src);
+msg bi_assign(bigint** dst, bigint* src);

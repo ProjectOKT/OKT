@@ -128,7 +128,7 @@ msg bi_delete(bigint** dst)
     return SUCCESS;
 }
 
-msg bi_refine(bigint** dst)
+msg bi_refine(bigint* dst)
 {
     if(dst == NULL){    //x가 비어있으면 반환
         return 0;
@@ -146,8 +146,8 @@ msg bi_refine(bigint** dst)
         dst->a = (word*)realloc(dst->a, sizeof(word)*resize_len);   //변환길이만큼 재할당
     }
 
-    if((dst->word_len == 1) && (dst->a[0] == 0x00)){    //만약 0이면 sign -> NON_NEGATIVE
-        dst->sign = NON_NEGATIVE;
+    if((dst->word_len == 1) && (dst->a[0] == 0x00)){    //만약 0이면 sign -> ZERO
+        dst->sign = ZERO;
     }
     return 0;
 }
