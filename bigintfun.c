@@ -131,7 +131,7 @@ msg bi_delete(bigint** dst)
 msg bi_refine(bigint* dst)
 {
     if(dst == NULL){    //x가 비어있으면 반환
-        return 0;
+        return SUCCESS;
     }
 
     int resize_len = dst->word_len;
@@ -149,7 +149,7 @@ msg bi_refine(bigint* dst)
     if((dst->word_len == 1) && (dst->a[0] == 0x00)){    //만약 0이면 sign -> ZERO
         dst->sign = ZERO;
     }
-    return 0;
+    return SUCCESS;
 }
 
 
@@ -164,5 +164,5 @@ msg bi_assign(bigint** dst, bigint* src)
     (*dst)->sign = src->sign;   //부호 복사
     array_copy(((*dst)->a), src->a, src->word_len);     //array_copy 만들어야함(Oct_11)
     
-    return 0;
+    return SUCCESS;
 }
