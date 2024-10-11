@@ -50,8 +50,7 @@ msg bi_new(bigint** dst, int word_len)
     }
     
     (*dst) = (bigint*)calloc(1, sizeof(bigint));
-    if((*dst) == NULL
-    L)
+    if((*dst) == NULL)
     {
         printf("bi_new func dst alloc fail\n");
         return -1;
