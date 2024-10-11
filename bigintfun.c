@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bigintfun.h"
+#include "params.h"
 
 /* big int <- array */
 msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
@@ -66,14 +67,42 @@ msg bi_delete(bigint** dst)
     return 0;
 }
 
-
-msg bi_refine(bigint** dst)
+//Remove Last Zero
+msg bi_refine(bigint* dst)
 {
+    if(dst == NULL){    //x가 비어있으면 반환
+        return 0;
+    }
+
+    int resize_len = dst->word_len;
+
+    for(int idx = resize_len; idx > 1; idx --){
+        if(dst->a[idx - 1] != 0){
+            break;                  //기존 msb부터 1이면 stop 0이면 down size
+        }
+    }
+    if(dst->word_len != resize_len){        //기존 길이에서 resize 됐다면,
+        dst->word_len = resize_len;
+        dst->a = (word*)realloc(dst->a, sizeof(word)*resize_len);   //변환길이만큼 재할당
+    }
+
+    if((dst->word_len == 1) && (dst->a[0] == 0x00)){    //만약 0이면 sign -> NON_NEGATIVE
+        dst->sign = NON_NEGATIVE;
+    }
     return 0;
 }
 
+
 /* tmp <- x */
-msg bi_assign(bigint** dst, bigint** src)
+msg bi_assign(bigint** dst, bigint* src)
 {
+    if(*dst != NULL){
+        bi_delete(dst);
+    }
+    
+    bi_new(dst, src->word_len);     //src의 길이만큼 생성
+    (*dst)->sign = src->sign;   //부호 복사
+    array_copy(((*dst)->a), src->a, src->word_len);     //array_copy 만들어야함(Oct_11)
+    
     return 0;
 }
