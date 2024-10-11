@@ -24,13 +24,24 @@ msg bi_get_random(bigint** dst, int word_len)
     return SUCCESS;
 }
 
-// 포인터로 하지않으면 구조체가 다 복사되서 넘어가기 때문에 메모리적으로 포인터가 더효율적
-// 현재는 16진수와 2진수 출력만 하기
+/*
+* bi_print: bigint를 입력받아 2진수 혹은 16진수 출력
+*
+* param dst: bigint의 2중 포인터
+* param base: 2진수 혹은 16진수 입력
+* return: error code
+*/
 msg bi_print(bigint** dst, int base)
 {
-    if(base == 2)
+    if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
-        if((*dst)->sign == POSITIVE)
+        printf("ZERO");
+        return SUCCESS;
+    }
+
+    if(base == 2) // 2진수
+    {
+        if((*dst)->sign == POSITIVE) // 양수 음수 출력
         {
             printf("0b");
         }
@@ -40,41 +51,52 @@ msg bi_print(bigint** dst, int base)
         }
         else
         {
-            return FAILED;
+            return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
         for(int word_index = (*dst)->word_len ; word_index > 0 ; word_index--)
         {
             for(int bit_index = 8 * sizeof(word) - 1; bit_index >=0 ; bit_index--)
             {
-                printf("%1u", (((*dst)->a[word_index]) >> bit_index) & (0x01));
+                printf("%1u", (((*dst)->a[word_index - 1]) >> bit_index) & (0x01));
             }
         }
+        printf("\n");
+
         return SUCCESS;
     }
-    else if(base = 16)
+    else if(base == 16) // 16진수
     {
-        if((*dst)->sign == POSITIVE)
+        if((*dst)->sign == POSITIVE) // 양수 음수 출력
         {
             printf("0x");
         }
         else if((*dst)->sign == NEGATIVE)
         {
-            printf("0x");
+            printf("-0x");
         }
         else
         {
-            return FAILED;
+            return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
         for(int word_index = (*dst)->word_len; word_index > 0; word_index--)
         {
-            printf("%04x", (*dst)->a[word_index - 1]);
+            printf("%08x", (*dst)->a[word_index - 1]);
         }
+        printf("\n");
 
         return SUCCESS;
     }
-    return FAILED;
+
+    return FAILED; // 2, 16이외의 base값은 에러코드
 }
 
+/*
+* bi_new: word_len만큼의 배열크기를 가지는 bigint를 만들어줌
+*
+* param dst: bigint의 2중 포인터
+* param word_len: 배열 크기
+* return: error code
+*/
 msg bi_new(bigint** dst, int word_len)
 {
     if(*dst != NULL)
@@ -90,7 +112,7 @@ msg bi_new(bigint** dst, int word_len)
         return FAILED;
     }
 
-    (*dst) -> sign = 0;
+    (*dst) -> sign = ZERO;
     (*dst) -> word_len = word_len;
     (*dst) -> a = (word*)calloc(word_len, sizeof(word));
 
@@ -104,6 +126,13 @@ msg bi_new(bigint** dst, int word_len)
     return SUCCESS;
 }
 
+/*
+* array_init: 배열을 word_len만큼 0으로 초기화
+*
+* param a: 초기화 하고자하는 배열
+* param word_len: 배열 크기
+* return: void
+*/
 void array_init(word* a, int word_len)
 {
     for(int word_index = 0; word_index<word_len; word_index++)
@@ -112,6 +141,12 @@ void array_init(word* a, int word_len)
     }
 }
 
+/*
+* bi_delete: bigint를 입력받아 동작할당 받은 공간을 반환(ZERORIZE가 1일시에 할당되었던 배열 메모리에 0으로 초기화 하고 반환)
+*
+* param dst: 초기화 bigint
+* return: error_code
+*/
 msg bi_delete(bigint** dst)
 {
     if((*dst) == NULL)
@@ -152,6 +187,13 @@ msg bi_refine(bigint* dst)
     return SUCCESS;
 }
 
+void array_copy(word* a, word* b, int array_len)
+{
+    for(int index = 0; index <array_len;index++)
+    {
+        b[index] = a[index];
+    }
+}
 
 /* tmp <- x */
 msg bi_assign(bigint** dst, bigint* src)
