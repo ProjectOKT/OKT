@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "params.h"
 #include "bigintfun.h"
 #include "errormsg.h"
@@ -24,13 +25,16 @@ msg bi_get_random(bigint** dst, int word_len)
     return SUCCESS;
 }
 
-/*
-* bi_print: bigint를 입력받아 2진수 혹은 16진수 출력
-*
-* param dst: bigint의 2중 포인터
-* param base: 2진수 혹은 16진수 입력
-* return: error code
-*/
+/*****************************************
+ * Name : bi_print
+ * 
+ * Desription : bigint를 입력받아 2진수 혹은 16진수 출력
+ * 
+ * Params : - bigint** dst : print하려는 bigint
+ *          - int base : 진수변환 base
+ * 
+ * Return : (SUCCESS)진수변환된 bigint print
+******************************************/
 msg bi_print(bigint** dst, int base)
 {
     if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
@@ -90,13 +94,16 @@ msg bi_print(bigint** dst, int base)
     return FAILED; // 2, 16이외의 base값은 에러코드
 }
 
-/*
-* bi_new: word_len만큼의 배열크기를 가지는 bigint를 만들어줌
-*
-* param dst: bigint의 2중 포인터
-* param word_len: 배열 크기
-* return: error code
-*/
+/*****************************************
+ * Name : bi_new
+ * 
+ * Desription : word_len만큼의 배열크기를 가지는 bigint를 만들어줌
+ * 
+ * Params : - bigint** dst : 생성하려는 bigint
+ *          - int word_len : word array 길이
+ * 
+ * Return : (SUCCESS)new bigint
+******************************************/
 msg bi_new(bigint** dst, int word_len)
 {
     if(*dst != NULL)
@@ -126,13 +133,16 @@ msg bi_new(bigint** dst, int word_len)
     return SUCCESS;
 }
 
-/*
-* array_init: 배열을 word_len만큼 0으로 초기화
-*
-* param a: 초기화 하고자하는 배열
-* param word_len: 배열 크기
-* return: void
-*/
+/*****************************************
+ * Name : array_init
+ * 
+ * Desription : 배열을 word_len만큼 0으로 초기화
+ * 
+ * Params : - word* a : 초기화하려는 array
+ *          - int word_len : word array 길이
+ * 
+ * Return : zero inited array
+******************************************/
 void array_init(word* a, int word_len)
 {
     for(int word_index = 0; word_index<word_len; word_index++)
@@ -141,12 +151,16 @@ void array_init(word* a, int word_len)
     }
 }
 
-/*
-* bi_delete: bigint를 입력받아 동작할당 받은 공간을 반환(ZERORIZE가 1일시에 할당되었던 배열 메모리에 0으로 초기화 하고 반환)
-*
-* param dst: 초기화 bigint
-* return: error_code
-*/
+/*****************************************
+ * Name : bi_delete
+ * 
+ * Desription : bigint를 입력받아 동작할당 받은 공간을 반환
+ *              (ZERORIZE가 1일시에 할당되었던 배열 메모리에 0으로 초기화 하고 반환)
+ * 
+ * Params : - bigint** dst : 반환(삭제)하려는 bigint
+ * 
+ * Return : (SUCCESS) NULL dst
+******************************************/
 msg bi_delete(bigint** dst)
 {
     if((*dst) == NULL)
@@ -163,6 +177,15 @@ msg bi_delete(bigint** dst)
     return SUCCESS;
 }
 
+/*****************************************
+ * Name : bi_refine
+ * 
+ * Desription : bigint dst의 last zero들을 삭제 후 재정의
+ * 
+ * Params : - bigint* dst : 길이를 조절하려는 bigint
+ * 
+ * Return : (Resized) dst
+******************************************/
 msg bi_refine(bigint* dst)
 {
     if(dst == NULL){    //x가 비어있으면 반환
@@ -173,7 +196,7 @@ msg bi_refine(bigint* dst)
 
     for(int idx = resize_len; idx > 1; idx --){
         if(dst->a[idx - 1] != 0){
-            break;                  //기존 msb부터 1이면 stop 0이면 down size
+            break;                  //기존 배열의 상위 인덱스부터 0이 아닐 때까지 size down
         }
     }
     if(dst->word_len != resize_len){        //기존 길이에서 resize 됐다면,
@@ -187,15 +210,35 @@ msg bi_refine(bigint* dst)
     return SUCCESS;
 }
 
-void array_copy(word* a, word* b, int array_len)
+/*****************************************
+ * Name : array_copy
+ * 
+ * Desription : src array를 dst array로 copy
+ * 
+ * Params : - bigint* dst_arr : 복사하려는 dst 배열
+ *          - bigint* src_arr : 복사받으려는 src 배열
+ *          - int array_len : 복사하려는 길이
+ * 
+ * Return : copied dst array
+******************************************/
+void array_copy(word* src_arr, word* dst_arr, int array_len)
 {
-    for(int index = 0; index <array_len;index++)
+    for(int index = 0; index < array_len; index++)
     {
-        b[index] = a[index];
+        dst_arr[index] = src_arr[index];
     }
 }
 
-/* tmp <- x */
+/*****************************************
+ * Name : bi_assign
+ * 
+ * Desription : bigint src를 bigint dst로 copy
+ * 
+ * Params : - bigint* dst : 복사하려는 dst 배열
+ *          - bigint* src : 복사받으려는 src 배열
+ * 
+ * Return : (SUCCESS) copied bigint dst
+******************************************/
 msg bi_assign(bigint** dst, bigint* src)
 {
     if(*dst != NULL){
@@ -204,7 +247,7 @@ msg bi_assign(bigint** dst, bigint* src)
     
     bi_new(dst, src->word_len);     //src의 길이만큼 생성
     (*dst)->sign = src->sign;   //부호 복사
-    array_copy(((*dst)->a), src->a, src->word_len);     //array_copy 만들어야함(Oct_11)
+    array_copy(((*dst)->a), src->a, src->word_len);
     
     return SUCCESS;
 }
