@@ -6,7 +6,7 @@
 msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a);
 
 /* str = 0x123qqppwq(숫자가 아닌 경우)에 대한 예외 처리 필요 */
-msg bi_set_from_string(bigint** dst, char* int_str, int base);
+msg bi_set_from_string(bigint** dst,  int sign, char* int_str, int base);
 
 /* A[4] = {1,2,3,0} -> {1.2.3.*1*} */
 // 마지막 배열은 nonzero라는 보장이 필요 word_len을 맞추기 위해
