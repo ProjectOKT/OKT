@@ -13,9 +13,67 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
 }
 
 /* str = 0x123qqppwq(숫자가 아닌 경우)에 대한 예외 처리 필요 */
-msg bi_set_from_string(bigint** dst, char* int_str, int base)
+msg bi_set_from_string(bigint** dst,  int sign, char* int_str, int base)
 {
-    return SUCCESS;
+    int word_len = 0;
+    unsigned int strlength = 0; //0b,0x, ... 뺴고 계산
+    if(base == 2){
+        strlength = strlen(int_str) -2; //string 길이
+        word_len = strlength / 32 + 1;  //word 길이
+        //구한 word len으로 bigint 하나 만들기
+        bi_new(dst, word_len);
+        (*dst) -> sign = sign;
+        //비트열 길이만큼 반복
+        for (int i = 0; strlength < 0; i++){
+            if (int_str[strlength - i] == '1'){
+                //1이면 32의 나머지만큼 shift해서 32로 나눈몫에저장
+                (*dst) -> a[i/32] |= 1 << (i % 32);
+            }
+            else if (int_str[strlength - i] != '0'){
+                printf("error : not number\n");
+            }
+        }
+    }
+    else if (base == 8){
+        strlength = strlen(int_str) - 1;  // 0을 제외한 길이
+        word_len = strlength * 3 / 32 + 1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
+        bi_new(dst, word_len);
+        (*dst)->sign = sign;
+
+         for (int i = 0; i < strlength; i++) {
+            int digit = int_str[strlength - i - 1] - '0';  // 문자 숫자를 정수로 변환
+            (*dst)->a[i * 3 / 32] |= (digit & 0x7) << (i * 3 % 32);  // 3비트씩 shift하여 저장
+        }
+    }
+    else if (base == 10){
+        strlength = strlen(int_str) -2;
+    }
+    else if (base == 16){
+         strlength = strlen(int_str) - 2;  // 0x를 제외한 길이
+        word_len = strlength * 4 / 32 + 1;  // 16진수는 4비트로 표현되므로 4비트씩 계산
+        bi_new(dst, word_len);
+        (*dst)->sign = sign;
+
+        for (int i = 0; i < strlength; i++) {
+            char c = int_str[strlength - i - 1];
+            int digit = 0;
+
+            // 16진수 문자를 정수로 변환
+            if (c >= '0' && c <= '9') {
+                digit = c - '0';
+            } else if (c >= 'a' && c <= 'f') {
+                digit = c - 'a' + 10;
+            } else if (c >= 'A' && c <= 'F') {
+                digit = c - 'A' + 10;
+            }
+            (*dst)->a[i * 4 / 32] |= (digit & 0xF) << (i * 4 % 32);  // 4비트씩 shift하여 저장
+        }
+    }
+    else {
+        printf("not defined base\n");
+        return -1;
+    }
+    return 0;
 }
 
 /* A[4] = {1,2,3,0} -> {1.2.3.*1*} */
