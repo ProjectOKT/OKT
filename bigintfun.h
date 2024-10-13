@@ -10,7 +10,8 @@ msg bi_set_from_string(bigint** dst,  int sign, char* int_str, int base);
 
 /* A[4] = {1,2,3,0} -> {1.2.3.*1*} */
 // 마지막 배열은 nonzero라는 보장이 필요 word_len을 맞추기 위해
-msg bi_get_random(bigint** dst, int word_len);
+void array_rand(word* dst, int word_len);
+msg bi_get_random(bigint** dst, int sign, int word_len);
 
 // 포인터로 하지않으면 구조체가 다 복사되서 넘어가기 때문에 메모리적으로 포인터가 더효율적
 msg bi_print(bigint** dst, int base); // 현재는 16진수와 2진수 출력만 하기

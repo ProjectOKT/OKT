@@ -14,7 +14,7 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
 }
 
 /* str = 0x123qqppwq(숫자가 아닌 경우)에 대한 예외 처리 필요 */
-msg bi_set_from_string(bigint** dst,  int sign, char* int_str, int base)
+msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
 {
     int word_len = 0;
     unsigned int strlength = 0; //0b,0x, ... 뺴고 계산
@@ -77,10 +77,57 @@ msg bi_set_from_string(bigint** dst,  int sign, char* int_str, int base)
     return 0;
 }
 
-/* A[4] = {1,2,3,0} -> {1.2.3.*1*} */
-// 마지막 배열은 nonzero라는 보장이 필요 word_len을 맞추기 위해
-msg bi_get_random(bigint** dst, int word_len)
+/*****************************************
+ * Name : array_rand
+ * 
+ * Desription : word_len 길이 만큼의 랜덤 배열
+ * 
+ * Params : - word* dst : 생성된 랜덤 배열이 저장되는 배열
+ *          - int word_len : 생성할 랜덤 배열의 길이
+ * 
+ * Return : (void)생성한 랜덤 배열
+******************************************/
+void array_rand(word* dst, int word_len)
 {
+    byte* p = (byte*)dst;
+    
+    int byte_index = word_len * sizeof(word);
+
+    while(byte_index > 0)
+    {
+        *p = rand() * 0xff;
+        p++;
+        byte_index--;
+    }
+}
+
+/*****************************************
+ * Name : bi_get_random
+ * 
+ * Desription : word_len 길이 만큼의 bigint random generate
+ * 
+ * Params : - bigint** dst : 생성된 random generate 배열이 저장되는 bigint
+ *          - int sign : random generate의 부호
+ *          - word_len : 생성할 random generate 배열의 길이
+ * 
+ * Return : (SUCCESS)생성한 random generate bigint
+******************************************/
+msg bi_get_random(bigint** dst, int sign, int word_len)
+{
+    msg err_code = 0;
+    err_code = bi_new(dst, word_len);
+    if (err_code == FAILED)
+    {
+        return FAILED;
+    }
+
+    (*dst) -> sign = sign;
+    
+    while(!((*dst)->a[word_len - 1])) // 마지막 배열 Nonzero 보장
+    {
+        array_rand((*dst)->a, word_len);
+    }
+
     return SUCCESS;
 }
 
