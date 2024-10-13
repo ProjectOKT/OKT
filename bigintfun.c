@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "params.h"
 #include "bigintfun.h"
@@ -280,7 +281,12 @@ msg bi_refine(bigint* dst)
  * Return : copied dst array
 ******************************************/
 void array_copy(word* src_arr, word* dst_arr, int array_len)
-{
+{   
+    
+    if(dst_arr != NULL){
+        array_init(dst_arr, array_len);
+    }
+
     for(int index = 0; index < array_len; index++)
     {
         dst_arr[index] = src_arr[index];

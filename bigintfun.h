@@ -18,7 +18,7 @@ msg bi_print(bigint** dst, int base); // 현재는 16진수와 2진수 출력만
 msg bi_new(bigint** dst, int word_len);
 void array_init(word* a, int word_len);
 msg bi_delete(bigint** dst); // 반납시에 비밀값은 0으로 씌우고 지워야함
-
+void array_copy(word* src_arr, word* dst_arr, int array_len);
 msg bi_refine(bigint* dst);
 
 /* tmp <- x */
