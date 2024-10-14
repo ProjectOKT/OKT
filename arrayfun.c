@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "arrayfun.h"
 #include "params.h"
 #include "dtype.h"
 #include "errormsg.h"

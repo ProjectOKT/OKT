@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include "bigintfun.h"
+#include "arrayfun.h"
 #include "dtype.h"
 #include "errormsg.h"
 #include "params.h"
