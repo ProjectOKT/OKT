@@ -11,8 +11,11 @@
 msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
 {
     bi_new(dst, word_len);
-    (*dst) ->a = a;
+    for (int i = 0; i < word_len; i++){
+        (*dst) -> a[i] = a[i];
+    }
     (*dst) -> sign = sign;
+    
     return SUCCESS;
 }
 
@@ -29,11 +32,11 @@ msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
         (*dst) -> sign = sign;
         //비트열 길이만큼 반복
         for (int i = 0; strlength < 0; i++){
-            if (int_str[strlength - i] == '1'){
+            if (int_str[strlength - i - 1] == '1'){
                 //1이면 32의 나머지만큼 shift해서 32로 나눈몫에저장
                 (*dst) -> a[i/32] |= 1 << (i % 32);
             }
-            else if (int_str[strlength - i] != '0'){
+            else if (int_str[strlength - i - 1] != '0'){
                 printf("error : not number\n");
             }
         }
@@ -45,15 +48,21 @@ msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
         (*dst)->sign = sign;
 
          for (int i = 0; i < strlength; i++) {
-            int digit = int_str[strlength - i - 1] - '0';  // 문자 숫자를 정수로 변환
-            (*dst)->a[i * 3 / 32] |= (digit & 0x7) << (i * 3 % 32);  // 3비트씩 shift하여 저장
+            if (int_str[strlength - i - 1] >= '0' && int_str[strlength - i - 1] <= '9') {
+                int digit = int_str[strlength - i - 1] - '0';  // 문자 숫자를 정수로 변환
+                (*dst)->a[i * 3 / 32] |= (digit & 0x7) << (i * 3 % 32);  // 3비트씩 shift하여 저장
+            }
+            else{
+                printf("error : not number\n");
+            }
+            
         }
     }
     else if (base == 10){
         strlength = strlen(int_str) -2;
     }
     else if (base == 16){
-         strlength = strlen(int_str) - 2;  // 0x를 제외한 길이
+        strlength = strlen(int_str) - 2;  // 0x를 제외한 길이
         word_len = strlength * 4 / 32 + 1;  // 16진수는 4비트로 표현되므로 4비트씩 계산
         bi_new(dst, word_len);
         (*dst)->sign = sign;
@@ -69,6 +78,9 @@ msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
                 digit = c - 'a' + 10;
             } else if (c >= 'A' && c <= 'F') {
                 digit = c - 'A' + 10;
+            }
+            else{
+                printf("error : not number\n");
             }
             (*dst)->a[i * 4 / 32] |= (digit & 0xF) << (i * 4 % 32);  // 4비트씩 shift하여 저장
         }
