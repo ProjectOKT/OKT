@@ -10,6 +10,9 @@
 /* big int <- array */
 msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
 {
+    bi_new(dst, word_len);
+    (*dst) ->a = a;
+    (*dst) -> sign = sign;
     return SUCCESS;
 }
 
