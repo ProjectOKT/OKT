@@ -8,8 +8,26 @@
 #include "errormsg.h"
 #include "params.h"
 
-// bi_new, bi_delete, bi_print test function
+// array_rand, bi_get_random test
 void bigint_test1()
+{
+    word a[4] = {0x00, };
+
+    array_rand(a, 4);
+
+    for(int i = 0; i<4; i++)
+    {
+        printf("%08x\n", a[i]);
+    }
+
+    bigint* dst = NULL;
+    bi_get_random(&dst, POSITIVE, 4);
+
+    bi_print(&dst, 16);
+}
+
+// bi_new, bi_delete, bi_print test function
+void bigint_test2()
 {
     bigint* test = NULL;
     bigint* test1 = NULL;
@@ -45,12 +63,6 @@ void bigint_test1()
     // {
     //     printf("failed\n");
     // }
-}
-
-// bi_refine, bi_assign test function
-void bigint_test2()
-{
-
 }
 
 int main()
