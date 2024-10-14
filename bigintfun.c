@@ -8,7 +8,17 @@
 #include "dtype.h"
 #include "arrayfun.h"
 
-/* big int <- array */
+/*****************************************
+ * Name : bi_set_from_array
+ * 
+ * Desription : array를 입력받아 bigint형으로 변환
+ * 
+ * Params : - bigint** dst : print하려는 bigint
+ *          - int sign : string의 부호
+ *          - int word_len : 배열의 길이
+ *          - word* a : bigint로 변환하려는 array
+ * Return : (SUCCESS) bigint print
+******************************************/
 msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
 {
     bi_new(dst, word_len);
@@ -16,59 +26,72 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a)
         (*dst) -> a[i] = a[i];
     }
     (*dst) -> sign = sign;
-    
+    bi_print(dst,16);
     return SUCCESS;
 }
 
-/* str = 0x123qqppwq(숫자가 아닌 경우)에 대한 예외 처리 필요 */
+/*****************************************
+ * Name : bi_set_from_string
+ * 
+ * Desription : string을 입력받아 base를 고려하여 bigint형으로 변환
+ * 
+ * Params : - bigint** dst : print하려는 bigint
+ *          - int base : 진수변환 base
+ *          - int sign : string의 부호
+ *          - char* int_str : bigint로 변환하려는 string
+ * Return : (SUCCESS) bigint print
+******************************************/
 msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
 {
     int word_len = 0;
     unsigned int strlength = 0; //0b,0x, ... 뺴고 계산
     if(base == 2){
-        strlength = strlen(int_str) - 2; //string 길이
-        word_len = strlength / 32 + 1;  //word 길이
+        strlength = strlen(int_str); //string 길이
+        word_len = strlength % 32 == 0 ? strlength / 32 : strlength / 32 +1;  //word 길이
         //구한 word len으로 bigint 하나 만들기
         bi_new(dst, word_len);
         (*dst) -> sign = sign;
         //비트열 길이만큼 반복
-        for (int i = 0; strlength < 0; i++){
+        for (int i = 0; i < strlength - 2; i++){
             if (int_str[strlength - i - 1] == '1'){
                 //1이면 32의 나머지만큼 shift해서 32로 나눈몫에저장
                 (*dst) -> a[i/32] |= 1 << (i % 32);
             }
             else if (int_str[strlength - i - 1] != '0'){
-                printf("error : not number\n");
+                fprintf(stderr, ERR_INVALID_INPUT);
+                bi_delete(dst);
+                return FAILED;
             }
         }
     }
     else if (base == 8){
-        strlength = strlen(int_str) - 1;  // 0을 제외한 길이
-        word_len = strlength * 3 / 32 + 1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
+        strlength = strlen(int_str);  // 0을 제외한 길이
+        word_len = word_len = strlength * 3 % 32 == 0 ? strlength * 3/ 32 : strlength * 3 / 32 +1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
         bi_new(dst, word_len);
         (*dst)->sign = sign;
 
-         for (int i = 0; i < strlength; i++) {
+         for (int i = 0; i < strlength - 1; i++) {
             if (int_str[strlength - i - 1] >= '0' && int_str[strlength - i - 1] <= '9') {
                 int digit = int_str[strlength - i - 1] - '0';  // 문자 숫자를 정수로 변환
                 (*dst)->a[i * 3 / 32] |= (digit & 0x7) << (i * 3 % 32);  // 3비트씩 shift하여 저장
             }
             else{
-                printf("error : not number\n");
+                fprintf(stderr, ERR_INVALID_INPUT);
+                bi_delete(dst);
+                return FAILED;
             }
-            
         }
     }
     else if (base == 10){
         strlength = strlen(int_str) -2;
     }
     else if (base == 16){
-        strlength = strlen(int_str) - 2;  // 0x를 제외한 길이
-        word_len = strlength * 4 / 32 + 1;  // 16진수는 4비트로 표현되므로 4비트씩 계산
+        strlength = strlen(int_str);  // 0x를 제외한 길이
+        word_len = word_len = strlength * 4 % 32 == 0 ? strlength * 4 / 32 : strlength * 4 / 32 +1;  
         bi_new(dst, word_len);
         (*dst)->sign = sign;
 
-        for (int i = 0; i < strlength; i++) {
+        for (int i = 0; i < strlength - 2; i++) {
             char c = int_str[strlength - i - 1];
             int digit = 0;
 
@@ -81,16 +104,21 @@ msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
                 digit = c - 'A' + 10;
             }
             else{
-                printf("error : not number\n");
+                fprintf(stderr, ERR_INVALID_INPUT);
+                bi_delete(dst);
+                return FAILED;
             }
             (*dst)->a[i * 4 / 32] |= (digit & 0xF) << (i * 4 % 32);  // 4비트씩 shift하여 저장
         }
     }
     else {
-        printf("not defined base\n");
-        return -1;
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
     }
-    return 0;
+    bi_refine(*dst);
+    bi_print(dst, base);
+
+    return SUCCESS;
 }
 
 
@@ -275,8 +303,8 @@ msg bi_refine(bigint* dst)
 
     int resize_len = dst->word_len;
 
-    for(int idx = resize_len; idx > 1; idx --){
-        if(dst->a[idx - 1] != 0){
+    for(; resize_len > 1; resize_len --){
+        if(dst->a[resize_len - 1] != 0){
             break;                  //기존 배열의 상위 인덱스부터 0이 아닐 때까지 size down
         }
     }

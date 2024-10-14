@@ -2,6 +2,7 @@
     2024.10.22
 */
 #include <stdio.h>
+#include <string.h>
 #include "bigintfun.h"
 #include "arrayfun.h"
 #include "dtype.h"
@@ -65,9 +66,34 @@ void bigint_test2()
     // }
 }
 
+void bigint_test3()
+{
+    bigint* test1 = NULL;
+    bigint* test2 = NULL;
+    bigint* test3 = NULL;
+    bigint* test4 = NULL;
+    word array[16] = {0, };
+    array_init(array, 16);
+    array_rand(array, 16);
+    char binstr[] = "0b000000000000000000000001110011101101";
+    printf("bi_set_from_string(bin)\n");
+    bi_set_from_string(&test1, NEGATIVE, binstr, 2);
+
+    char octstr[] = "075321056745";
+    printf("bi_set_from_string(oct)\n");
+    bi_set_from_string(&test2, 1, octstr, 8);
+
+    char hexstr[] = "0xab542548c1123412374109238df";
+    printf("bi_set_from_string(hex)\n");
+    bi_set_from_string(&test3, 1, hexstr, 16);
+
+    printf("bi_set_from_arrray(hex)\n");
+    bi_set_from_array(&test4, 1, 16, array);
+}
+
 int main()
 {
-    bigint_test1();
+    bigint_test3();
     
     return 0;
 }
