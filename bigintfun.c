@@ -66,7 +66,7 @@ msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
     }
     else if (base == 8){
         strlength = strlen(int_str);  // 0을 제외한 길이
-        word_len = word_len = strlength * 3 % 32 == 0 ? strlength * 3/ 32 : strlength * 3 / 32 +1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
+        word_len = strlength * 3 % 32 == 0 ? strlength * 3/ 32 : strlength * 3 / 32 +1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
         bi_new(dst, word_len);
         (*dst)->sign = sign;
 
