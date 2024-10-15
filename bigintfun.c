@@ -71,7 +71,7 @@ msg bi_set_from_string(bigint** dst, int sign, char* int_str, int base)
         (*dst)->sign = sign;
 
          for (int i = 0; i < strlength - 1; i++) {
-            if (int_str[strlength - i - 1] >= '0' && int_str[strlength - i - 1] <= '9') {
+            if (int_str[strlength - i - 1] >= '0' && int_str[strlength - i - 1] < '8') {
                 int digit = int_str[strlength - i - 1] - '0';  // 문자 숫자를 정수로 변환
                 (*dst)->a[i * 3 / 32] |= (digit & 0x7) << (i * 3 % 32);  // 3비트씩 shift하여 저장
             }
