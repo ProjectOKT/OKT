@@ -79,14 +79,14 @@ void bigint_test3()
 
     char octstr[] = "075321056745";
     printf("bi_set_from_string(oct)\n");
-    bi_set_from_string(&test2, 1, octstr, 8);
+    bi_set_from_string(&test2, POSITIVE, octstr, 8);
 
     char hexstr[] = "0xab542548c1123412374109238df";
     printf("bi_set_from_string(hex)\n");
-    bi_set_from_string(&test3, 1, hexstr, 16);
+    bi_set_from_string(&test3, POSITIVE, hexstr, 16);
 
     printf("bi_set_from_arrray(hex)\n");
-    bi_set_from_array(&test4, 1, 16, array);
+    bi_set_from_array(&test4, POSITIVE, 16, array);
 }
 
 int main()
