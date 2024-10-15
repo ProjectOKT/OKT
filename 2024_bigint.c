@@ -3,23 +3,19 @@
 */
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "bigintfun.h"
 #include "arrayfun.h"
 #include "dtype.h"
 #include "errormsg.h"
 #include "params.h"
 
+
 // array_rand, bi_get_random test
 void bigint_test1()
 {
+    printf("bi_get_random test\n");
     word a[4] = {0x00, };
-
-    array_rand(a, 4);
-
-    for(int i = 0; i<4; i++)
-    {
-        printf("%08x\n", a[i]);
-    }
 
     bigint* dst = NULL;
     bi_get_random(&dst, POSITIVE, 4);
@@ -30,6 +26,7 @@ void bigint_test1()
 // bi_new, bi_delete, bi_print test function
 void bigint_test2()
 {
+    printf("bi_new, bi_delete, bi_print test\n");
     bigint* test = NULL;
     bigint* test1 = NULL;
     int error_code = 0;
@@ -55,19 +52,20 @@ void bigint_test2()
     array_copy(test->a, test1->a, 3);
 
     bi_print(&test1, 16);
-    // bi_print(&test, 2);
-    // bi_print(&test, 16);
+    bi_print(&test, 2);
+    bi_print(&test, 16);
 
-    // error_code = bi_delete(&test);
-    // printf("%p", test);
-    // if(error_code == FAILED)
-    // {
-    //     printf("failed\n");
-    // }
+    error_code = bi_delete(&test);
+    printf("%p", test);
+    if(error_code == FAILED)
+    {
+        printf("failed\n");
+    }
 }
 
 void bigint_test3()
 {
+    printf("bi_set_from_string, bi_set_from_array function test\n");
     bigint* test1 = NULL;
     bigint* test2 = NULL;
     bigint* test3 = NULL;
@@ -75,7 +73,7 @@ void bigint_test3()
     word array[16] = {0, };
     array_init(array, 16);
     array_rand(array, 16);
-    char binstr[] = "0b000000000000000000000001110011101101";
+    char binstr[] = "0b11111111111010101011110011101101";
     printf("bi_set_from_string(bin)\n");
     bi_set_from_string(&test1, NEGATIVE, binstr, 2);
 
@@ -93,7 +91,7 @@ void bigint_test3()
 
 int main()
 {
-    bigint_test3();
+    bigint_test2();
     
     return 0;
 }
