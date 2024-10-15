@@ -278,6 +278,8 @@ msg bi_delete(bigint** dst)
     }
 #if ZERORIZE == 1
     array_init((*dst)->a, (*dst)->word_len);
+    (*dst)->sign = 0;
+    (*dst)->word_len = 0;
 #endif
     free((*dst)->a);
     free((*dst));
