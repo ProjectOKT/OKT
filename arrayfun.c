@@ -17,7 +17,7 @@
  * 
  * Return : (void)생성한 랜덤 배열
 ******************************************/
-void array_rand(word* dst, int word_len)
+void array_rand(const word* dst, int word_len)
 {
     byte* p = (byte*)dst;
     
