@@ -94,7 +94,7 @@ void bigint_test3()
 }
 
 int main()
-{
+{   
     atexit(check_leaks);
     bigint_test2();
     return 0;
