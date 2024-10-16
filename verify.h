@@ -1,5 +1,5 @@
-#ifndef VERIFY
-#define VERIFY
+#ifndef VERIFY_H
+#define VERIFY_H
 
 void check_leaks();
 
