@@ -4,7 +4,7 @@
 void check_leaks(){
 
     #if defined(_WIN32) || defined(_WIN64)
-        system("rmemory -- 2024_bigint.exe");
+        system("drmemory -- 2024_bigint.exe");
     #elif defined(__APPLE__) || defined(__MACH__)
         system("leaks 2024_bigint");
     #else
