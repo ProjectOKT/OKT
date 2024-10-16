@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "errormsg.h": "c",
-        "dtype.h": "c",
-        "stdio.h": "c"
-    }
-}
