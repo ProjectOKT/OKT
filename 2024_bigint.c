@@ -2,14 +2,16 @@
     2024.10.22
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 #include "bigintfun.h"
 #include "arrayfun.h"
 #include "dtype.h"
 #include "errormsg.h"
 #include "params.h"
-
+#include "verify.h"
 
 // array_rand, bi_get_random test
 void bigint_test1()
@@ -61,6 +63,8 @@ void bigint_test2()
     {
         printf("failed\n");
     }
+    bi_delete(&test);
+    bi_delete(&test1);
 }
 
 void bigint_test3()
@@ -75,15 +79,15 @@ void bigint_test3()
     array_rand(array, 16);
     char binstr[] = "0b11111111111010101011110011101101";
     printf("bi_set_from_string(bin)\n");
-    bi_set_from_string(&test1, NEGATIVE, binstr, 2);
+    bi_set_from_string(&test1, binstr, 2);
 
     char octstr[] = "075321056745";
     printf("bi_set_from_string(oct)\n");
-    bi_set_from_string(&test2, POSITIVE, octstr, 8);
+    bi_set_from_string(&test2, octstr, 8);
 
     char hexstr[] = "0xab542548c1123412374109238df";
     printf("bi_set_from_string(hex)\n");
-    bi_set_from_string(&test3, POSITIVE, hexstr, 16);
+    bi_set_from_string(&test3, hexstr, 16);
 
     printf("bi_set_from_arrray(hex)\n");
     bi_set_from_array(&test4, POSITIVE, 16, array);
@@ -91,7 +95,7 @@ void bigint_test3()
 
 int main()
 {
+    atexit(check_leaks);
     bigint_test2();
-    
     return 0;
 }

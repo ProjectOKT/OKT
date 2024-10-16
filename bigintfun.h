@@ -6,7 +6,7 @@
 
 msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a);
 
-msg bi_set_from_string(bigint** dst,  int sign, char* int_str, int base);
+msg bi_set_from_string(bigint** dst, const char* int_str, int base);
 
 msg bi_get_random(bigint** dst, int sign, int word_len);
 

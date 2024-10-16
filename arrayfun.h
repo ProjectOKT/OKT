@@ -2,7 +2,7 @@
 
 #include "dtype.h"
 
-void array_rand(word* dst, int word_len);
+void array_rand(const word* dst, int word_len);
 
 void array_init(word* a, int word_len);
 
