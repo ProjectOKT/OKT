@@ -229,7 +229,7 @@ msg bi_get_random(bigint** dst, int sign, int word_len)
  * 
  * Return : (SUCCESS)진수변환된 bigint print
 ******************************************/
-msg bi_print(const bigint** dst, int base)
+msg bi_print(bigint** dst, int base)
 {
     if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
