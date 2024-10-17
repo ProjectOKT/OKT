@@ -4,7 +4,7 @@
 
 #include "dtype.h"
 
-msg bi_set_from_array(bigint** dst, int sign, int word_len, word* a);
+msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a);
 
 msg bi_set_from_string(bigint** dst, const char* int_str, int base);
 
