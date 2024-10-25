@@ -8,17 +8,18 @@
 #include "dtype.h"
 #include "arrayfun.h"
 
-/*****************************************
- * Name : bi_set_from_array
- * 
- * Desription : array를 입력받아 bigint형으로 변환
- * 
- * Params : - bigint** dst : print하려는 bigint
- *          - int sign : string의 부호
- *          - int word_len : 배열의 길이
- *          - word* a : bigint로 변환하려는 array
- * Return : (SUCCESS) bigint print
-******************************************/
+/**
+ * @brief Convert an array to a bigint.
+ *
+ * @description This function takes an array as input and converts it to a bigint.
+ *
+ * @param[out] dst Pointer to the bigint where the converted value will be stored.
+ * @param[in] sign The sign of the bigint to be created.
+ * @param[in] word_len The length of the array to be converted.
+ * @param[in] a Pointer to the array to be converted to bigint.
+ *
+ * @return (SUCCESS) The converted bigint.
+ */
 msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a)
 {
     bi_new(dst, word_len);
@@ -30,17 +31,19 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a)
     return SUCCESS;
 }
 
-/*****************************************
- * Name : bi_set_from_string
- * 
- * Desription : string을 입력받아 base를 고려하여 bigint형으로 변환
- * 
- * Params : - bigint** dst : print하려는 bigint
- *          - int base : 진수변환 base
- *          - int sign : string의 부호
- *          - char* int_str : bigint로 변환하려는 string
- * Return : (SUCCESS) bigint print
-******************************************/
+/**
+ * @brief Convert a string to a bigint considering the specified base.
+ *
+ * @description This function takes a string input and converts it to a bigint, 
+ * taking into account the specified base and the sign of the string.
+ *
+ * @param[out] dst Pointer to the bigint where the converted value will be stored.
+ * @param[in] base The base for conversion.
+ * @param[in] sign The sign of the string to be converted.
+ * @param[in] int_str The string to be converted to bigint.
+ *
+ * @return (SUCCESS) The converted bigint.
+ */
 msg bi_set_from_string(bigint** dst, const char* int_str, int base)
 {
     int word_len = 0;
@@ -189,17 +192,17 @@ msg bi_set_from_string(bigint** dst, const char* int_str, int base)
 }
 
 
-/*****************************************
- * Name : bi_get_random
- * 
- * Desription : word_len 길이 만큼의 bigint random generate
- * 
- * Params : - bigint** dst : 생성된 random generate 배열이 저장되는 bigint
- *          - int sign : random generate의 부호
- *          - word_len : 생성할 random generate 배열의 길이
- * 
- * Return : (SUCCESS)생성한 random generate bigint
-******************************************/
+/**
+ * @brief Generate a random bigint of specified word length.
+ *
+ * @description This function generates a random bigint with a length defined by word_len.
+ *
+ * @param[out] dst Pointer to the bigint where the generated random value will be stored.
+ * @param[in] sign The sign of the random number to be generated.
+ * @param[in] word_len The length of the random bigint array to be created.
+ *
+ * @return (SUCCESS) The generated random bigint.
+ */
 msg bi_get_random(bigint** dst, int sign, int word_len)
 {
     msg err_code = 0;
@@ -219,16 +222,17 @@ msg bi_get_random(bigint** dst, int sign, int word_len)
     return SUCCESS;
 }
 
-/*****************************************
- * Name : bi_print
- * 
- * Desription : bigint를 입력받아 2진수 혹은 16진수 출력
- * 
- * Params : - bigint** dst : print하려는 bigint
- *          - int base : 진수변환 base
- * 
- * Return : (SUCCESS)진수변환된 bigint print
-******************************************/
+/**
+ * @brief Print a bigint in binary or hexadecimal format.
+ *
+ * @description This function takes a bigint as input and outputs it in either binary or hexadecimal format, 
+ * depending on the specified base.
+ *
+ * @param[in] dst Pointer to the bigint to be printed.
+ * @param[in] base The base for conversion (e.g., 2 for binary, 16 for hexadecimal).
+ *
+ * @return (SUCCESS) The bigint printed in the specified base.
+ */
 msg bi_print(bigint** dst, int base)
 {
     if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
@@ -288,16 +292,16 @@ msg bi_print(bigint** dst, int base)
     return FAILED; // 2, 16이외의 base값은 에러코드
 }
 
-/*****************************************
- * Name : bi_new
- * 
- * Desription : word_len만큼의 배열크기를 가지는 bigint를 만들어줌
- * 
- * Params : - bigint** dst : 생성하려는 bigint
- *          - int word_len : word array 길이
- * 
- * Return : (SUCCESS)new bigint
-******************************************/
+/**
+ * @brief Create a bigint with a specified array size.
+ *
+ * @description This function allocates memory for a bigint with a size determined by word_len.
+ *
+ * @param[out] dst Pointer to the bigint to be created.
+ * @param[in] word_len The length of the word array for the bigint.
+ *
+ * @return (SUCCESS) A new bigint.
+ */
 msg bi_new(bigint** dst, int word_len)
 {
     if(*dst != NULL)
@@ -327,16 +331,16 @@ msg bi_new(bigint** dst, int word_len)
     return SUCCESS;
 }
 
-/*****************************************
- * Name : bi_delete
- * 
- * Desription : bigint를 입력받아 동작할당 받은 공간을 반환
- *              (ZERORIZE가 1일시에 할당되었던 배열 메모리에 0으로 초기화 하고 반환)
- * 
- * Params : - bigint** dst : 반환(삭제)하려는 bigint
- * 
- * Return : (SUCCESS) NULL dst
-******************************************/
+/**
+ * @brief Free the allocated memory for a bigint.
+ *
+ * @description This function takes a bigint and returns the allocated memory.
+ *              If ZERORIZE is set to 1, the allocated array memory is initialized to 0 before being freed.
+ *
+ * @param[in,out] dst Pointer to the bigint to be deleted (set to NULL after deletion).
+ *
+ * @return (SUCCESS) NULL dst after deletion.
+ */
 msg bi_delete(bigint** dst)
 {
     if((*dst) == NULL)
@@ -355,15 +359,15 @@ msg bi_delete(bigint** dst)
     return SUCCESS;
 }
 
-/*****************************************
- * Name : bi_refine
- * 
- * Desription : bigint dst의 last zero들을 삭제 후 재정의
- * 
- * Params : - bigint* dst : 길이를 조절하려는 bigint
- * 
- * Return : (Resized) dst
-******************************************/
+/**
+ * @brief Refine a bigint by removing trailing zeros and redefining it.
+ *
+ * @description This function removes the last zeros from the bigint dst and resizes it.
+ *
+ * @param[in,out] dst Pointer to the bigint whose length will be adjusted.
+ *
+ * @return (Resized) The resized bigint dst.
+ */
 msg bi_refine(bigint* dst)
 {
     if(dst == NULL){    //x가 비어있으면 반환
@@ -388,16 +392,16 @@ msg bi_refine(bigint* dst)
     return SUCCESS;
 }
 
-/*****************************************
- * Name : bi_assign
- * 
- * Desription : bigint src를 bigint dst로 copy
- * 
- * Params : - bigint* dst : 복사하려는 dst 배열
- *          - bigint* src : 복사받으려는 src 배열
- * 
- * Return : (SUCCESS) copied bigint dst
-******************************************/
+/**
+ * @brief Copy a bigint from src to dst.
+ *
+ * @description This function copies the bigint array from src to dst.
+ *
+ * @param[out] dst Pointer to the destination bigint array to copy into.
+ * @param[in] src Pointer to the source bigint array to copy from.
+ *
+ * @return (SUCCESS) if the copy was successful.
+ */
 msg bi_assign(bigint** dst, bigint* src)
 {
     if(*dst != NULL){

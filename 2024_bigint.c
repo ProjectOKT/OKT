@@ -13,7 +13,22 @@
 #include "params.h"
 #include "verify.h"
 
-// array_rand, bi_get_random test
+/**
+ * @brief Tests the bi_get_random function.
+ *
+ * This function demonstrates the usage of the bi_get_random function 
+ * by generating a random positive bigint and printing it in hexadecimal format.
+ *
+ * It initializes an array of `word` type with zeros and then calls 
+ * `bi_get_random` to populate the `dst` pointer with a random bigint 
+ * of specified length. The generated bigint is then printed to the 
+ * console in base 16.
+ *
+ * @note Ensure that the bigint library is properly initialized before 
+ *       calling this function.
+ *
+ * @return void
+ */
 void bigint_test1()
 {
     printf("bi_get_random test\n");
@@ -25,7 +40,29 @@ void bigint_test1()
     bi_print(&dst, 16);
 }
 
-// bi_new, bi_delete, bi_print test function
+/**
+ * @brief Tests the bi_new, bi_delete, and bi_print functions.
+ *
+ * This function demonstrates the creation, deletion, and printing of 
+ * big integer (bigint) objects using the bi_new and bi_delete 
+ * functions. It also tests the array_copy function for copying 
+ * values between two bigint instances.
+ *
+ * The function initializes two bigint pointers, allocates memory for 
+ * them, and sets their values to predefined negative integers. 
+ * It then copies the values from one bigint to another and prints 
+ * their representations in both binary and hexadecimal formats.
+ *
+ * If any of the bigint allocations fail, it prints an error message. 
+ * Finally, the function attempts to delete the allocated big integer 
+ * objects and checks for successful deallocation.
+ *
+ * @note Ensure that the bigint library is properly initialized before 
+ *       calling this function. The function also uses an array_copy 
+ *       utility to copy data between big integer arrays.
+ *
+ * @return void
+ */
 void bigint_test2()
 {
     printf("bi_new, bi_delete, bi_print test\n");
@@ -67,6 +104,27 @@ void bigint_test2()
     bi_delete(&test1);
 }
 
+/**
+ * @brief Tests the bi_set_from_string and bi_set_from_array functions.
+ *
+ * This function demonstrates the functionality of converting 
+ * strings in different number bases (binary, octal, hexadecimal) 
+ * into big integer (bigint) objects using the bi_set_from_string 
+ * function. It also tests the bi_set_from_array function to 
+ * initialize a bigint from an array of words.
+ *
+ * The function initializes multiple bigint pointers, generates a 
+ * random array of words, and sets the values of the big integer 
+ * objects from the provided string representations of numbers in 
+ * binary, octal, and hexadecimal formats. It prints the results 
+ * to the console to verify successful conversion.
+ *
+ * @note Ensure that the bigint library is properly initialized 
+ *       before calling this function. The array used in 
+ *       bi_set_from_array is generated randomly for testing.
+ *
+ * @return void
+ */
 void bigint_test3()
 {
     printf("bi_set_from_string, bi_set_from_array function test\n");
@@ -93,6 +151,20 @@ void bigint_test3()
     bi_set_from_array(&test4, POSITIVE, 16, array);
 }
 
+
+/**
+ * @brief Main function of the program.
+ *
+ * This function initializes the program by setting up a leak check
+ * function to be called at program exit. It then calls the
+ * `bigint_test2` function to perform specific tests related to the
+ * bigint library.
+ *
+ * @return Returns 0 upon successful completion of the program.
+ *
+ * @note This function will call `check_leaks` to check for memory
+ *       leaks when the program exits.
+ */
 int main()
 {   
     atexit(check_leaks);
