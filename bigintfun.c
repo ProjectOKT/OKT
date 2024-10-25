@@ -27,7 +27,7 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a)
         (*dst) -> a[i] = a[i];
     }
     (*dst) -> sign = sign;
-    bi_print(dst,16);
+
     return SUCCESS;
 }
 
@@ -86,45 +86,6 @@ msg bi_set_from_string(bigint** dst, const char* int_str, int base)
             }
         }
         
-    }
-    else if (base == 8){
-        if (int_str[0] == '-'){
-            strlength = strlen(int_str)-1;  // 0을 제외한 길이
-            word_len = strlength * 3 % SIZEOFWORD == 0 ? strlength * 3/ SIZEOFWORD : strlength * 3 / SIZEOFWORD +1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
-            bi_new(dst, word_len);
-            (*dst)->sign = NEGATIVE;
-            for (int i = 0; i < strlength; i++) {
-                if (int_str[strlength - i] >= '0' && int_str[strlength - i] < '8') {
-                    int digit = int_str[strlength - i] - '0';  // 문자 숫자를 정수로 변환
-                    (*dst)->a[i * 3 / SIZEOFWORD] |= (digit & 0x7) << (i * 3 % SIZEOFWORD);  // 3비트씩 shift하여 저장
-                }
-                else{
-                    fprintf(stderr, ERR_INVALID_INPUT);
-                    bi_delete(dst);
-                    return FAILED;
-                }
-            }
-        }
-        else {
-            strlength = strlen(int_str);  // 0을 제외한 길이
-            word_len = strlength * 3 % SIZEOFWORD == 0 ? strlength * 3/ SIZEOFWORD : strlength * 3 / SIZEOFWORD +1;  // 8진수는 3비트로 표현되므로 3비트씩 계산
-            bi_new(dst, word_len);
-            (*dst)->sign = POSITIVE;
-            for (int i = 0; i < strlength; i++) {
-                if (int_str[strlength - i - 1] >= '0' && int_str[strlength - i - 1] < '8') {
-                    int digit = int_str[strlength - i - 1] - '0';  // 문자 숫자를 정수로 변환
-                    (*dst)->a[i * 3 / SIZEOFWORD] |= (digit & 0x7) << (i * 3 % SIZEOFWORD);  // 3비트씩 shift하여 저장
-                }
-                else{
-                    fprintf(stderr, ERR_INVALID_INPUT);
-                    bi_delete(dst);
-                    return FAILED;
-                }
-            }
-        }
-        
-
-         
     }
     else if (base == 10){
         return 0;
@@ -186,7 +147,6 @@ msg bi_set_from_string(bigint** dst, const char* int_str, int base)
         return FAILED;
     }
     bi_refine(*dst);
-    bi_print(dst, base);
 
     return SUCCESS;
 }
