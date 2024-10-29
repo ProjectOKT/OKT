@@ -20,5 +20,6 @@ msg bi_refine(bigint* dst);
 
 msg bi_assign(bigint** dst, bigint* src);
 
+msg bi_fillzero(bigint** dst, int src_len);
 
 #endif
