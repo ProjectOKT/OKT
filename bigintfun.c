@@ -344,6 +344,9 @@ msg bi_refine(bigint* dst)
     if(dst->word_len != resize_len){        //기존 길이에서 resize 됐다면,
         dst->word_len = resize_len;
         dst->a = (word*)realloc(dst->a, sizeof(word)*resize_len);   //변환길이만큼 재할당
+        if(dst->a == NULL){
+            fprintf(stderr, ERR_MEMORY_ALLOCATION);
+        }
     }
 
     if((dst->word_len == 1) && (dst->a[0] == 0x00)){    //만약 0이면 sign -> ZERO
@@ -391,8 +394,12 @@ msg bi_fillzero(bigint** dst, int src_len){
     (*dst)->word_len = src_len;
     (*dst)->a = (word*)realloc((*dst)->a, sizeof(word)*src_len);
     
-    while(src_len < origin_len){
-        (*dst)->a[src_len] = 0;
+    if((*dst)->a == NULL){
+        fprintf(stderr, ERR_MEMORY_ALLOCATION);
+    }
+
+    while(src_len > origin_len){
+        (*dst)->a[src_len - 1] = 0;
         src_len--;
     }
     return SUCCESS;
