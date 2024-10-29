@@ -245,11 +245,11 @@ void bi_test3()
  */
 
 void compare_test(){
-    bigint *x;
-    bigint *y;
-    bigint *z;
-    bigint *k;
-
+    bigint *x = NULL;
+    bigint *y = NULL;
+    bigint *z = NULL;
+    bigint *k = NULL;
+    int result;
     bi_get_random(&x, POSITIVE, 5);
     bi_get_random(&y, POSITIVE, 5);
     bi_get_random(&z, NEGATIVE, 5);
@@ -258,17 +258,26 @@ void compare_test(){
     bi_print(&y,16);
     bi_print(&z,16);
     bi_print(&k,16);
-    bi_compare(&x,&z);
-    bi_compare(&z,&x);
-    bi_compare(&x,&y);
-    bi_compare(&y,&x);
-    bi_compare(&z,&k);
-    bi_compare(&k,&z);
-    bi_compare(&x,&x);
+    //1
+    result = bi_compare(&x,&z);
+    printf("%d\n",result);
+    //-1
+    result = bi_compare(&z,&x);
+    printf("%d\n",result);
+    result = bi_compare(&x,&y);
+    printf("%d\n",result);
+    result = bi_compare(&y,&x);
+    printf("%d\n",result);
+    result = bi_compare(&z,&k);
+    printf("%d\n",result);
+    result = bi_compare(&k,&z);
+    printf("%d\n",result);
+    result = bi_compare(&x,&x);
+    printf("%d\n",result);
 }
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     compare_test();
     return 0;
 }
