@@ -12,6 +12,7 @@
 #include "errormsg.h"
 #include "params.h"
 #include "verify.h"
+#include "operation.h"
 
 /**
  * @brief Tests the bi_new, bi_delete, and bi_print functions.
@@ -242,11 +243,32 @@ void bi_test3()
  * @note This function will call `check_leaks` to check for memory
  *       leaks when the program exits.
  */
+
+void compare_test(){
+    bigint *x;
+    bigint *y;
+    bigint *z;
+    bigint *k;
+
+    bi_get_random(&x, POSITIVE, 5);
+    bi_get_random(&y, POSITIVE, 5);
+    bi_get_random(&z, NEGATIVE, 5);
+    bi_get_random(&k, NEGATIVE, 5);
+    bi_print(&x,16);
+    bi_print(&y,16);
+    bi_print(&z,16);
+    bi_print(&k,16);
+    bi_compare(&x,&z);
+    bi_compare(&z,&x);
+    bi_compare(&x,&y);
+    bi_compare(&y,&x);
+    bi_compare(&z,&k);
+    bi_compare(&k,&z);
+    bi_compare(&x,&x);
+}
 int main()
 {   
     atexit(check_leaks);
-    bi_test1();
-    bi_test2();
-    bi_test3();
+    compare_test();
     return 0;
 }
