@@ -374,3 +374,28 @@ msg bi_assign(bigint** dst, bigint* src)
     
     return SUCCESS;
 }
+
+/**
+ * @brief Resizing and fill zero dst to src 
+ *
+ * @description This function resizing dst to src and fill zero
+ *
+ * @param[out] dst Pointer to the destination bigint resized
+ * @param[in] src Pointer to the source bigint with size for resizing
+ *
+ * @return (SUCCESS) if resize and fill zero was successful.
+ */
+msg bi_fillzero(bigint** dst, bigint* src){
+    if(src->word_len < (*dst)->word_len){
+        bi_fillzero(src, dst); //src가 더 작다면, 순서 바꿔서 실행
+    }
+    int target_len = src->word_len;
+    int origin_len = (*dst)->word_len;
+    
+    (*dst)->word_len = target_len;
+
+    while(target_len < origin_len){
+        (*dst)->a[target_len] = 0;
+        target_len--;
+    }
+}
