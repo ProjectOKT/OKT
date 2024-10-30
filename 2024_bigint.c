@@ -259,20 +259,20 @@ void compare_test(){
     bi_print(&z,16);
     bi_print(&k,16);
     //1
-    result = bi_compare(&x,&z);
+    result = bi_compare(x,z);
     printf("%d\n",result);
     //-1
-    result = bi_compare(&z,&x);
+    result = bi_compare(z,x);
     printf("%d\n",result);
-    result = bi_compare(&x,&y);
+    result = bi_compare(x,y);
     printf("%d\n",result);
-    result = bi_compare(&y,&x);
+    result = bi_compare(y,x);
     printf("%d\n",result);
-    result = bi_compare(&z,&k);
+    result = bi_compare(z,k);
     printf("%d\n",result);
-    result = bi_compare(&k,&z);
+    result = bi_compare(k,z);
     printf("%d\n",result);
-    result = bi_compare(&x,&x);
+    result = bi_compare(x,x);
     printf("%d\n",result);
 }
 
@@ -281,17 +281,18 @@ void sub_test()
     bigint* x1 = NULL;
     bigint* x2 = NULL;
     bigint* y = NULL;
-
+    
     msg error_msg = 0;
 
     error_msg = bi_get_random(&x1, NEGATIVE, 4);
-    error_msg = bi_get_random(&x2, NEGATIVE, 4);
+    error_msg = bi_get_random(&x2, POSITIVE, 4);
     bi_print(&x1, 16);
     bi_print(&x2, 16);
 
-    error_msg = bi_sub(&y, &x2, &x1);
+    error_msg = bi_sub(&y, x2, x1);
     bi_print(&y, 16);
 }
+
 
 int main()
 {   

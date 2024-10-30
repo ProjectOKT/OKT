@@ -197,7 +197,7 @@ msg bi_print(bigint** dst, int base)
 {
     if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
-        printf("ZERO");
+        printf("ZERO\n");
         return SUCCESS;
     }
 
@@ -365,7 +365,7 @@ msg bi_refine(bigint* dst)
  *
  * @return (SUCCESS) if the copy was successful.
  */
-msg bi_assign(bigint** dst, bigint* src)
+msg bi_assign(bigint** dst, const bigint* src)
 {
     if(*dst != NULL){
         bi_delete(dst);

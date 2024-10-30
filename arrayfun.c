@@ -61,7 +61,7 @@ void array_init(word* a, int word_len)
  * 
  * Return : copied dst array
 ******************************************/
-void array_copy(word* src_arr, word* dst_arr, int array_len)
+void array_copy(word* dst_arr, word* src_arr, int array_len)
 {   
     
     if(dst_arr != NULL){
