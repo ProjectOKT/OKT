@@ -141,5 +141,123 @@ msg bi_add(bigint *dst, bigint* src1, bigint* src2){
     }
 }
 
+word sub_adb(word A, char* borrow, word B)
+{
+    char borrow_buf = 0;
+    word C = A - (*borrow);
 
+    if(A < (word)*borrow)
+    {
+        borrow_buf = 1;
+    }
+
+    if(C < B)
+    {
+        borrow_buf += 1;
+    }
+
+    C = C - B;
+
+    *borrow = borrow_buf;
+    return C;
+}
+
+msg bi_subc(bigint** dst, bigint** src1, bigint** src2)
+{
+    msg error_msg = 0;
+    error_msg = bi_fillzero(src2, (*src1)->word_len);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    
+    error_msg = bi_new(dst, (*src1)->word_len);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    (*dst)->sign = POSITIVE;
+    
+    char borrow = 0;
+
+    for (int index = 0; index<((*src2)->word_len); index++)
+    {
+        (*dst)->a[index] = sub_adb((*src1)->a[index], &borrow, (*src2)->a[index]);
+    }
+    
+    return bi_refine(*dst);
+}
+
+msg bi_sub(bigint** dst, bigint** src1, bigint** src2)
+{
+    msg error_msg = FAILED;
+
+    word temp1 = 0;
+    word temp2 = 0;
+
+    for(int index = 0; index < (*src1)->word_len; index++)
+    {
+        temp1 |= (*src1)->a[index];
+        error_msg = SUCCESS;
+    }
+    for(int index = 0; index < (*src2)->word_len; index++)
+    {
+        temp2 |= (*src2)->a[index];
+    }
+    if(temp1 == 0)
+    {
+        (*src2)->sign = ((*src1)->sign == POSITIVE) ? NEGATIVE : POSITIVE;
+        return bi_assign(dst, *src2);
+    }
+    if(temp2 == 0)
+    {
+        return bi_assign(dst, *src1);
+    }
+
+    if(bi_compare(src1, src2) == 0)
+    {
+        return bi_new(dst, 1);
+    }
+    else if((bi_compare(src1, src2) == 1) && ((*src2)->sign == POSITIVE))
+    {
+        return bi_subc(dst, src1, src2);
+    }
+    else if((bi_compare(src1, src2) == -1) && ((*src1)->sign == POSITIVE))
+    {
+        error_msg = bi_subc(dst, src2, src1);
+        (*dst)->sign = NEGATIVE;
+        return error_msg;
+    }
+    else if((bi_compare(src1, src2) == 1) && ((*src1)->sign == NEGATIVE))
+    {
+        (*src1)->sign = (*src2)->sign = POSITIVE;
+        return bi_subc(dst, src2, src1);
+    }
+    else if((bi_compare(src1, src2) == -1) && ((*src2)->sign == NEGATIVE))
+    {
+        (*src1)->sign = (*src2)->sign = POSITIVE;
+        error_msg = bi_subc(dst, src1, src2);
+        (*dst)->sign = NEGATIVE;
+        return error_msg;
+    }
+    else if(((*src1)->sign == POSITIVE) && (*src2)->sign == NEGATIVE)
+    {
+        (*src2)->sign = POSITIVE;
+        printf("ADD 실행\n");
+        return ADD(dst, src1, src2);
+    }
+    else
+    {
+        (*src1)->sign = POSITIVE;
+        printf("ADD 실행\n");
+        error_msg = ADD(dst, src1, src2);
+        (*dst)->sign = NEGATIVE;
+        return error_msg;
+    }
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    return SUCCESS;
+}
 

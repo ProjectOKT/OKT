@@ -229,27 +229,6 @@ void bi_test3()
     }
 }
 
-void bi_test4(){
-    printf("bi_add test\n");
-
-    word a[3] = {0x12345678, 0x12345678, 0x12345678};
-    word b[1] = {0x00111111};
-    bigint* src = NULL;
-    bigint* dst = NULL;
-    bigint* src1 = NULL;
-    bi_set_from_array(&src, POSITIVE, 3, a);
-    bi_set_from_array(&src1, POSITIVE, 1, b);
-
-    bi_print(&src, 16);
-    bi_print(&src1, 16);
-
-    add_same_sign(&dst, src, src1);
-    bi_print(&dst, 16);
-
-    bi_delete(&src);
-    bi_delete(&src1);
-    bi_delete(&dst);
-}
 
 /**
  * @brief Main function of the program.
@@ -296,12 +275,29 @@ void compare_test(){
     result = bi_compare(&x,&x);
     printf("%d\n",result);
 }
+
+void sub_test()
+{
+    bigint* x1 = NULL;
+    bigint* x2 = NULL;
+    bigint* y = NULL;
+
+    msg error_msg = 0;
+
+    error_msg = bi_get_random(&x1, NEGATIVE, 4);
+    error_msg = bi_get_random(&x2, NEGATIVE, 4);
+    bi_print(&x1, 16);
+    bi_print(&x2, 16);
+
+    error_msg = bi_sub(&y, &x2, &x1);
+    bi_print(&y, 16);
+}
+
 int main()
 {   
-    atexit(check_leaks);
-    // bi_test1();
-    // bi_test2();
-    // bi_test3();
-    bi_test4();
+    //atexit(check_leaks);
+    //compare_test();
+
+    sub_test();
     return 0;
 }
