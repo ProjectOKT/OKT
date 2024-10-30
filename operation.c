@@ -66,14 +66,17 @@ word add_c(word src1, word src2, int* c){
 }
 
 //src1 >= src2
-msg add_same_sign(bigint** dst, bigint* src1, bigint* src2){
+msg add_same_sign(bigint** dst, const bigint* src1, const bigint* src2){
+    word result;
     int max_len;
     int c = 0;
-    word result;
+    
     max_len = src1->word_len;
     bi_new(dst, max_len + 1);   //더 긴 길이의 bigint만큼 생성
+    bigint *src2_copy = NULL;
+    bi_assign(&src2_copy, src2); //src2값이 바뀌는 것을 방지
 
-    if((src1->sign) == (src2->sign)){
+    if((src1->sign) == (src2_copy->sign)){
         if(src1->sign == POSITIVE){
             (*dst)->sign = POSITIVE;
         }
@@ -85,11 +88,11 @@ msg add_same_sign(bigint** dst, bigint* src1, bigint* src2){
         fprintf(stderr, ERR_NOT_CONDITION_FUNC);
     }
     
-    if((src1->word_len) > (src2->word_len)){
-        bi_fillzero(&src2, src1->word_len);
+    if((src1->word_len) > (src2_copy->word_len)){
+        bi_fillzero(&src2_copy, src1->word_len);
     }
     for(int idx = 0; idx < max_len; idx++){    
-        result = add_c(src1->a[idx], src2->a[idx], &c);
+        result = add_c(src1->a[idx], src2_copy->a[idx], &c);
         (*dst)->a[idx] = result;
     }
     if(c == 1){
@@ -98,10 +101,13 @@ msg add_same_sign(bigint** dst, bigint* src1, bigint* src2){
     else{
         bi_refine(*dst);             //마지막 carry가 0이면 크기 조절 후 마무리
     }
+
+    bi_delete(&src2_copy);
+    
     return SUCCESS;
 }
 
-msg bi_add(bigint *dst, bigint* src1, bigint* src2){
+msg bi_add(bigint** dst, bigint* src1, bigint* src2){
     word temp = 0;
     word temp1 = 0;
     for(int idx = 0; idx < src1->word_len; idx++){
@@ -122,12 +128,12 @@ msg bi_add(bigint *dst, bigint* src1, bigint* src2){
 
     if((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)){
         src2->sign = POSITIVE;
-        bi_sub(&dst, src1, src2);
+        bi_sub(dst, src1, src2);
         return SUCCESS;
     }
     if((src1->sign ==  NEGATIVE) && (src2->sign ==  POSITIVE)){
         src1->sign = POSITIVE;
-        bi_sub(&dst, src2, src1);
+        bi_sub(dst, src2, src1);
         return SUCCESS;
     }
 
