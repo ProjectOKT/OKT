@@ -284,12 +284,12 @@ void sub_test()
     
     msg error_msg = 0;
 
-    error_msg = bi_get_random(&x1, NEGATIVE, 4);
+    error_msg = bi_get_random(&x1, POSITIVE, 4);
     error_msg = bi_get_random(&x2, POSITIVE, 4);
     bi_print(&x1, 16);
     bi_print(&x2, 16);
 
-    error_msg = bi_sub(&y, x2, x1);
+    error_msg = bi_sub(&y, x1, x2);
     bi_print(&y, 16);
 }
 

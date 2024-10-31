@@ -66,33 +66,33 @@ word add_c(word src1, word src2, int* c){
 }
 
 //src1 >= src2
-msg add_same_sign(bigint** dst, const bigint* src1, const bigint* src2){
+msg add_same_sign(bigint** dst, bigint* src1, bigint* src2){
+    msg error_msg = 0;
     word result;
     int max_len;
     int c = 0;
     
     max_len = src1->word_len;
-    bi_new(dst, max_len + 1);   //더 긴 길이의 bigint만큼 생성
-    bigint *src2_copy = NULL;
-    bi_assign(&src2_copy, src2); //src2값이 바뀌는 것을 방지
+    error_msg = bi_new(dst, max_len + 1);   //더 긴 길이의 bigint만큼 생성
 
-    if((src1->sign) == (src2_copy->sign)){
-        if(src1->sign == POSITIVE){
-            (*dst)->sign = POSITIVE;
-        }
-        else{
-            (*dst)->sign = NEGATIVE;
-        }
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
+    if(src1->sign == POSITIVE){
+        (*dst)->sign = POSITIVE;
     }
     else{
-        fprintf(stderr, ERR_NOT_CONDITION_FUNC);
+        (*dst)->sign = NEGATIVE;
     }
-    
-    if((src1->word_len) > (src2_copy->word_len)){
-        bi_fillzero(&src2_copy, src1->word_len);
+
+    if((src1->word_len) > (src2->word_len)){
+        bi_fillzero(&src2, src1->word_len);
     }
+
     for(int idx = 0; idx < max_len; idx++){    
-        result = add_c(src1->a[idx], src2_copy->a[idx], &c);
+        result = add_c(src1->a[idx], src2->a[idx], &c);
         (*dst)->a[idx] = result;
     }
     if(c == 1){
@@ -101,50 +101,68 @@ msg add_same_sign(bigint** dst, const bigint* src1, const bigint* src2){
     else{
         bi_refine(*dst);             //마지막 carry가 0이면 크기 조절 후 마무리
     }
-
-    bi_delete(&src2_copy);
-    
     return SUCCESS;
 }
 
-msg bi_add(bigint** dst, bigint* src1, bigint* src2){
-    word temp = 0;
+msg bi_add(bigint** dst, const bigint* src1, const bigint* src2){
+    msg error_msg = FAILED;
+
+    bigint* temp_src1 = NULL;
+    bigint* temp_src2 = NULL;
+    
     word temp1 = 0;
-    for(int idx = 0; idx < src1->word_len; idx++){
-        temp |= src1->a[idx];
+    word temp2 = 0;
+
+    error_msg = bi_assign(&temp_src1, src1);
+    if(error_msg == FAILED){
+        return FAILED;
     }
-    for(int idx = 0; idx < src2->word_len; idx++){
-        temp1 |= src2->a[idx];
+    error_msg = bi_assign(&temp_src2, src2);
+    if(error_msg == FAILED){
+        return FAILED;
     }
 
-    if(temp == 0){
-        bi_assign(dst, src2);
-        return SUCCESS;
+    for(int index = 0; index < temp_src1->word_len; index++)
+    {
+        temp1 |= temp_src1->a[index];
     }
+    for(int index = 0; index < temp_src2->word_len; index++)
+    {
+        temp2 |= temp_src2->a[index];
+    }
+
     if(temp1 == 0){
-        bi_assign(dst, src1);
-        return SUCCESS;
+        error_msg = bi_assign(dst, temp_src2);
+    }
+    else if(temp2 == 0){
+        error_msg = bi_assign(dst, temp_src1);
+    }
+    else if((temp_src1->sign == POSITIVE) && (temp_src2->sign == NEGATIVE)){
+        temp_src2->sign = POSITIVE;
+        error_msg = bi_sub(dst, temp_src1, temp_src2);
+    }
+    else if((temp_src1->sign ==  NEGATIVE) && (temp_src2->sign ==  POSITIVE)){
+        temp_src1->sign = POSITIVE;
+        error_msg = bi_sub(dst, temp_src2, temp_src1);
+    }
+    else if ((bi_compare(temp_src1, temp_src2) == 1) || (bi_compare(temp_src1, temp_src2) == 0)){
+        error_msg = add_same_sign(dst, temp_src1, temp_src2);
+    }
+    else{   
+        error_msg = add_same_sign(dst, temp_src2, temp_src1);
     }
 
-    if((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)){
-        src2->sign = POSITIVE;
-        bi_sub(dst, src1, src2);
-        return SUCCESS;
+    error_msg = bi_delete(&temp_src1);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
     }
-    if((src1->sign ==  NEGATIVE) && (src2->sign ==  POSITIVE)){
-        src1->sign = POSITIVE;
-        bi_sub(dst, src2, src1);
-        return SUCCESS;
+    error_msg = bi_delete(&temp_src2);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
     }
-
-    if ((bi_compare(src1, src2) == 1) || (bi_compare(src1, src2) == 0)){
-        add_same_sign(dst, src1, src2);
-        return SUCCESS;
-    }
-    else{     //A < B
-        add_same_sign(dst, src2, src1);
-        return SUCCESS;
-    }
+    return SUCCESS;
 }
 
 word sub_adb(word A, char* borrow, word B)
@@ -171,7 +189,6 @@ word sub_adb(word A, char* borrow, word B)
 msg bi_subc(bigint** dst, bigint* src1, bigint* src2)
 {
     msg error_msg = 0;
-    bigint temp;
     error_msg = bi_fillzero(&src2, src1->word_len);
     if(error_msg == FAILED)
     {
@@ -255,7 +272,6 @@ msg bi_sub(bigint** dst, const bigint* src1, const bigint* src2)
         temp_src1->sign = temp_src2->sign = POSITIVE;
         error_msg = bi_subc(dst, temp_src1, temp_src2);
         (*dst)->sign = NEGATIVE;
-        return error_msg;
     }
     else if((temp_src1->sign == POSITIVE) && (temp_src2->sign == NEGATIVE))
     {
