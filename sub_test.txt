@@ -1,0 +1,29 @@
+pos_a =0xdc497d9ef6324912fd367840ee509a20
+pos_b =0x22a13b32b730c46bd0664044f2144fad
+neg_c =-0x499d72b90299cab0da1f8be19d9122f6
+neg_d =-0xd667bf53ccc9eab280e9d599c57e802c
+z =0x0
+pp_sub = 0xb9a8426c3f0184a72cd037fbfc3c4a73
+nn_sub= 0x8cca4c9aca302001a6ca49b827ed5d36
+np_sub = -0x6c3eadebb9ca8f1caa85cc268fa572a3
+pn_sub= 0x00000001b2b13cf2c2fc33c57e204ddab3cf1a4c
+zp_sub = -0x22a13b32b730c46bd0664044f2144fad
+zn_sub = 0x499d72b90299cab0da1f8be19d9122f6
+nz_sub = -0x499d72b90299cab0da1f8be19d9122f6
+pz_sub= 0x22a13b32b730c46bd0664044f2144fad
+if (pos_a - pos_b != pp_sub):
+ 	 print('pp_sub') 
+if (neg_c - neg_d != nn_sub):
+ 	 print('nn_sub') 
+if (pos_a - neg_d != pn_sub):
+ 	 print('pn_sub') 
+if (neg_c - pos_b != np_sub):
+ 	 print('np_sub') 
+if (pos_b - z != pz_sub):
+ 	 print('pz_sub') 
+if (neg_c - z != nz_sub):
+ 	 print('nz_sub') 
+if (z - pos_b != zp_sub):
+ 	 print('zp_sub') 
+if (z - neg_c != zn_sub):
+ 	 print('zn_sub') 

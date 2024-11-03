@@ -266,29 +266,39 @@ msg bi_print(bigint** dst, int base)
  */
 msg bi_fprint(FILE* file, bigint** dst)
 {
+    if (dst == NULL || *dst == NULL) {
+        fprintf(stderr, "Error: NULL pointer dereference in bi_fprint\n");
+        return FAILED;
+    }
     if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
-        printf("0x0\n");
+        fprintf(file, "0x0\n");
         return SUCCESS;
     }
     else if((*dst)->sign == POSITIVE) // 양수 음수 출력
     {
-        printf("0x");
+        fprintf(file, "0x");
     }
     else if((*dst)->sign == NEGATIVE)
     {
-        printf("-0x");
+        fprintf(file, "-0x");
     }
     else
     {
         fprintf(stderr, ERR_INVALID_INPUT);
         return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
     }
-    for(int word_index = (*dst)->word_len; word_index > 0; word_index--)
-    {
-        printf("%08x", (*dst)->a[word_index - 1]);
+
+    if ((*dst)->a == NULL) {
+        fprintf(stderr, "Error: NULL pointer dereference for bigint array in bi_fprint\n");
+        return FAILED;
     }
-    printf("\n");
+
+    // word_len을 사용하여 배열을 출력 (상위 워드부터 역순으로 출력)
+    for (int word_index = (*dst)->word_len; word_index > 0; word_index--) {
+        fprintf(file, "%08x", (*dst)->a[word_index - 1]);
+    }
+    fprintf(file, "\n");
 
     return SUCCESS;
 }

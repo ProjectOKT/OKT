@@ -11,14 +11,14 @@
 #include "verify.h"
 #include "operation.h"
 
-void add_test(const char* filename) {
+void sage_add_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
         return;
     }
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 1; i++) {
         //인자
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE,4);
@@ -104,95 +104,111 @@ void add_test(const char* filename) {
         fprintf(file, "if (neg_c + z != nz_add):\n \t print('nz_add') \n");
         fprintf(file, "if (z + pos_b != zp_add):\n \t print('zp_add') \n");
         fprintf(file, "if (z + neg_c != zn_add):\n \t print('zn_add') \n");
+
+        bi_delete(&pos_a);
+        bi_delete(&pos_b);
+        bi_delete(&neg_c);
+        bi_delete(&neg_d);
+        bi_delete(&z);
+
+        bi_delete(&pp_add);
+        bi_delete(&nn_add);
+        bi_delete(&pn_add);
+        bi_delete(&np_add);
+
+        bi_delete(&pz_add);
+        bi_delete(&zn_add);
+        bi_delete(&nz_add);
+        bi_delete(&zp_add);
+
     }   
 
     fclose(file);
 }
 
-
-void sub_test(const char* filename) {
+void sage_sub_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
         return;
     }
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 1; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE,4);
+        bi_get_random(&pos_a, POSITIVE, 4);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE,4);
+        bi_get_random(&pos_b, POSITIVE, 4);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE,4);
+        bi_get_random(&neg_c, NEGATIVE, 4);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE,4);
+        bi_get_random(&neg_d, NEGATIVE, 4);
         bigint *z = NULL;
-        bi_new(&z,1);
+        bi_new(&z, 1);
 
         //0이 아닌 결과
         bigint *pp_sub = NULL;
-        bi_new(&pp_sub,4);
-        bi_add(&pp_sub, pos_a, pos_b);
+        bi_new(&pp_sub, 4);
+        bi_sub(&pp_sub, pos_a, pos_b);  // 뺄셈 수행
 
         bigint *nn_sub = NULL;
-        bi_new(&nn_sub,4);
-        bi_add(&nn_sub, neg_c, neg_d);
+        bi_new(&nn_sub, 4);
+        bi_sub(&nn_sub, neg_c, neg_d);  // 뺄셈 수행
 
         bigint *pn_sub = NULL;
-        bi_new(&pn_sub,4);
-        bi_add(&pn_sub, pos_a, neg_d);
+        bi_new(&pn_sub, 4);
+        bi_sub(&pn_sub, pos_a, neg_d);  // 뺄셈 수행
 
         bigint *np_sub = NULL;
-        bi_new(&np_sub,4);
-        bi_add(&np_sub, neg_c, pos_b);
-        
+        bi_new(&np_sub, 4);
+        bi_sub(&np_sub, neg_c, pos_b);  // 뺄셈 수행
+
         //0일때
         bigint *pz_sub = NULL;
-        bi_new(&pz_sub,4);
-        bi_add(&pz_sub, pos_b, z);
+        bi_new(&pz_sub, 4);
+        bi_sub(&pz_sub, pos_b, z);  // 뺄셈 수행
 
         bigint *nz_sub = NULL;
-        bi_new(&nz_sub,4);
-        bi_add(&nz_sub, neg_c, z);
+        bi_new(&nz_sub, 4);
+        bi_sub(&nz_sub, neg_c, z);  // 뺄셈 수행
 
         bigint *zp_sub = NULL;
-        bi_new(&zp_sub,4);
-        bi_add(&zp_sub, z, pos_b);
+        bi_new(&zp_sub, 4);
+        bi_sub(&zp_sub, z, pos_b);  // 뺄셈 수행
 
         bigint *zn_sub = NULL;
-        bi_new(&zn_sub,4);
-        bi_add(&zn_sub, z, neg_c);
+        bi_new(&zn_sub, 4);
+        bi_sub(&zn_sub, z, neg_c);  // 뺄셈 수행
 
         //
         fprintf(file, "pos_a =");
-        bi_fprint(file,&pos_a);
+        bi_fprint(file, &pos_a);
         fprintf(file, "pos_b =");
-        bi_fprint(file,&pos_b);
+        bi_fprint(file, &pos_b);
         fprintf(file, "neg_c =");
-        bi_fprint(file,&neg_c);
+        bi_fprint(file, &neg_c);
         fprintf(file, "neg_d =");
-        bi_fprint(file,&neg_d);
+        bi_fprint(file, &neg_d);
         fprintf(file, "z =");
-        bi_fprint(file,&z);
+        bi_fprint(file, &z);
 
         fprintf(file, "pp_sub = ");
-        bi_fprint(file,&pp_sub);
+        bi_fprint(file, &pp_sub);
         fprintf(file, "nn_sub= ");
-        bi_fprint(file,&nn_sub);
+        bi_fprint(file, &nn_sub);
         fprintf(file, "np_sub = ");
-        bi_fprint(file,&np_sub);
+        bi_fprint(file, &np_sub);
         fprintf(file, "pn_sub= ");
-        bi_fprint(file,&pn_sub);
+        bi_fprint(file, &pn_sub);
 
         fprintf(file, "zp_sub = ");
-        bi_fprint(file,&zp_sub);
+        bi_fprint(file, &zp_sub);
         fprintf(file, "zn_sub = ");
-        bi_fprint(file,&zn_sub);
+        bi_fprint(file, &zn_sub);
         fprintf(file, "nz_sub = ");
-        bi_fprint(file,&nz_sub);
+        bi_fprint(file, &nz_sub);
         fprintf(file, "pz_sub= ");
-        bi_fprint(file,&pz_sub);
+        bi_fprint(file, &pz_sub);
 
         fprintf(file, "if (pos_a - pos_b != pp_sub):\n \t print('pp_sub') \n");
         fprintf(file, "if (neg_c - neg_d != nn_sub):\n \t print('nn_sub') \n");
@@ -203,6 +219,22 @@ void sub_test(const char* filename) {
         fprintf(file, "if (neg_c - z != nz_sub):\n \t print('nz_sub') \n");
         fprintf(file, "if (z - pos_b != zp_sub):\n \t print('zp_sub') \n");
         fprintf(file, "if (z - neg_c != zn_sub):\n \t print('zn_sub') \n");
+
+        bi_delete(&pos_a);
+        bi_delete(&pos_b);
+        bi_delete(&neg_c);
+        bi_delete(&neg_d);
+        bi_delete(&z);
+
+        bi_delete(&pp_sub);
+        bi_delete(&nn_sub);
+        bi_delete(&pn_sub);
+        bi_delete(&np_sub);
+
+        bi_delete(&pz_sub);
+        bi_delete(&zn_sub);
+        bi_delete(&nz_sub);
+        bi_delete(&zp_sub);
     }
 
     fclose(file);

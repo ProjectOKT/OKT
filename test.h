@@ -4,6 +4,6 @@
 
 #include "dtype.h"
 
-void add_test(const char* filename);
-void sub_test(const char* filename);
+void sage_add_test(const char* filename);
+void sage_sub_test(const char* filename);
 #endif

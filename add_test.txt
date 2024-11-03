@@ -1,0 +1,29 @@
+pos_a =0xebe9bbf1f1499052aed66ce184be2329
+pos_b =0xde47b7061c0d5e24993e0c873cdba6b3
+neg_c =-0x1f2538097d5a031fa68bbb43c84d12b3
+neg_d =-0x32aedb1c0a890d133b45f596fccbd45d
+z =0x0
+pp_add = 0x00000001ca3172f80d56ee7748147968c199c9dc
+nn_add= -0x51d4132587e31032e1d1b0dac518e710
+np_add = 0xbf227efc9eb35b04f2b25143748e9400
+pn_add= 0xb93ae0d5e6c0833f7390774a87f24ecc
+zp_add = 0xde47b7061c0d5e24993e0c873cdba6b3
+zn_add= -0x1f2538097d5a031fa68bbb43c84d12b3
+nz_add = -0x1f2538097d5a031fa68bbb43c84d12b3
+pz_add= 0xde47b7061c0d5e24993e0c873cdba6b3
+if (pos_a + pos_b != pp_add):
+ 	 print('pp_add') 
+if (neg_c + neg_d != nn_add):
+ 	 print('nn_add') 
+if (pos_a + neg_d != pn_add):
+ 	 print('pn_add') 
+if (neg_c + pos_b != np_add):
+ 	 print('np_add') 
+if (pos_b + z != pz_add):
+ 	 print('pz_add') 
+if (neg_c + z != nz_add):
+ 	 print('nz_add') 
+if (z + pos_b != zp_add):
+ 	 print('zp_add') 
+if (z + neg_c != zn_add):
+ 	 print('zn_add') 

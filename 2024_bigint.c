@@ -13,6 +13,7 @@
 #include "params.h"
 #include "verify.h"
 #include "operation.h"
+#include "test.h"
 
 /**
  * @brief Tests the bi_new, bi_delete, and bi_print functions.
@@ -299,6 +300,7 @@ int main()
     //atexit(check_leaks);
     //compare_test();
 
-    sub_test();
+    sage_add_test("add_test.txt");
+    sage_sub_test("sub_test.txt");
     return 0;
 }
