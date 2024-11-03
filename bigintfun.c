@@ -238,6 +238,7 @@ msg bi_print(bigint** dst, int base)
         }
         else
         {
+            fprintf(stderr, ERR_INVALID_INPUT);
             return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
         for(int word_index = (*dst)->word_len; word_index > 0; word_index--)
@@ -250,6 +251,46 @@ msg bi_print(bigint** dst, int base)
     }
 
     return FAILED; // 2, 16이외의 base값은 에러코드
+}
+
+/**
+ * @brief Print a bigint in binary or hexadecimal format.
+ *
+ * @description This function takes a bigint as input and outputs it in either binary or hexadecimal format, 
+ * depending on the specified base.
+ *
+ * @param[in] file File pointer
+ * @param[in] dst Pointer to the bigint to be printed.
+ *
+ * @return (SUCCESS) The bigint printed in the specified base.
+ */
+msg bi_fprint(FILE* file, bigint** dst)
+{
+    if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
+    {
+        printf("0x0\n");
+        return SUCCESS;
+    }
+    else if((*dst)->sign == POSITIVE) // 양수 음수 출력
+    {
+        printf("0x");
+    }
+    else if((*dst)->sign == NEGATIVE)
+    {
+        printf("-0x");
+    }
+    else
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
+    }
+    for(int word_index = (*dst)->word_len; word_index > 0; word_index--)
+    {
+        printf("%08x", (*dst)->a[word_index - 1]);
+    }
+    printf("\n");
+
+    return SUCCESS;
 }
 
 /**

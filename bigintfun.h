@@ -12,6 +12,8 @@ msg bi_get_random(bigint** dst, int sign, int word_len);
 
 msg bi_print(bigint** dst, int base);
 
+msg bi_fprint(FILE* file, bigint** dst);
+
 msg bi_new(bigint** dst, int word_len);
 
 msg bi_delete(bigint** dst);
