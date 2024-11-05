@@ -67,33 +67,33 @@ void sage_add_test(const char* filename) {
 
         //
         fprintf(file, "pos_a =");
-        bi_fprint(file,&pos_a);
+        bi_fprint(file,pos_a);
         fprintf(file, "pos_b =");
-        bi_fprint(file,&pos_b);
+        bi_fprint(file,pos_b);
         fprintf(file, "neg_c =");
-        bi_fprint(file,&neg_c);
+        bi_fprint(file,neg_c);
         fprintf(file, "neg_d =");
-        bi_fprint(file,&neg_d);
+        bi_fprint(file,neg_d);
         fprintf(file, "z =");
-        bi_fprint(file,&z);
+        bi_fprint(file,z);
 
         fprintf(file, "pp_add = ");
-        bi_fprint(file,&pp_add);
+        bi_fprint(file,pp_add);
         fprintf(file, "nn_add= ");
-        bi_fprint(file,&nn_add);
+        bi_fprint(file,nn_add);
         fprintf(file, "np_add = ");
-        bi_fprint(file,&np_add);
+        bi_fprint(file,np_add);
         fprintf(file, "pn_add= ");
-        bi_fprint(file,&pn_add);
+        bi_fprint(file,pn_add);
 
         fprintf(file, "zp_add = ");
-        bi_fprint(file,&zp_add);
+        bi_fprint(file,zp_add);
         fprintf(file, "zn_add= ");
-        bi_fprint(file,&zn_add);
+        bi_fprint(file,zn_add);
         fprintf(file, "nz_add = ");
-        bi_fprint(file,&nz_add);
+        bi_fprint(file,nz_add);
         fprintf(file, "pz_add= ");
-        bi_fprint(file,&pz_add);
+        bi_fprint(file,pz_add);
 
         fprintf(file, "if (pos_a + pos_b != pp_add):\n \t print('pp_add') \n");
         fprintf(file, "if (neg_c + neg_d != nn_add):\n \t print('nn_add') \n");
@@ -182,33 +182,33 @@ void sage_sub_test(const char* filename) {
 
         //
         fprintf(file, "pos_a =");
-        bi_fprint(file, &pos_a);
+        bi_fprint(file, pos_a);
         fprintf(file, "pos_b =");
-        bi_fprint(file, &pos_b);
+        bi_fprint(file, pos_b);
         fprintf(file, "neg_c =");
-        bi_fprint(file, &neg_c);
+        bi_fprint(file, neg_c);
         fprintf(file, "neg_d =");
-        bi_fprint(file, &neg_d);
+        bi_fprint(file, neg_d);
         fprintf(file, "z =");
-        bi_fprint(file, &z);
+        bi_fprint(file, z);
 
         fprintf(file, "pp_sub = ");
-        bi_fprint(file, &pp_sub);
+        bi_fprint(file, pp_sub);
         fprintf(file, "nn_sub= ");
-        bi_fprint(file, &nn_sub);
+        bi_fprint(file, nn_sub);
         fprintf(file, "np_sub = ");
-        bi_fprint(file, &np_sub);
+        bi_fprint(file, np_sub);
         fprintf(file, "pn_sub= ");
-        bi_fprint(file, &pn_sub);
+        bi_fprint(file, pn_sub);
 
         fprintf(file, "zp_sub = ");
-        bi_fprint(file, &zp_sub);
+        bi_fprint(file, zp_sub);
         fprintf(file, "zn_sub = ");
-        bi_fprint(file, &zn_sub);
+        bi_fprint(file, zn_sub);
         fprintf(file, "nz_sub = ");
-        bi_fprint(file, &nz_sub);
+        bi_fprint(file, nz_sub);
         fprintf(file, "pz_sub= ");
-        bi_fprint(file, &pz_sub);
+        bi_fprint(file, pz_sub);
 
         fprintf(file, "if (pos_a - pos_b != pp_sub):\n \t print('pp_sub') \n");
         fprintf(file, "if (neg_c - neg_d != nn_sub):\n \t print('nn_sub') \n");

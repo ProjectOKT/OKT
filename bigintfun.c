@@ -9,18 +9,18 @@
 #include "arrayfun.h"
 
 /**
- * @brief Convert an array to a bigint.
- *
- * @description This function takes an array as input and converts it to a bigint.
- *
- * @param[out] dst Pointer to the bigint where the converted value will be stored.
- * @param[in] sign The sign of the bigint to be created.
- * @param[in] word_len The length of the array to be converted.
- * @param[in] a Pointer to the array to be converted to bigint.
- *
- * @return (SUCCESS) The converted bigint.
+ * @brief Initializes a bigint structure from an array of words.
+ * 
+ * This function converts an array of words into a `bigint` structure and stores it in the specified location.
+ * 
+ * @param[out] dst Pointer to a double pointer of `bigint`, where the converted bigint will be stored.
+ * @param[in] sign The sign of the bigint (POSITIVE or NEGATIVE).
+ * @param[in] word_len The length of the input array.
+ * @param[in] a Pointer to the input array of words.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a)
+msg bi_set_from_array(OUT bigint** dst, IN int sign, IN int word_len, IN const word* a)
 {
     bi_new(dst, word_len);
     for (int i = 0; i < word_len; i++){
@@ -31,20 +31,19 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a)
     return SUCCESS;
 }
 
+
 /**
- * @brief Convert a string to a bigint considering the specified base.
- *
- * @description This function takes a string input and converts it to a bigint, 
- * taking into account the specified base and the sign of the string.
- *
- * @param[out] dst Pointer to the bigint where the converted value will be stored.
- * @param[in] base The base for conversion.
- * @param[in] sign The sign of the string to be converted.
- * @param[in] int_str The string to be converted to bigint.
- *
- * @return (SUCCESS) The converted bigint.
+ * @brief Converts a string to a bigint structure.
+ * 
+ * This function converts a given string representation of an integer into a `bigint` structure.
+ * 
+ * @param[out] dst Pointer to a double pointer of `bigint`, where the converted bigint will be stored.
+ * @param[in] int_str Pointer to the input string representing the integer.
+ * @param[in] base The base of the input string (valid values are 2, 10, or 16).
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_set_from_string(bigint** dst, const char* int_str, int base)
+msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
 {
     int word_len = 0;
     unsigned int strlength = 0; 
@@ -153,17 +152,17 @@ msg bi_set_from_string(bigint** dst, const char* int_str, int base)
 
 
 /**
- * @brief Generate a random bigint of specified word length.
- *
- * @description This function generates a random bigint with a length defined by word_len.
- *
- * @param[out] dst Pointer to the bigint where the generated random value will be stored.
- * @param[in] sign The sign of the random number to be generated.
- * @param[in] word_len The length of the random bigint array to be created.
- *
- * @return (SUCCESS) The generated random bigint.
+ * @brief Generates a random bigint and stores it in a bigint structure.
+ * 
+ * This function creates a random bigint and saves it in the specified bigint structure.
+ * 
+ * @param[out] dst Pointer to a double pointer of `bigint`, where the generated random bigint will be stored.
+ * @param[in] sign The sign of the bigint (POSITIVE or NEGATIVE).
+ * @param[in] word_len The length of the random array to be generated.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_get_random(bigint** dst, int sign, int word_len)
+msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
 {
     msg err_code = 0;
     err_code = bi_new(dst, word_len);
@@ -182,20 +181,20 @@ msg bi_get_random(bigint** dst, int sign, int word_len)
     return SUCCESS;
 }
 
+
 /**
- * @brief Print a bigint in binary or hexadecimal format.
- *
- * @description This function takes a bigint as input and outputs it in either binary or hexadecimal format, 
- * depending on the specified base.
- *
- * @param[in] dst Pointer to the bigint to be printed.
- * @param[in] base The base for conversion (e.g., 2 for binary, 16 for hexadecimal).
- *
- * @return (SUCCESS) The bigint printed in the specified base.
+ * @brief Prints a bigint in the specified base.
+ * 
+ * This function takes a bigint structure and outputs its value in the specified numerical base.
+ * 
+ * @param[in] src Pointer to the `bigint` structure to be printed.
+ * @param[in] base The base in which to print the bigint (valid values are 2, 10, or 16).
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_print(bigint** dst, int base)
+msg bi_print(IN const bigint* src, IN int base)
 {
-    if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
+    if(src->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
         printf("ZERO\n");
         return SUCCESS;
@@ -203,11 +202,11 @@ msg bi_print(bigint** dst, int base)
 
     if(base == 2) // 2진수
     {
-        if((*dst)->sign == POSITIVE) // 양수 음수 출력
+        if(src->sign == POSITIVE) // 양수 음수 출력
         {
             printf("0b");
         }
-        else if((*dst)->sign == NEGATIVE)
+        else if(src->sign == NEGATIVE)
         {
             printf("-0b");
         }
@@ -215,11 +214,11 @@ msg bi_print(bigint** dst, int base)
         {
             return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
-        for(int word_index = (*dst)->word_len ; word_index > 0 ; word_index--)
+        for(int word_index = src->word_len ; word_index > 0 ; word_index--)
         {
             for(int bit_index = 8 * sizeof(word) - 1; bit_index >=0 ; bit_index--)
             {
-                printf("%1u", (((*dst)->a[word_index - 1]) >> bit_index) & (0x01));
+                printf("%1u", ((src->a[word_index - 1]) >> bit_index) & (0x01));
             }
         }
         printf("\n");
@@ -228,11 +227,11 @@ msg bi_print(bigint** dst, int base)
     }
     else if(base == 16) // 16진수
     {
-        if((*dst)->sign == POSITIVE) // 양수 음수 출력
+        if(src->sign == POSITIVE) // 양수 음수 출력
         {
             printf("0x");
         }
-        else if((*dst)->sign == NEGATIVE)
+        else if(src->sign == NEGATIVE)
         {
             printf("-0x");
         }
@@ -241,9 +240,9 @@ msg bi_print(bigint** dst, int base)
             fprintf(stderr, ERR_INVALID_INPUT);
             return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
-        for(int word_index = (*dst)->word_len; word_index > 0; word_index--)
+        for(int word_index = src->word_len; word_index > 0; word_index--)
         {
-            printf("%08x", (*dst)->a[word_index - 1]);
+            printf("%08x", src->a[word_index - 1]);
         }
         printf("\n");
 
@@ -253,33 +252,33 @@ msg bi_print(bigint** dst, int base)
     return FAILED; // 2, 16이외의 base값은 에러코드
 }
 
+
 /**
- * @brief Print a bigint in binary or hexadecimal format.
- *
- * @description This function takes a bigint as input and outputs it in either binary or hexadecimal format, 
- * depending on the specified base.
- *
- * @param[in] file File pointer
- * @param[in] dst Pointer to the bigint to be printed.
- *
- * @return (SUCCESS) The bigint printed in the specified base.
+ * @brief Prints a bigint to a specified file.
+ * 
+ * This function takes a bigint structure and writes its value to the provided file.
+ * 
+ * @param[in] file Pointer to the `FILE` where the bigint will be printed.
+ * @param[in] src Pointer to the `bigint` structure to be printed.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_fprint(FILE* file, bigint** dst)
+msg bi_fprint(IN FILE* file, IN bigint* src)
 {
-    if (dst == NULL || *dst == NULL) {
+    if (src == NULL) {
         fprintf(stderr, "Error: NULL pointer dereference in bi_fprint\n");
         return FAILED;
     }
-    if((*dst)->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
+    if(src->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
         fprintf(file, "0x0\n");
         return SUCCESS;
     }
-    else if((*dst)->sign == POSITIVE) // 양수 음수 출력
+    else if(src->sign == POSITIVE) // 양수 음수 출력
     {
         fprintf(file, "0x");
     }
-    else if((*dst)->sign == NEGATIVE)
+    else if(src->sign == NEGATIVE)
     {
         fprintf(file, "-0x");
     }
@@ -289,31 +288,32 @@ msg bi_fprint(FILE* file, bigint** dst)
         return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
     }
 
-    if ((*dst)->a == NULL) {
+    if (src->a == NULL) {
         fprintf(stderr, "Error: NULL pointer dereference for bigint array in bi_fprint\n");
         return FAILED;
     }
 
     // word_len을 사용하여 배열을 출력 (상위 워드부터 역순으로 출력)
-    for (int word_index = (*dst)->word_len; word_index > 0; word_index--) {
-        fprintf(file, "%08x", (*dst)->a[word_index - 1]);
+    for (int word_index = src->word_len; word_index > 0; word_index--) {
+        fprintf(file, "%08x", src->a[word_index - 1]);
     }
     fprintf(file, "\n");
 
     return SUCCESS;
 }
 
+
 /**
- * @brief Create a bigint with a specified array size.
- *
- * @description This function allocates memory for a bigint with a size determined by word_len.
- *
- * @param[out] dst Pointer to the bigint to be created.
- * @param[in] word_len The length of the word array for the bigint.
- *
- * @return (SUCCESS) A new bigint.
+ * @brief Allocates a new bigint with a specified word length.
+ * 
+ * This function allocates memory for a new `bigint` structure with an array size equal to the specified word length.
+ * 
+ * @param[out] dst Pointer to a double pointer of `bigint`, where the allocated bigint will be stored.
+ * @param[in] word_len The length of the array to be allocated for the bigint.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_new(bigint** dst, int word_len)
+msg bi_new(OUT bigint** dst, IN int word_len)
 {
     if(*dst != NULL)
     {
@@ -342,17 +342,17 @@ msg bi_new(bigint** dst, int word_len)
     return SUCCESS;
 }
 
+
 /**
- * @brief Free the allocated memory for a bigint.
- *
- * @description This function takes a bigint and returns the allocated memory.
- *              If ZERORIZE is set to 1, the allocated array memory is initialized to 0 before being freed.
- *
- * @param[in,out] dst Pointer to the bigint to be deleted (set to NULL after deletion).
- *
- * @return (SUCCESS) NULL dst after deletion.
+ * @brief Deletes a bigint structure and frees allocated memory.
+ * 
+ * This function deallocates the memory associated with the specified `bigint` structure.
+ * 
+ * @param[out] dst Pointer to a double pointer of `bigint`, which will be deleted.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_delete(bigint** dst)
+msg bi_delete(OUT bigint** dst)
 {
     if((*dst) == NULL)
     {
@@ -370,16 +370,18 @@ msg bi_delete(bigint** dst)
     return SUCCESS;
 }
 
+
 /**
- * @brief Refine a bigint by removing trailing zeros and redefining it.
- *
- * @description This function removes the last zeros from the bigint dst and resizes it.
- *
- * @param[in,out] dst Pointer to the bigint whose length will be adjusted.
- *
- * @return (Resized) The resized bigint dst.
+ * @brief Refines a bigint structure by adjusting its size and sign.
+ * 
+ * This function refines the given `bigint` structure by reducing its size 
+ * based on the highest non-zero word and adjusting the sign if the value is zero.
+ * 
+ * @param[out] dst Pointer to the `bigint` structure to be refined.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_refine(bigint* dst)
+msg bi_refine(OUT bigint* dst)
 {
     if(dst == NULL){    //x가 비어있으면 반환
         return SUCCESS;
@@ -406,17 +408,21 @@ msg bi_refine(bigint* dst)
     return SUCCESS;
 }
 
+
 /**
- * @brief Copy a bigint from src to dst.
- *
- * @description This function copies the bigint array from src to dst.
- *
- * @param[out] dst Pointer to the destination bigint array to copy into.
- * @param[in] src Pointer to the source bigint array to copy from.
- *
- * @return (SUCCESS) if the copy was successful.
+ * @brief Assigns the value of one bigint structure to another.
+ * 
+ * This function deletes the existing `bigint` structure pointed to by `dst` 
+ * (if it is not NULL), creates a new `bigint` with the same word length as 
+ * `src`, and copies the sign and array data from `src` to `dst`.
+ * 
+ * @param[out] dst Pointer to a double pointer of `bigint`, where the assigned 
+ *                 bigint will be stored.
+ * @param[in] src Pointer to the `bigint` structure to be copied from.
+ * 
+ * @return Returns 1 on success, -1 on failure.
  */
-msg bi_assign(bigint** dst, const bigint* src)
+msg bi_assign(OUT bigint** dst, IN const bigint* src)
 {
     if(*dst != NULL){
         bi_delete(dst);
@@ -429,28 +435,31 @@ msg bi_assign(bigint** dst, const bigint* src)
     return SUCCESS;
 }
 
-/**
- * @brief Resizing and fill zero dst to src 
- *
- * @description This function resizing dst to src and fill zero
- *
- * @param[out] dst Pointer to the destination bigint resized
- * @param[in] src_len source size for resizing
- *
- * @return (SUCCESS) if resize and fill zero was successful.
- */
-msg bi_fillzero(bigint** dst, int src_len){
 
-    int origin_len = (*dst)->word_len;
-    (*dst)->word_len = src_len;
-    (*dst)->a = (word*)realloc((*dst)->a, sizeof(word)*src_len);
+/**
+ * @brief Fills the bigint structure with zeros and resizes it.
+ * 
+ * This function adjusts the size of the given `bigint` structure to the specified 
+ * length (`src_len`), reallocates memory for the underlying array, and fills any 
+ * additional space with zeros.
+ * 
+ * @param[out] dst Pointer to the `bigint` structure to be modified.
+ * @param[in] src_len The desired length to which the bigint should be resized.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
+msg bi_fillzero(OUT bigint* dst, IN int src_len){
+
+    int origin_len = dst->word_len;
+    dst->word_len = src_len;
+    dst->a = (word*)realloc(dst->a, sizeof(word)*src_len);
     
-    if((*dst)->a == NULL){
+    if(dst->a == NULL){
         fprintf(stderr, ERR_MEMORY_ALLOCATION);
     }
 
     while(src_len > origin_len){
-        (*dst)->a[src_len - 1] = 0;
+        dst->a[src_len - 1] = 0;
         src_len--;
     }
     return SUCCESS;

@@ -1,27 +1,26 @@
 #ifndef BIGINTFUNC_H
 #define BIGINTFUNC_H
 
-
 #include "dtype.h"
 
-msg bi_set_from_array(bigint** dst, int sign, int word_len, const word* a);
+msg bi_set_from_array(OUT bigint** dst, IN int sign, IN int word_len, IN const word* a);
 
-msg bi_set_from_string(bigint** dst, const char* int_str, int base);
+msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base);
 
-msg bi_get_random(bigint** dst, int sign, int word_len);
+msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len);
 
-msg bi_print(bigint** dst, int base);
+msg bi_print(IN const bigint* src, IN int base);
 
-msg bi_fprint(FILE* file, bigint** dst);
+msg bi_fprint(IN FILE* file, IN bigint* src);
 
-msg bi_new(bigint** dst, int word_len);
+msg bi_new(OUT bigint** dst, IN int word_len);
 
-msg bi_delete(bigint** dst);
+msg bi_delete(OUT bigint** dst);
 
-msg bi_refine(bigint* dst);
+msg bi_refine(OUT bigint* dst);
 
-msg bi_assign(bigint** dst, const bigint* src);
+msg bi_assign(OUT bigint** dst, IN const bigint* src);
 
-msg bi_fillzero(bigint** dst, int src_len);
+msg bi_fillzero(OUT bigint* dst, IN int src_len);
 
 #endif

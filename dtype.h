@@ -4,6 +4,9 @@
 
 #include <stdint.h>
 
+#define IN
+#define OUT
+
 typedef uint32_t msg;
 typedef uint8_t byte;
 typedef uint32_t word;

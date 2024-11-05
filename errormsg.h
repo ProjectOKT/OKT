@@ -11,6 +11,4 @@
 #define ERR_NOT_SUPPORT_OS     "Error: Not supported Os.\n"
 #define ERR_NOT_CONDITION_FUNC "Error: Function condition not satisfied.\n"
 
-
-
 #endif

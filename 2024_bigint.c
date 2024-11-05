@@ -83,12 +83,12 @@ void bi_test1()
     test2->a[2] = 0xffffffff;
 
     printf("[Positive]\n");
-    bi_print(&test1, 2);
-    bi_print(&test1, 16);
+    bi_print(test1, 2);
+    bi_print(test1, 16);
 
     printf("\n[Negative]\n");
-    bi_print(&test2, 2);
-    bi_print(&test2, 16);
+    bi_print(test2, 2);
+    bi_print(test2, 16);
     error_code = bi_delete(&test1);
     if(error_code == FAILED)
     {
@@ -152,17 +152,17 @@ void bi_test2()
     printf("string(binary): %s\n", binstr);
     printf("bi_set_from_string(bin)\n=>");
     bi_set_from_string(&test1, binstr, 2);
-    bi_print(&test1, 2);
+    bi_print(test1, 2);
     printf("=>");
-    bi_print(&test1, 16);
+    bi_print(test1, 16);
 
     char hexstr[] = "ab542548c1123412374109238df";
     printf("\nstring(hex): %s\n", hexstr);
     printf("bi_set_from_string(hex) test\n=>");
     bi_set_from_string(&test2, hexstr, 16);
-    bi_print(&test2, 2);
+    bi_print(test2, 2);
     printf("=>");
-    bi_print(&test2, 16);
+    bi_print(test2, 16);
 
     printf("\ntest bi_set_from_arrray(hex)\n");
     printf("array:\n0x");
@@ -172,7 +172,7 @@ void bi_test2()
     }
     printf("\n");
     bi_set_from_array(&test3, POSITIVE, 16, array);
-    bi_print(&test3, 16);
+    bi_print(test3, 16);
     printf("\n");
     error_code = bi_delete(&test1);
     if(error_code == FAILED)
@@ -221,7 +221,7 @@ void bi_test3()
     bi_get_random(&dst, POSITIVE, 4);
 
     printf("bi(hex): ");
-    bi_print(&dst, 16);
+    bi_print(dst, 16);
 
     int error_code = bi_delete(&dst);
     if(error_code == FAILED)
@@ -244,7 +244,6 @@ void bi_test3()
  * @note This function will call `check_leaks` to check for memory
  *       leaks when the program exits.
  */
-
 void compare_test(){
     bigint *x = NULL;
     bigint *y = NULL;
@@ -255,10 +254,10 @@ void compare_test(){
     bi_get_random(&y, POSITIVE, 5);
     bi_get_random(&z, NEGATIVE, 5);
     bi_get_random(&k, NEGATIVE, 5);
-    bi_print(&x,16);
-    bi_print(&y,16);
-    bi_print(&z,16);
-    bi_print(&k,16);
+    bi_print(x,16);
+    bi_print(y,16);
+    bi_print(z,16);
+    bi_print(k,16);
     //1
     result = bi_compare(x,z);
     printf("%d\n",result);
@@ -275,6 +274,11 @@ void compare_test(){
     printf("%d\n",result);
     result = bi_compare(x,x);
     printf("%d\n",result);
+
+    bi_delete(&x);
+    bi_delete(&y);
+    bi_delete(&z);
+    bi_delete(&k);
 }
 
 void sub_test()
@@ -287,20 +291,28 @@ void sub_test()
 
     error_msg = bi_get_random(&x1, POSITIVE, 4);
     error_msg = bi_get_random(&x2, POSITIVE, 4);
-    bi_print(&x1, 16);
-    bi_print(&x2, 16);
+    bi_print(x1, 16);
+    bi_print(x2, 16);
 
     error_msg = bi_sub(&y, x1, x2);
-    bi_print(&y, 16);
+    bi_print(y, 16);
+
+    bi_delete(&x1);
+    bi_delete(&x2);
+    bi_delete(&y);
 }
 
 
 int main()
 {   
-    //atexit(check_leaks);
+    atexit(check_leaks);
+    //bi_test1();
+    //bi_test2();
+    //bi_test3();
     //compare_test();
+    //sub_test();
 
     sage_add_test("add_test.txt");
-    sage_sub_test("sub_test.txt");
+    //sage_sub_test("sub_test.txt");
     return 0;
 }

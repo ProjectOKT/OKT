@@ -3,13 +3,19 @@
 
 #include "dtype.h"
 
-word add_c(word src1, word src2, int* c);
-msg add_same_sign(bigint** dst, bigint* src1, bigint* src2);
-msg bi_add(bigint **dst, const bigint* src1, const bigint* src2);
-msg bi_compare(const bigint* A, const bigint* B);
-word sub_adb(word A, char* borrow, word B);
-msg bi_subc(bigint** dst, bigint* src1, bigint* src2);
-msg bi_sub(bigint** dst, const bigint* src1, const bigint* src2);
+int bi_compare(IN const bigint* A, IN const bigint* B);
+
+word add_c(IN word src1, IN word src2, IN int* c);
+
+msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2);
+
+msg bi_add(OUT bigint **dst, IN const bigint* src1, IN const bigint* src2);
+
+word sub_adb(IN word A, IN char* borrow, IN word B);
+
+msg bi_subc(OUT bigint** dst, IN bigint* src1, IN bigint* src2);
+
+msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
 
 #endif
