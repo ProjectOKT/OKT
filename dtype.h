@@ -7,10 +7,9 @@
 #define IN
 #define OUT
 
-typedef uint32_t msg;
+typedef int msg;
 typedef uint8_t byte;
 typedef uint32_t word;
-
 
 /**
  * @struct bigint
