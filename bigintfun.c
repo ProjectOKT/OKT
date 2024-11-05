@@ -54,7 +54,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             //구한 word len으로 bigint 하나 만들기
             bi_new(dst, word_len);
             (*dst) -> sign = NEGATIVE;
-            for (int i = 0; i < strlength; i++){
+            for (unsigned int i = 0; i < strlength; i++){
                 if (int_str[strlength - i] == '1'){
                     //1이면 32의 나머지만큼 shift해서 64로 나눈몫에저장
                     (*dst) -> a[i/SIZEOFWORD] |= 1 << (i % SIZEOFWORD);
@@ -72,7 +72,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             //구한 word len으로 bigint 하나 만들기
             bi_new(dst, word_len);
             (*dst) -> sign = POSITIVE;
-            for (int i = 0; i < strlength; i++){
+            for (unsigned int i = 0; i < strlength; i++){
                 if (int_str[strlength - i - 1] == '1'){
                     //1이면 SIZEOFWORD의 나머지만큼 shift해서 SIZEOFWORD로 나눈몫에저장
                     (*dst) -> a[i/SIZEOFWORD] |= 1 << (i % SIZEOFWORD);
@@ -95,7 +95,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             word_len = strlength * 4 % SIZEOFWORD == 0 ? strlength * 4 / SIZEOFWORD : strlength * 4 / SIZEOFWORD +1;  
             bi_new(dst, word_len);
             (*dst)->sign = NEGATIVE;
-            for (int i = 0; i < strlength; i++) {
+            for (unsigned int i = 0; i < strlength; i++) {
                 char c = int_str[strlength - i];
                 int digit = 0;
 
@@ -120,7 +120,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             word_len = strlength * 4 % SIZEOFWORD == 0 ? strlength * 4 / SIZEOFWORD : strlength * 4 / SIZEOFWORD +1;  
             bi_new(dst, word_len);
             (*dst)->sign = POSITIVE;
-            for (int i = 0; i < strlength; i++) {
+            for (unsigned int i = 0; i < strlength; i++) {
                 char c = int_str[strlength - i - 1];
                 int digit = 0;
 

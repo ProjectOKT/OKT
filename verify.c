@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "verify.h"
+
 void check_leaks(){
 
     #if defined(_WIN32) || defined(_WIN64)

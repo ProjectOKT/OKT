@@ -215,7 +215,6 @@ void bi_test2()
 void bi_test3()
 {
     printf("bi_get_random test\n");
-    word a[4] = {0x00, };
 
     bigint* dst = NULL;
     bi_get_random(&dst, POSITIVE, 4);
@@ -290,7 +289,15 @@ void sub_test()
     msg error_msg = 0;
 
     error_msg = bi_get_random(&x1, POSITIVE, 4);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "sub test failed\n");
+    }
     error_msg = bi_get_random(&x2, POSITIVE, 4);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "sub test failed\n");
+    }
     bi_print(x1, 16);
     bi_print(x2, 16);
 
@@ -310,9 +317,10 @@ int main()
     //bi_test2();
     //bi_test3();
     //compare_test();
-    //sub_test();
+    sub_test();
 
-    sage_add_test("add_test.txt");
+    //sage_add_test("add_test.txt");
     //sage_sub_test("sub_test.txt");
+    
     return 0;
 }
