@@ -11,16 +11,24 @@
 #include "verify.h"
 #include "operation.h"
 
-#define TESTNUM 5000
-
-void sage_add_test(const char* filename) {
+/**
+ * @brief Runs a specific addition test from a file for validation.
+ *
+ * This function reads test cases from the specified file and executes an addition test based on the provided test number. 
+ * It is commonly used for validating the correctness of bigint addition operations.
+ *
+ * @param filename The name of the file containing test cases.
+ * @param testnum The specific test case number to run from the file.
+ * @return void
+ */
+void sage_add_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
         return;
     }
 
-    for (int i = 0; i < TESTNUM; i++) {
+    for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE,4);
@@ -128,14 +136,25 @@ void sage_add_test(const char* filename) {
     fclose(file);
 }
 
-void sage_sub_test(const char* filename) {
+
+/**
+ * @brief Runs a specific subtraction test from a file for validation.
+ *
+ * This function reads test cases from the specified file and executes a subtraction test based on the provided test number.
+ * It is commonly used for validating the correctness of bigint subtraction operations.
+ *
+ * @param filename The name of the file containing test cases.
+ * @param testnum The specific test case number to run from the file.
+ * @return void
+ */
+void sage_sub_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
         return;
     }
 
-    for (int i = 0; i < TESTNUM; i++) {
+    for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
         bi_get_random(&pos_a, POSITIVE, 4);

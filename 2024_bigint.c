@@ -319,8 +319,10 @@ int main()
     //compare_test();
     //sub_test();
 
-    sage_add_test("add_test.txt");
-    sage_sub_test("sub_test.txt");
+    srand(time(NULL));
+
+    sage_add_test("add_test.py", 100000);
+    sage_sub_test("sub_test.py", 100000);
     
     return 0;
 }
