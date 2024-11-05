@@ -317,10 +317,10 @@ int main()
     //bi_test2();
     //bi_test3();
     //compare_test();
-    sub_test();
+    //sub_test();
 
-    //sage_add_test("add_test.txt");
-    //sage_sub_test("sub_test.txt");
+    sage_add_test("add_test.txt");
+    sage_sub_test("sub_test.txt");
     
     return 0;
 }

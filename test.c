@@ -11,6 +11,8 @@
 #include "verify.h"
 #include "operation.h"
 
+#define TESTNUM 5000
+
 void sage_add_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -18,7 +20,7 @@ void sage_add_test(const char* filename) {
         return;
     }
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < TESTNUM; i++) {
         //인자
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE,4);
@@ -133,7 +135,7 @@ void sage_sub_test(const char* filename) {
         return;
     }
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < TESTNUM; i++) {
         //인자
         bigint *pos_a = NULL;
         bi_get_random(&pos_a, POSITIVE, 4);

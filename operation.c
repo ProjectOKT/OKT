@@ -77,7 +77,7 @@ word add_c(IN word src1, IN word src2, IN int* c){
         cout = 1;
     }
     result += *c;
-    if(result < *c){
+    if(result < (word)*c){
         cout += 1;
     }
     *c = cout;
@@ -105,6 +105,15 @@ msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
     int max_len;
     int c = 0;
     
+    if((*dst) != NULL)
+    {
+        error_msg = bi_delete(dst);
+        if(error_msg == FAILED )
+        {
+            return FAILED;
+        }
+    }
+
     max_len = src1->word_len;
     error_msg = bi_new(dst, max_len + 1);   //더 긴 길이의 bigint만큼 생성
 
@@ -271,6 +280,15 @@ msg bi_subc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
         return FAILED;
     }
     
+    if((*dst) != NULL)
+    {
+        error_msg = bi_delete(dst);
+        if(error_msg == FAILED )
+        {
+            return FAILED;
+        }
+    }
+
     error_msg = bi_new(dst, src1->word_len);
     if(error_msg == FAILED)
     {
