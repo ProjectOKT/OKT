@@ -21,6 +21,7 @@ msg bi_refine(OUT bigint* dst);
 
 msg bi_assign(OUT bigint** dst, IN const bigint* src);
 
-msg bi_fillzero(OUT bigint* dst, IN int src_len);
+//msg bi_fillzero(OUT bigint* dst, IN int src_len);
+msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward);
 
 #endif

@@ -308,7 +308,30 @@ void sub_test()
     bi_delete(&x2);
     bi_delete(&y);
 }
+void fillzero_test(){
+    bigint* x1 = NULL;
+    bigint* x2 = NULL;
+    msg error_msg = 0;
 
+    error_msg = bi_get_random(&x1, POSITIVE, 4);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "test failed\n");
+    }
+    error_msg = bi_get_random(&x2, POSITIVE, 4);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "test failed\n");
+    }
+
+    bi_fillzero(x1, 6, 1);
+    bi_print(x1, 16);
+    bi_fillzero(x2, 6, -1);
+    bi_print(x2, 16);
+
+    bi_delete(&x1);
+    bi_delete(&x2);
+}
 
 int main()
 {   
@@ -321,8 +344,8 @@ int main()
 
     srand(time(NULL));
 
-    sage_add_test("add_test.py", 100000);
-    sage_sub_test("sub_test.py", 100000);
-    
+    // sage_add_test("add_test.py", 100000);
+    // sage_sub_test("sub_test.py", 100000);
+    fillzero_test();
     return 0;
 }

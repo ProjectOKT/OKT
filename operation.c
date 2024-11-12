@@ -130,7 +130,11 @@ msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
     }
 
     if((src1->word_len) > (src2->word_len)){
-        bi_fillzero(src2, src1->word_len);
+        error_msg = bi_fillzero(src2, src1->word_len, TOP);
+    }
+    if(error_msg == FAILED)
+    {
+        return FAILED;
     }
 
     for(int idx = 0; idx < max_len; idx++){    
@@ -141,8 +145,13 @@ msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
         (*dst)->a[max_len] = 1;        //마지막 carry가 1이면 src1 크기를 넘어간다.
     }
     else{
-        bi_refine(*dst);             //마지막 carry가 0이면 크기 조절 후 마무리
+        error_msg = bi_refine(*dst);             //마지막 carry가 0이면 크기 조절 후 마무리
     }
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
     return SUCCESS;
 }
 
@@ -274,7 +283,7 @@ word sub_adb(IN word A, IN char* borrow, IN word B)
 msg bi_subc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
 {
     msg error_msg = 0;
-    error_msg = bi_fillzero(src2, src1->word_len);
+    error_msg = bi_fillzero(src2, src1->word_len, TOP);
     if(error_msg == FAILED)
     {
         return FAILED;
@@ -413,3 +422,112 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     return SUCCESS;
 }
 
+msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
+{   
+    int error_msg = 0;
+    bigint* temp0 = NULL;
+    bigint* temp1 = NULL;
+    bigint* temp = NULL;
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
+    if((*dst) != NULL)
+    {
+        error_msg = bi_delete(dst);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+    }
+
+    error_msg = bi_new(&dst, 1);
+
+    if((src1->word_len) % 2 == 1)
+    {
+        error_msg = bi_fillzero(src1, src1->word_len + 1, TOP);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }   
+    }
+    else if((src2->word_len) % 2 == 1)
+    {
+        error_msg = bi_fillzero(src2, src2->word_len + 1, TOP);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+    }
+    for(int idx1 = 0; idx1 < src1->word_len; idx1++){
+        for(int idx2 = 0; idx2 < (src2->word_len)/ 2; idx2++){
+            bi_smul(&temp0, src1->a[2*idx1], src2->a[idx2]);
+            bi_smul(&temp1, src1->a[2*idx1 + 1], src2->a[idx2]);
+            bi_fillzero(temp1, temp1->word_len + 1, BOTTOM);
+        }
+        add_same_sign(&temp, temp0, temp1);
+        bi_fillzero(temp, temp->word_len + idx1, BOTTOM);
+        add_same_sign(dst, *dst, temp);
+    }
+}
+
+
+msg bi_mul(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
+{
+    msg error_msg = FAILED;
+
+    bigint* temp_src1 = NULL;
+    bigint* temp_src2 = NULL;
+
+    error_msg = bi_assign(&temp_src1, src1);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    error_msg = bi_assign(&temp_src2, src2);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
+    if((temp_src1->sign == ZERO) || (temp_src2->sign == ZERO))
+    {
+        error_msg = bi_new(dst, 1);
+        if(((*dst)->word_len != 1) || ((*dst)->a[0] != 0)){
+            fprintf(stderr, ERR_MEMORY_ALLOCATION);
+        }
+    }
+    else if((temp_src1->word_len == 1) && (temp_src1->a[0] == 1))
+    {
+        error_msg = bi_assign(dst, temp_src2);
+        (*dst)->sign = ((temp_src1->sign) == (temp_src2->sign)) ? POSITIVE : NEGATIVE;
+    }
+    else if((temp_src2->word_len == 1) && (temp_src2->a[0] == 1))
+    {
+        error_msg = bi_assign(dst, temp_src1);
+        (*dst)->sign = ((temp_src1->sign) == (temp_src2->sign)) ? POSITIVE : NEGATIVE;
+    }
+    else
+    {
+        error_msg = bi_mulc(dst, temp_src1, temp_src2);
+        (*dst)->sign = ((temp_src1->sign) == (temp_src2->sign)) ? POSITIVE : NEGATIVE;
+    }
+
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    error_msg = bi_delete(&temp_src1);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    error_msg = bi_delete(&temp_src2);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
+    return SUCCESS;
+}

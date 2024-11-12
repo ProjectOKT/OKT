@@ -448,7 +448,24 @@ msg bi_assign(OUT bigint** dst, IN const bigint* src)
  * 
  * @return Returns 1 on success, -1 on failure.
  */
-msg bi_fillzero(OUT bigint* dst, IN int src_len){
+// msg bi_fillzero(OUT bigint* dst, IN int src_len){
+
+//     int origin_len = dst->word_len;
+//     dst->word_len = src_len;
+//     dst->a = (word*)realloc(dst->a, sizeof(word)*src_len);
+    
+//     if(dst->a == NULL){
+//         fprintf(stderr, ERR_MEMORY_ALLOCATION);
+//     }
+
+//     while(src_len > origin_len){
+//         dst->a[src_len - 1] = 0;
+//         src_len--;
+//     }
+//     return SUCCESS;
+// }
+
+msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward){
 
     int origin_len = dst->word_len;
     dst->word_len = src_len;
@@ -457,10 +474,27 @@ msg bi_fillzero(OUT bigint* dst, IN int src_len){
     if(dst->a == NULL){
         fprintf(stderr, ERR_MEMORY_ALLOCATION);
     }
-
-    while(src_len > origin_len){
-        dst->a[src_len - 1] = 0;
-        src_len--;
+    if(toward == TOP){
+        while(src_len > origin_len){
+            dst->a[src_len - 1] = 0;
+            src_len--;
+        }
+    }
+    else if(toward == BOTTOM){
+        int diff_len = src_len - origin_len;
+        while(src_len > 0){
+            if(src_len > diff_len){
+                dst->a[src_len - 1] = dst->a[src_len - diff_len - 1];
+            }
+            else{
+                dst->a[src_len - 1] = 0;
+            }
+            src_len--;
+        }
+    }
+    else{
+        fprintf(stderr, ERR_NOT_CONDITION_FUNC);
+        return FAILED;
     }
     return SUCCESS;
 }
