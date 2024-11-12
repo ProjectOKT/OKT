@@ -355,9 +355,37 @@ void bi_single_mul_test()
     }
 }
 
+void bi_mulc_test()
+{
+    int error_msg = 0;
+    
+    bigint* test_1 = NULL;
+    bigint* test_2 = NULL;
+    bigint* dst = NULL;
+
+    bi_get_random(&test_1, POSITIVE, 2);
+    bi_get_random(&test_2, POSITIVE, 2);
+
+    bi_print(test_1, 16);
+    bi_print(test_2, 16);
+
+    error_msg = bi_mulc(&dst, test_1, test_2);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_single_mul_test_error\n");
+    }
+
+    bi_print(dst, 16);
+    error_msg = bi_delete(&dst);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_single_mul_test_error\n");
+    }
+}
+
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     //bi_test1();
     //bi_test2();
     //bi_test3();
@@ -368,7 +396,7 @@ int main()
 
     // sage_add_test("add_test.py", 100000);
     // sage_sub_test("sub_test.py", 100000);
-    bi_single_mul_test();
+    bi_mulc_test();
     // fillzero_test();
     return 0;
 }

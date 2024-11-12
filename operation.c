@@ -437,10 +437,10 @@ msg bi_smul(OUT bigint** dst, IN word src1, IN word src2)
     word temp, temp1 = 0, temp0 = 0;
 
     A1 = src1 >> (sizeof(half_word) * 8);
-    A0 = src1 & ((word)1 << (sizeof(half_word) * 8)) - 1;
+    A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
 
     B1 = src2 >> (sizeof(half_word) * 8);
-    B0 = src2 & ((word)1 << (sizeof(half_word) * 8)) - 1;
+    B0 = src2 & (((word)1 << (sizeof(half_word) * 8)) - 1);
 
     temp1 = (word)A1 * (word)B0;
     temp0 = (word)A0 * (word)B1;
