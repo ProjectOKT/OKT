@@ -333,6 +333,28 @@ void fillzero_test(){
     bi_delete(&x2);
 }
 
+void bi_single_mul_test()
+{
+    int error_msg = 0;
+    
+    word a = 0xac343874;
+    word b = 0x9d8de389;
+    bigint* dst = NULL;
+
+    error_msg = bi_smul(&dst, a, b);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_single_mul_test_error\n");
+    }
+
+    bi_print(dst, 16);
+    error_msg = bi_delete(&dst);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_single_mul_test_error\n");
+    }
+}
+
 int main()
 {   
     atexit(check_leaks);
@@ -346,6 +368,7 @@ int main()
 
     // sage_add_test("add_test.py", 100000);
     // sage_sub_test("sub_test.py", 100000);
-    fillzero_test();
+    bi_single_mul_test();
+    // fillzero_test();
     return 0;
 }

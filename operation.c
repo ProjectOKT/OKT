@@ -422,6 +422,40 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     return SUCCESS;
 }
 
+msg bi_smul(OUT bigint** dst, IN word src1, IN word src2)
+{
+    int error_msg = 0;
+
+    error_msg =  bi_new(dst, 2);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    (*dst)->sign = POSITIVE;
+
+    half_word A1 = 0, A0 = 0, B1 = 0, B0 = 0;
+    word temp, temp1 = 0, temp0 = 0;
+
+    A1 = src1 >> (sizeof(half_word) * 8);
+    A0 = src1 & ((word)1 << (sizeof(half_word) * 8)) - 1;
+
+    B1 = src2 >> (sizeof(half_word) * 8);
+    B0 = src2 & ((word)1 << (sizeof(half_word) * 8)) - 1;
+
+    temp1 = (word)A1 * (word)B0;
+    temp0 = (word)A0 * (word)B1;
+    temp0 += temp1;
+    temp1 = (temp0 < temp1);
+
+    (*dst)->a[1] = (word)A1 * (word)B1;
+    temp = (*dst)->a[0] = (word)A0 * (word)B0;
+    
+    (*dst)->a[0] += temp0 << (sizeof(half_word) * 8);
+    (*dst)->a[1] += (temp1 << (sizeof(half_word) * 8)) + (temp0 >> (sizeof(half_word) * 8)) + ((*dst)->a[0] < temp);
+    
+    return SUCCESS;
+}
+
 msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
 {   
     int error_msg = 0;
@@ -442,7 +476,7 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
         }
     }
 
-    error_msg = bi_new(&dst, 1);
+    error_msg = bi_new(dst, 1); //
 
     if((src1->word_len) % 2 == 1)
     {
@@ -470,6 +504,8 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
         bi_fillzero(temp, temp->word_len + idx1, BOTTOM);
         add_same_sign(dst, *dst, temp);
     }
+
+    return SUCCESS; //
 }
 
 

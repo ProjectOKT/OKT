@@ -9,6 +9,7 @@
 
 typedef int msg;
 typedef uint8_t byte;
+typedef uint16_t half_word;
 typedef uint32_t word;
 
 /**
