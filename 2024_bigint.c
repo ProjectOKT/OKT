@@ -417,7 +417,7 @@ void bi_connect_test(){
 
 int main()
 {   
-    //atexit(check_leaks);
+    atexit(check_leaks);
     //bi_test1();
     //bi_test2();
     //bi_test3();
@@ -426,9 +426,9 @@ int main()
 
     srand(time(NULL));
 
-    // sage_add_test("add_test.py", 100000);
-    // sage_sub_test("sub_test.py", 100000);
-    bi_mul_test();
+    sage_add_test("add_test.py", 10);
+    sage_sub_test("sub_test.py", 10000);
+    // bi_mul_test();
     // fillzero_test();
     return 0;
 }

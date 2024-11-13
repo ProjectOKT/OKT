@@ -114,19 +114,23 @@ msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
         }
     }
 
-    max_len = src1->word_len;
-    error_msg = bi_new(dst, max_len + 1);   //더 긴 길이의 bigint만큼 생성
-
-    if(error_msg == FAILED)
-    {
-        return FAILED;
-    }
-
-    if(src1->sign == POSITIVE){
+    if(src1->sign == POSITIVE){   //더 긴 길이의 bigint만큼 생성
+        max_len = src1->word_len;
+        error_msg = bi_new(dst, max_len + 1);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
         (*dst)->sign = POSITIVE;
     }
     else{
-        (*dst)->sign = NEGATIVE;
+        max_len = src2->word_len;
+        error_msg = bi_new(dst, max_len + 1);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+        (*dst)->sign = NEGATIVE;          //더 긴 길이의 bigint만큼 생성
     }
 
     if((src1->word_len) > (src2->word_len)){
@@ -393,13 +397,11 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     else if((temp_src1->sign == POSITIVE) && (temp_src2->sign == NEGATIVE))
     {
         temp_src2->sign = POSITIVE;
-        printf("ADD 실행1\n");
         error_msg = bi_add(dst, temp_src1, temp_src2);
     }
     else
     {
         temp_src1->sign = POSITIVE;
-        printf("ADD 실행2\n");
         error_msg = bi_add(dst, temp_src1, temp_src2);
         (*dst)->sign = ((*dst)->sign == POSITIVE) ? NEGATIVE : POSITIVE;
     }
