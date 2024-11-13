@@ -451,11 +451,11 @@ int main()
 
     srand(time(NULL));
 
-    //sage_add_test("add_test.py", 10000);
-    //sage_sub_test("sub_test.py", 10000);
-    //sage_mul_test("mul_test.py", 100);
+    sage_add_test("add_test.py", 100000);
+    sage_sub_test("sub_test.py", 100000);
+    sage_mul_test("mul_test.py", 100000);
     //bi_single_mul_test();
-    bi_mulc_test();
+    // bi_mulc_test();
     //bi_mul_test();
     //fillzero_test();
     return 0;

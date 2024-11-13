@@ -496,7 +496,8 @@ msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward){
 msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
     
     int dst_len;
-    if(src1 == NULL){
+
+    if(src1 == NULL || src1->sign == ZERO){
         bi_assign(dst, src2);
         return SUCCESS;
     }
@@ -504,8 +505,10 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
         bi_assign(dst, src1);
         return SUCCESS;
     }
+    
     dst_len = src1->word_len + src2->word_len;
     bi_new(dst, dst_len);
+
     (*dst)->sign = src1->sign;
     for(int i = 0; i < src2->word_len; i++){
         (*dst)->a[i] = src2->a[i];

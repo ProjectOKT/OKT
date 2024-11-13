@@ -556,9 +556,13 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
         }
         if (bi_compare(tempT1, tempT0) == 1){
             add_same_sign(&temp, tempT1, tempT0);
+            bi_delete(&tempT1);
+            bi_delete(&tempT0);
         }
         else{
             add_same_sign(&temp, tempT0, tempT1);
+            bi_delete(&tempT1);
+            bi_delete(&tempT0);
         }
         bi_fillzero(temp, temp->word_len + idx2, BOTTOM);
         if (bi_compare(temp, tempC) == 1){
@@ -571,13 +575,13 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
         bi_assign(&tempC, tempC_result);
     }
 
+
     bi_assign(dst, tempC);
     bi_delete(&tempC);
     bi_delete(&temp);
     bi_delete(&tempC_result);
     bi_delete(&tempT0);
     bi_delete(&tempT1);
-
     return SUCCESS;
 }
 
