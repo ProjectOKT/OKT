@@ -135,10 +135,17 @@ msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
 
     if((src1->word_len) > (src2->word_len)){
         error_msg = bi_fillzero(src2, src1->word_len, TOP);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
     }
-    if(error_msg == FAILED)
-    {
-        return FAILED;
+    else{
+        error_msg = bi_fillzero(src1, src2->word_len, TOP);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
     }
 
     for(int idx = 0; idx < max_len; idx++){    
