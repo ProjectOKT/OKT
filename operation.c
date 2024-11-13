@@ -450,7 +450,7 @@ msg bi_smul(OUT bigint** dst, IN word src1, IN word src2)
 {
     int error_msg = 0;
 
-    error_msg =  bi_new(dst, 2);
+    error_msg = bi_new(dst, 2);
     if(error_msg == FAILED)
     {
         return FAILED;
@@ -549,8 +549,6 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
             bi_connect(&tempT1_result, temp1, tempT1);
             bi_assign(&tempT0, tempT0_result);
             bi_assign(&tempT1, tempT1_result);
-            bi_print(tempT0, 16);
-            bi_print(tempT1, 16);
             bi_delete(&tempT0_result);
             bi_delete(&tempT1_result);
             bi_delete(&temp0);
