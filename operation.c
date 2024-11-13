@@ -422,6 +422,21 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     return SUCCESS;
 }
 
+/**
+ * @brief Multiplication two single words
+ * 
+ * This function performs multiplication between two words (`src1` and `src2`) and 
+ * stores the result in a bigint structure pointed to by `dst`. It handles the multiplication
+ * by dividing each word into half-word, then products and adds each others.
+ * 
+ * @param[out] dst Pointer to the result bigint that will store the result of the multiplication.
+ *                 The function allocates memory for this bigint and initializes its elements.
+ * @param[in] src1 The first operand for the multiplication.
+ * @param[in] src2 The second operand for the multiplication.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ * 
+ */
 msg bi_smul(OUT bigint** dst, IN word src1, IN word src2)
 {
     int error_msg = 0;
@@ -456,12 +471,32 @@ msg bi_smul(OUT bigint** dst, IN word src1, IN word src2)
     return SUCCESS;
 }
 
+/**
+ * @brief Multiplication two multi-word size integers with the non-negative integer
+ * 
+ * This function performs the Multiplication of two big non-negative integers (`src1` and `src2`), 
+ * This Improved Multiplication performs single words mul by smul and connects result of smul.
+ * The result is addtion of the results connected sigle words mul with shifting and zero padding.
+ * 
+ * @param[out] dst Pointer to the result bigint that will hold the result of the non-negative multiplication.
+ * @param[in] src1 The first operand for the multiplication.
+ * @param[in] src2 The second operand for the multiplication.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
 msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
 {   
     int error_msg = 0;
     bigint* temp0 = NULL;
     bigint* temp1 = NULL;
     bigint* temp = NULL;
+    bigint* tempC = NULL;
+    bigint* tempC_result = NULL;
+    bigint* tempT0 = NULL;
+    bigint* tempT1 = NULL;
+    bigint* tempT0_result = NULL;
+    bigint* tempT1_result = NULL;
+
     if(error_msg == FAILED)
     {
         return FAILED;
@@ -476,7 +511,8 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
         }
     }
 
-    error_msg = bi_new(dst, 1); //
+    error_msg = bi_new(&tempC, 1);
+    tempC->sign = POSITIVE;
 
     if((src1->word_len) % 2 == 1)
     {
@@ -486,7 +522,7 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
             return FAILED;
         }   
     }
-    else if((src2->word_len) % 2 == 1)
+    if((src2->word_len) % 2 == 1)
     {
         error_msg = bi_fillzero(src2, src2->word_len + 1, TOP);
         if(error_msg == FAILED)
@@ -494,21 +530,63 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
             return FAILED;
         }
     }
-    for(int idx1 = 0; idx1 < src1->word_len; idx1++){
-        for(int idx2 = 0; idx2 < (src2->word_len)/ 2; idx2++){
+    for(int idx2 = 0; idx2 < src2->word_len; idx2++){
+        bi_new(&tempT1, 1);
+        tempT0 = NULL;
+        for(int idx1 = 0; idx1 < (src1->word_len)/ 2; idx1++){
             bi_smul(&temp0, src1->a[2*idx1], src2->a[idx2]);
             bi_smul(&temp1, src1->a[2*idx1 + 1], src2->a[idx2]);
-            bi_fillzero(temp1, temp1->word_len + 1, BOTTOM);
+            bi_connect(&tempT0_result, temp0, tempT0);
+            bi_connect(&tempT1_result, temp1, tempT1);
+            bi_assign(&tempT0, tempT0_result);
+            bi_assign(&tempT1, tempT1_result);
+            bi_print(tempT0, 16);
+            bi_print(tempT1, 16);
+            bi_delete(&tempT0_result);
+            bi_delete(&tempT1_result);
+            bi_delete(&temp0);
+            bi_delete(&temp1);
         }
-        add_same_sign(&temp, temp0, temp1);
-        bi_fillzero(temp, temp->word_len + idx1, BOTTOM);
-        add_same_sign(dst, *dst, temp);
+        if (bi_compare(tempT1, tempT0) == 1){
+            add_same_sign(&temp, tempT1, tempT0);
+        }
+        else{
+            add_same_sign(&temp, tempT0, tempT1);
+        }
+        bi_fillzero(temp, temp->word_len + idx2, BOTTOM);
+        if (bi_compare(temp, tempC) == 1){
+            add_same_sign(&tempC_result, temp, tempC);
+        }
+        else
+        {
+            add_same_sign(&tempC_result, tempC, temp);
+        }
+        bi_assign(&tempC, tempC_result);
     }
 
-    return SUCCESS; //
+    bi_assign(dst, tempC);
+    bi_delete(&tempC);
+    bi_delete(&temp);
+    bi_delete(&tempC_result);
+    bi_delete(&tempT0);
+    bi_delete(&tempT1);
+
+    return SUCCESS;
 }
 
-
+/**
+ * @brief Multiplication two big integers
+ * 
+ * This function performs the Multiplication of two big integers (`src1` and `src2`), 
+ * This Multiplication performs multiplication by Improved Multiplication.
+ * Consider sign of two integers, as the result of the muliplication with two negative integers is negative.
+ * 
+ * @param[out] dst Pointer to the result bigint that will hold the result of the multiplication.
+ * @param[in] src1 The first big integer for the multiplication.
+ * @param[in] src2 The second big integer for the multiplication.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
 msg bi_mul(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 {
     msg error_msg = FAILED;

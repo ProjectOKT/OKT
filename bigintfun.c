@@ -317,7 +317,6 @@ msg bi_new(OUT bigint** dst, IN int word_len)
 {
     if(*dst != NULL)
     {
-        fprintf(stderr, ERR_NULL_POINTER);
         bi_delete(dst);
     }
     
@@ -445,25 +444,9 @@ msg bi_assign(OUT bigint** dst, IN const bigint* src)
  * 
  * @param[out] dst Pointer to the `bigint` structure to be modified.
  * @param[in] src_len The desired length to which the bigint should be resized.
- * 
+ * @param[in] toward The direction zero padding from msb or lsb
  * @return Returns 1 on success, -1 on failure.
  */
-// msg bi_fillzero(OUT bigint* dst, IN int src_len){
-
-//     int origin_len = dst->word_len;
-//     dst->word_len = src_len;
-//     dst->a = (word*)realloc(dst->a, sizeof(word)*src_len);
-    
-//     if(dst->a == NULL){
-//         fprintf(stderr, ERR_MEMORY_ALLOCATION);
-//     }
-
-//     while(src_len > origin_len){
-//         dst->a[src_len - 1] = 0;
-//         src_len--;
-//     }
-//     return SUCCESS;
-// }
 
 msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward){
 
@@ -495,6 +478,40 @@ msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward){
     else{
         fprintf(stderr, ERR_NOT_CONDITION_FUNC);
         return FAILED;
+    }
+    return SUCCESS;
+}
+
+/**
+ * @brief Connects two big integers like src1||src2.
+ * 
+ * This function connects two big intergers. 
+ * the result of conneting integer's sign is same with src1's sign.
+ * 
+ * @param[out] dst Pointer to the `bigint` structure to be modified.
+ * @param[in] src_len The desired length to which the bigint should be resized.
+ * @param[in] toward The direction zero padding from msb or lsb
+ * @return Returns 1 on success, -1 on failure.
+ */
+msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
+    
+    int dst_len;
+    if(src1 == NULL){
+        bi_assign(dst, src2);
+        return SUCCESS;
+    }
+    else if(src2 == NULL){
+        bi_assign(dst, src1);
+        return SUCCESS;
+    }
+    dst_len = src1->word_len + src2->word_len;
+    bi_new(dst, dst_len);
+    (*dst)->sign = src1->sign;
+    for(int i = 0; i < src2->word_len; i++){
+        (*dst)->a[i] = src2->a[i];
+    }
+    for(int j = src2->word_len; j < dst_len; j++){
+        (*dst)->a[j] = src1->a[j-src2->word_len];
     }
     return SUCCESS;
 }

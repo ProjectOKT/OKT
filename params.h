@@ -10,6 +10,7 @@
 #define ENDIAN         0 // Little endian: 0, Big endian: 1
 #define SIZEOFWORD     32 //bitsize of word
 
-#define TOP            1
-#define BOTTOM        -1
+#define TOP            1 //zero padding to msb
+#define BOTTOM        -1 //zero padding to lsb
+
 #endif
