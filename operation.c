@@ -38,19 +38,20 @@ int bi_compare(IN const bigint* A, IN const bigint* B){
         else if (A->word_len < B->word_len){
             return (-1)*A_sign;
         }
-        // 길이가 같을 때 제일 마지막 배열인자 비교
+        // 길이가 같을 때 제일 마지막 배열인자 까지 비교
         else{
-            //A가 더 클 때
-            if(A->a[A->word_len-1] > B->a[B->word_len-1]){
-                return A_sign;
+            for (int i = 1; i <= A->word_len; i++){
+                //A가 더 클 때
+                if(A->a[A->word_len-i] > B->a[B->word_len-i]){
+                    return A_sign;
+                }
+                //B가 더 클 때
+                else if(A->a[A->word_len-i] < B->a[B->word_len-i]){
+                    return (-1)*A_sign;
+                }
             }
-            //B가 더 클 때
-            else if(A->a[A->word_len-1] < B->a[B->word_len-1]){
-                return (-1)*A_sign;
-            }
-            else{
-                return 0;
-            }
+            //모두 같을 때
+            return 0;
         }
     }
 }
