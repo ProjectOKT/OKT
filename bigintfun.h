@@ -25,4 +25,7 @@ msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward);
 
 msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2);
 
+msg bi_bit_rshift(OUT bigint* dst, IN int num_bits);
+
+msg bi_bit_lshift(OUT bigint* dst, IN int num_bits);
 #endif

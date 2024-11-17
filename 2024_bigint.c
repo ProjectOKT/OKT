@@ -440,6 +440,128 @@ void bi_connect_test(){
     }
 }
 
+
+void bi_bits_shift_test()
+{
+    int error_msg = FAILED;
+
+    bigint* dst1 = NULL;
+    bigint* dst2 = NULL;
+
+    bi_get_random(&dst1, POSITIVE, 4);
+
+    bi_print(dst1, 2);
+
+    error_msg = bi_bit_rshift(dst1, 127);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_shift_test\n");
+    }
+    bi_print(dst1, 2);
+
+    bi_delete(&dst1);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_shift_test\n");
+    }
+
+    bi_get_random(&dst2, POSITIVE, 2);
+
+    bi_print(dst2, 2);
+
+    error_msg = bi_bit_lshift(dst2, 31);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_shift_test\n");
+    }
+    bi_print(dst2, 2);
+
+    bi_delete(&dst2);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_shift_test\n");
+    }
+}
+
+
+void bi_binary_division_test()
+{
+    int error_msg = FAILED;
+
+    bigint* src_1 = NULL;
+    bigint* src_2 = NULL;
+    bigint* quotient = NULL;
+    bigint* remainder = NULL;
+
+    bi_get_random(&src_1, POSITIVE, 2);
+    bi_get_random(&src_2, POSITIVE, 1);
+
+    bi_print(src_1, 16);
+    bi_print(src_2, 16);
+
+    error_msg = bi_binary_long_division(&quotient, &remainder, src_1, src_2);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_binary_division_test\n");
+    }
+
+    bi_print(quotient, 16);
+    bi_print(remainder, 16);
+    
+    bi_delete(&src_1);
+    bi_delete(&src_2);
+    bi_delete(&quotient);
+    bi_delete(&remainder);
+}
+
+void bi_compare_test()
+{
+    bigint* src_1 = NULL;
+    bigint* src_2 = NULL;
+
+    bi_new(&src_1, 1);
+    bi_get_random(&src_2, NEGATIVE, 2);
+
+    printf("%d\n", bi_compare(src_1, src_2));
+
+    bi_delete(&src_1);
+    bi_delete(&src_2);
+}
+
+void bi_division_test()
+{
+    int error_msg = FAILED;
+
+    bigint* src_1 = NULL;
+    bigint* src_2 = NULL;
+    bigint* quotient = NULL;
+    bigint* remainder = NULL;
+
+    bi_get_random(&src_1, NEGATIVE, rand() % 4 + 1);
+    bi_get_random(&src_2, NEGATIVE, rand() % 4 + 1);
+
+    printf("a = ");
+    bi_print(src_1, 16);
+    printf("b = ");
+    bi_print(src_2, 16);
+
+    error_msg = bi_division(&quotient, &remainder, src_1, src_2);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_binary_division_test\n");
+    }
+
+    printf("q = ");
+    bi_print(quotient, 16);
+    printf("r = ");
+    bi_print(remainder, 16);
+    
+    bi_delete(&src_1);
+    bi_delete(&src_2);
+    bi_delete(&quotient);
+    bi_delete(&remainder);
+}
+
 int main()
 {   
     atexit(check_leaks);
@@ -451,12 +573,17 @@ int main()
 
     srand(time(NULL));
 
-    sage_add_test("add_test.py", 100000);
-    sage_sub_test("sub_test.py", 100000);
-    sage_mul_test("mul_test.py", 100000);
+    //sage_add_test("add_test.py", 100000);
+    //sage_sub_test("sub_test.py", 100000);
+    //sage_mul_test("mul_test.py", 100000);
+    sage_div_test("div_test.py", 10000);
     //bi_single_mul_test();
     // bi_mulc_test();
     //bi_mul_test();
     //fillzero_test();
+    //bi_binary_division_test();
+    //bi_binary_division_test2();
+    //bi_compare_test();
+    //bi_division_test();
     return 0;
 }

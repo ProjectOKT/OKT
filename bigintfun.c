@@ -194,6 +194,11 @@ msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
  */
 msg bi_print(IN const bigint* src, IN int base)
 {
+    if((src == NULL) || !(base == 2 || base == 10 || base == 16))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
     if(src->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
     {
         printf("ZERO\n");
@@ -516,5 +521,147 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
     for(int j = src2->word_len; j < dst_len; j++){
         (*dst)->a[j] = src1->a[j-src2->word_len];
     }
+    return SUCCESS;
+}
+
+
+msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
+{
+    int num_shift_words = 0;
+    int num_shift_bits = 0;
+    int dst_len = 0;
+    
+    if((dst == NULL) || (num_bits < 0)) 
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    if((dst->sign == ZERO) || (num_bits == 0))
+    {
+        return SUCCESS;
+    }
+
+    dst_len = dst->word_len;
+    num_shift_words = num_bits / (sizeof(word) * 8);
+    num_shift_bits = num_bits % (sizeof(word) * 8);
+
+    if(num_shift_words >= dst_len || ((dst_len - 1 == num_shift_words) && ((dst->a[dst_len - 1]) >> num_bits == 0)))
+    {
+#if ZERORIZE == 1
+        array_init(dst->a, dst_len);
+#endif
+        dst->a = (word*)realloc(dst->a, sizeof(word) * 1);
+        if(dst->a == NULL)
+        {
+            fprintf(stderr, ERR_MEMORY_ALLOCATION);
+        }
+        dst->sign = ZERO;
+        dst->word_len = 1;
+        
+        return SUCCESS;
+    }
+
+    if(num_shift_words > 0)
+    {
+        for (int word_index = 0; word_index < dst_len - num_shift_words; word_index++)
+        {
+            dst->a[word_index] = dst->a[word_index + num_shift_words];
+        }
+#if ZERORIZE == 1
+            array_init(dst->a + dst_len - num_shift_words, num_shift_words);
+#endif
+        dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len - num_shift_words));
+        if(dst->a == NULL)
+        {
+            fprintf(stderr, ERR_MEMORY_ALLOCATION);
+        }
+        dst->word_len -= num_shift_words;
+
+        dst_len = dst->word_len;
+    }
+    
+    if(num_shift_bits > 0)
+    {
+        for (int word_index = 0; word_index < dst_len - 1; word_index++)
+        {
+            dst->a[word_index] >>= num_shift_bits;
+            dst->a[word_index] ^= (dst->a[word_index + 1] << (sizeof(word) * 8 - num_shift_bits));
+        }
+
+        dst->a[dst_len - 1] >>= num_shift_bits;
+        if(dst->a[dst_len - 1] == 0)
+        {
+            dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len - 1));
+            if(dst->a == NULL)
+            {
+                fprintf(stderr, ERR_MEMORY_ALLOCATION);
+            }
+            dst->word_len--;
+        }
+    }
+    
+    return SUCCESS;
+}
+
+
+msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
+{
+    int num_shift_words = 0;
+    int num_shift_bits = 0;
+    int dst_len = 0;
+    
+    if((dst == NULL) || (num_bits < 0)) 
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    if((dst->sign == ZERO) || (num_bits == 0))
+    {
+        return SUCCESS;
+    }
+
+    dst_len = dst->word_len;
+    num_shift_words = num_bits / (sizeof(word) * 8);
+    num_shift_bits = num_bits % (sizeof(word) * 8);
+
+    if(num_shift_words > 0)
+    {
+        dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + num_shift_words));
+        if(dst->a == NULL)
+        {
+            fprintf(stderr, ERR_MEMORY_ALLOCATION);
+        }
+        for (int word_index = dst_len - 1; word_index >= 0; word_index--)
+        {
+            dst->a[word_index + num_shift_words] = dst->a[word_index];
+            dst->a[word_index] = 0;
+        }
+        dst->word_len += num_shift_words;
+    }
+    
+    dst_len = dst->word_len;
+    if (num_shift_bits > 0)
+    {
+        if(((dst->a[dst_len - 1]) >> (sizeof(word) * 8 - num_shift_bits)) != 0)
+        {
+            dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + 1));
+            if(dst->a == NULL)
+            {
+                fprintf(stderr, ERR_MEMORY_ALLOCATION);
+            }
+            dst->word_len++;
+            dst_len++;
+        }
+        
+        for (int word_index = dst_len - 1; word_index > 0; word_index--)
+        {
+            dst->a[word_index] <<= num_shift_bits;
+            dst->a[word_index] ^= (dst->a[word_index - 1] >> (sizeof(word) * 8 - num_shift_bits));
+        }
+        dst->a[0] <<= num_shift_bits;
+    }
+
     return SUCCESS;
 }
