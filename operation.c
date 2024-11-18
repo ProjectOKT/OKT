@@ -906,9 +906,13 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_bit_rshift(a1,lw);
     //a mod 
     bi_assign(&a0, temp_src1);
-    for (int i = l; i < a0->word_len; i++){
-        a0->a[i] = 0;
+    if (a0->word_len > l){
+        for (int i = l; i < a0->word_len; i++)
+        {
+            a0->a[i] = 0;
+        }
     }
+    
     bi_delete(&temp_src1);
     
     // b >> lw
@@ -916,8 +920,11 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_bit_rshift(b1,lw);
     //b mod 
     bi_assign(&b0, temp_src2);
-    for (int i = l; i < b0->word_len; i++){
-        b0->a[i] = 0;
+    if (b0->word_len > l){
+        for (int i = l; i < b0->word_len; i++)
+        {
+            b0->a[i] = 0;
+        }
     }
     bi_delete(&temp_src2);
 
