@@ -525,6 +525,17 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
 }
 
 
+/**
+ * @brief Performs a bitwise right shift on a big integer.
+ * 
+ * This function shifts the bits of a big integer (`dst`) to the right by a specified number of bits (`num_bits`). 
+ * The resulting integer is zero-padded on the most significant bits (MSB) after the shift. The sign of the 
+ * integer remains unchanged. 
+ * 
+ * @param[out] dst Pointer to the `bigint` structure to be modified with the shifted value.
+ * @param[in] num_bits The number of bits to shift to the right.
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or memory allocation error).
+ */
 msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
 {
     int num_shift_words = 0;
@@ -605,6 +616,17 @@ msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
 }
 
 
+/**
+ * @brief Performs a bitwise left shift on a big integer.
+ * 
+ * This function shifts the bits of a big integer (`dst`) to the left by a specified number of bits (`num_bits`). 
+ * The resulting integer is zero-padded on the least significant bits (LSB) after the shift. The sign of the 
+ * integer remains unchanged. 
+ * 
+ * @param[out] dst Pointer to the `bigint` structure to be modified with the shifted value.
+ * @param[in] num_bits The number of bits to shift to the left.
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or memory allocation error).
+ */
 msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
 {
     int num_shift_words = 0;

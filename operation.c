@@ -663,6 +663,25 @@ msg bi_mul(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 }
 
 
+/**
+ * @brief Binary long division of two big integers.
+ * 
+ * This function performs binary long division of two big integers (`src1` and `src2`), computing both the quotient and remainder.
+ * The division is performed bit-by-bit, starting from the most significant bit of the dividend. 
+ * The function assumes that the divisor (`src2`) is positive and that the dividend (`src1`) is greater than or equal to the divisor.
+ * 
+ * The `quotient` is always positive, and the `remainder` is adjusted to its correct value. If the remainder is zero, 
+ * its sign is explicitly set to `ZERO`.
+ * 
+ * If any error occurs (e.g., invalid input or memory allocation failure), the function returns an error.
+ * 
+ * @param[out] quotient Pointer to the result bigint that will hold the quotient of the division.
+ * @param[out] remainder Pointer to the result bigint that will hold the remainder of the division.
+ * @param[in] src1 The dividend big integer for the division.
+ * @param[in] src2 The divisor big integer for the division.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or memory allocation error).
+ */
 msg bi_binary_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
 {
     int error_msg = FAILED;
@@ -726,6 +745,27 @@ msg bi_binary_long_division(OUT bigint** quotient, OUT bigint** remainder, IN co
     return SUCCESS;
 }
 
+
+/**
+ * @brief Division of two big integers.
+ * 
+ * This function performs the division of two big integers (`src1` and `src2`), computing both the quotient and remainder. 
+ * The function handles positive and negative values for the input integers. The signs of the `quotient` and `remainder` 
+ * are determined based on the signs of the input integers:
+ * 
+ * - Division between two integers with the same sign produces a positive `quotient`.
+ * - Division between two integers with different signs produces a negative `quotient`.
+ * - The `remainder` always takes the same sign as the divisor (`src2`).
+ * 
+ * If the division is not possible (e.g., `src2` is zero), the function returns an error.
+ * 
+ * @param[out] quotient Pointer to the result bigint that will hold the quotient of the division.
+ * @param[out] remainder Pointer to the result bigint that will hold the remainder of the division.
+ * @param[in] src1 The dividend big integer for the division.
+ * @param[in] src2 The divisor big integer for the division.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or division by zero).
+ */
 msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
 {
     int error_msg = SUCCESS;
@@ -742,7 +782,11 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
     error_msg = bi_assign(&temp_src1, src1);
     if (error_msg == FAILED) return FAILED;
     error_msg = bi_assign(&temp_src2, src2);
-    if (error_msg == FAILED) return FAILED;
+    if (error_msg == FAILED)
+    {   
+        bi_delete(&temp_src1);
+        return FAILED;
+    }
 
     if (((src1->sign == POSITIVE) && (src2->sign == POSITIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == NEGATIVE)))
     {

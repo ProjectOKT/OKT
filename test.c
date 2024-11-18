@@ -379,6 +379,17 @@ void sage_mul_test(const char* filename, int testnum) {
     fclose(file);
 }
 
+
+/**
+ * @brief Runs a specific division test from a file for validation.
+ *
+ * This function reads test cases from the specified file and executes a division test based on the provided test number.
+ * It is primarily used for validating the correctness of bigint division operations, including both quotient and remainder.
+ *
+ * @param filename The name of the file containing the test cases for bigint division.
+ * @param testnum The specific test case number to execute from the file.
+ * @return void
+ */
 void sage_div_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -486,6 +497,7 @@ void sage_div_test(const char* filename, int testnum) {
         // bi_fprint(file, zz_quotient);
         // fprintf(file, "zz_remainder = ");
         // bi_fprint(file, zz_remainder);
+
 
         fprintf(file, "if (pos_a // pos_b != pp_quotient):\n \t print(f\"[pp_quotient]: {pos_a:#x} // {pos_b:#x} != {pp_quotient:#x}\\n\")\n");
         fprintf(file, "if (pos_a %% pos_b != pp_remainder):\n \t print(f\"[pp_remainder]: {pos_a:#x} %% {pos_b:#x} != {pp_remainder:#x}\\n\")\n");
