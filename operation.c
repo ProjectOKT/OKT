@@ -912,10 +912,10 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_delete(&temp_src1);
     
     // b >> lw
-    bi_assign(&b1, temp_src1);
+    bi_assign(&b1, temp_src2);
     bi_bit_rshift(b1,lw);
     //b mod 
-    bi_assign(&b0, temp_src1);
+    bi_assign(&b0, temp_src2);
     for (int i = l; i < b0->word_len; i++){
         b0->a[i] = 0;
     }
@@ -973,7 +973,6 @@ msg bi_mul_kara(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_mul_k(dst,src1,src2);
     if (src1->sign == ZERO || src2->sign == ZERO){
         (*dst)->sign= ZERO;
-        return SUCCESS;
     }
     else if(src1->sign != src2->sign){
         (*dst)->sign= NEGATIVE;
