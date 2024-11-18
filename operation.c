@@ -865,13 +865,12 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
 #define max(a,b)  ((a) > (b) ? (a) : (b))
 
 int get_sign(bigint* src){
-    if (src->sign = NEGATIVE) return 1;
+    if (src->sign == NEGATIVE) return 1;
     return 0;
 } 
 
 msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 {
-    msg error_msg = FAILED;
     bigint* temp_src1 = NULL;
     bigint* temp_src2 = NULL;
     bigint* a1 = NULL;
@@ -900,7 +899,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     int l = (max(n,m) + 1) >> 1;
     int lw = l*SIZEOFWORD;
     //a mod 
-    bi_assign(a1, temp_src1);
+    bi_assign(&a1, temp_src1);
     for (int i = 0; i < l ; i++){
         a1->a[i] = 0;
     }
@@ -910,7 +909,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_bit_rshift(a1,lw);
     
     //b mod 
-    bi_assign(b1, temp_src2);
+    bi_assign(&b1, temp_src2);
     for (int i = 0; i < l ; i++){
         b1->a[i] = 0;
     }
@@ -937,7 +936,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     int s_sign = (-1)^(get_sign(s1) + get_sign(s0));
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;
-    bi_mul_k(s,s1,s0);
+    bi_mul_k(&s,s1,s0);
     bi_delete(&s0);
     bi_delete(&s1);
     s->sign = s_sign;

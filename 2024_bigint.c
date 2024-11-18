@@ -564,7 +564,7 @@ void bi_division_test()
 
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     //bi_test1();
     //bi_test2();
     //bi_test3();
@@ -576,7 +576,8 @@ int main()
     //sage_add_test("add_test.py", 100000);
     //sage_sub_test("sub_test.py", 100000);
     //sage_mul_test("mul_test.py", 100000);
-    sage_div_test("div_test.py", 10000);
+    sage_mul_k_test("mul_k_test.py", 1);
+    //sage_div_test("div_test.py", 10000);
     //bi_single_mul_test();
     // bi_mulc_test();
     //bi_mul_test();
