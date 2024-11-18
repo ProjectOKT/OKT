@@ -582,32 +582,32 @@ void sage_mul_k_test(const char* filename, int testnum) {
 
         //0이 아닌 결과
         bigint *pp_mul = NULL;
-        bi_mul_k(&pp_mul, pos_a, pos_b);
+        bi_mul_kara(&pp_mul, pos_a, pos_b);
 
         bigint *nn_mul = NULL;
-        bi_mul_k(&nn_mul, neg_c, neg_d);
+        bi_mul_kara(&nn_mul, neg_c, neg_d);
 
         bigint *pn_mul = NULL;
-        bi_mul_k(&pn_mul, pos_a, neg_d);
+        bi_mul_kara(&pn_mul, pos_a, neg_d);
 
         bigint *np_mul = NULL;
-        bi_mul_k(&np_mul, neg_c, pos_b);
+        bi_mul_kara(&np_mul, neg_c, pos_b);
         
         //0일때
         bigint *pz_mul = NULL;
-        bi_mul_k(&pz_mul, pos_b, z);
+        bi_mul_kara(&pz_mul, pos_b, z);
 
         bigint *nz_mul = NULL;
-        bi_mul_k(&nz_mul, neg_c, z);
+        bi_mul_kara(&nz_mul, neg_c, z);
 
         bigint *zp_mul = NULL;
-        bi_mul_k(&zp_mul, z, pos_b);
+        bi_mul_kara(&zp_mul, z, pos_b);
 
         bigint *zn_mul = NULL;
-        bi_mul_k(&zn_mul, z, neg_c);
+        bi_mul_kara(&zn_mul, z, neg_c);
 
         bigint *zz_mul = NULL;
-        bi_mul_k(&zz_mul, z, z);
+        bi_mul_kara(&zz_mul, z, z);
 
         //
         fprintf(file, "pos_a = ");

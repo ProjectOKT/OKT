@@ -861,8 +861,8 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
  * 
  * @return Returns 1 on success, -1 on failure.
  */
-#define min(a,b)  ((a) < (b) ? (a) : (b))
-#define max(a,b)  ((a) > (b) ? (a) : (b))
+#define min(a,b)  ((a) <= (b) ? (a) : (b))
+#define max(a,b)  ((a) >= (b) ? (a) : (b))
 
 int get_sign(bigint* src){
     if (src->sign == NEGATIVE) return 1;
@@ -894,29 +894,33 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     int m = src2->word_len;
 
     //flag
-    if (10 >= min(n,m)) return bi_mul(dst,temp_src1,temp_src2);
+    if (10 >= min(n,m)) {
+        bi_mul(dst,temp_src1,temp_src2);
+        return SUCCESS;
+    } 
     //5
     int l = (max(n,m) + 1) >> 1;
     int lw = l*SIZEOFWORD;
-    //a mod 
+    // a >> lw
     bi_assign(&a1, temp_src1);
-    for (int i = 0; i < l ; i++){
-        a1->a[i] = 0;
-    }
-    bi_sub(&a0, temp_src1, a1);
-    bi_delete(&temp_src1);
-    // a >> l
     bi_bit_rshift(a1,lw);
-    
-    //b mod 
-    bi_assign(&b1, temp_src2);
-    for (int i = 0; i < l ; i++){
-        b1->a[i] = 0;
+    //a mod 
+    bi_assign(&a0, temp_src1);
+    for (int i = l; i < a0->word_len; i++){
+        a0->a[i] = 0;
     }
-    bi_sub(&b0, temp_src2, b1);
-    bi_delete(&temp_src2);
-    // b >> l
+    bi_delete(&temp_src1);
+    
+    // b >> lw
+    bi_assign(&b1, temp_src1);
     bi_bit_rshift(b1,lw);
+    //b mod 
+    bi_assign(&b0, temp_src1);
+    for (int i = l; i < b0->word_len; i++){
+        b0->a[i] = 0;
+    }
+    bi_delete(&temp_src2);
+
     // t1, t0
     bi_mul_k(&t1, a1, b1);
     bi_mul_k(&t0, a0, b0);
@@ -933,7 +937,13 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_delete(&b1);
     bi_delete(&b0);
     //24,25
-    int s_sign = (-1)^(get_sign(s1) + get_sign(s0));
+    int s_sign = 0;
+    if ((get_sign(s1) + get_sign(s0)) == 1){
+        s_sign = -1;
+    }
+    else {
+        s_sign = 1;
+    }
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;
     bi_mul_k(&s,s1,s0);
@@ -953,6 +963,24 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_add(dst,r,sum_s);
     bi_delete(&sum_s);
     bi_delete(&r);
+
+    return SUCCESS;
+}
+
+
+msg bi_mul_kara(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
+{
+    bi_mul_k(dst,src1,src2);
+    if (src1->sign == ZERO || src2->sign == ZERO){
+        (*dst)->sign= ZERO;
+        return SUCCESS;
+    }
+    else if(src1->sign != src2->sign){
+        (*dst)->sign= NEGATIVE;
+    }
+    else{
+        (*dst)->sign= POSITIVE;
+    }
 
     return SUCCESS;
 }
