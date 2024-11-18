@@ -930,6 +930,9 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 
     // t1, t0
     bi_mul_k(&t1, a1, b1);
+
+    bi_refine(a0);
+    bi_refine(b0);
     bi_mul_k(&t0, a0, b0);
     // r = (t1 << 2*lw) + t0
     bi_assign(&temp, t1);
