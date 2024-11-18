@@ -548,3 +548,126 @@ void sage_div_test(const char* filename, int testnum) {
     }   
     fclose(file);
 }
+
+
+/**
+ * @brief Runs a specific multiplication test from a file for validation.
+ *
+ * This function reads test cases from the specified file and executes a multiplication test based on the provided test number.
+ * It is commonly used for validating the correctness of bigint multiplication operations.
+ *
+ * @param filename The name of the file containing test cases.
+ * @param testnum The specific test case number to run from the file.
+ * @return void
+ */
+void sage_mul_k_test(const char* filename, int testnum) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    for (int i = 0; i < testnum; i++) {
+        //인자
+        bigint *pos_a = NULL;
+        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bigint *pos_b = NULL;
+        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bigint *neg_c = NULL;
+        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bigint *neg_d = NULL;
+        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bigint *z = NULL;
+        bi_new(&z,1);
+
+        //0이 아닌 결과
+        bigint *pp_mul = NULL;
+        bi_mul_k(&pp_mul, pos_a, pos_b);
+
+        bigint *nn_mul = NULL;
+        bi_mul_k(&nn_mul, neg_c, neg_d);
+
+        bigint *pn_mul = NULL;
+        bi_mul_k(&pn_mul, pos_a, neg_d);
+
+        bigint *np_mul = NULL;
+        bi_mul_k(&np_mul, neg_c, pos_b);
+        
+        //0일때
+        bigint *pz_mul = NULL;
+        bi_mul_k(&pz_mul, pos_b, z);
+
+        bigint *nz_mul = NULL;
+        bi_mul_k(&nz_mul, neg_c, z);
+
+        bigint *zp_mul = NULL;
+        bi_mul_k(&zp_mul, z, pos_b);
+
+        bigint *zn_mul = NULL;
+        bi_mul_k(&zn_mul, z, neg_c);
+
+        bigint *zz_mul = NULL;
+        bi_mul_k(&zz_mul, z, z);
+
+        //
+        fprintf(file, "pos_a = ");
+        bi_fprint(file,pos_a);
+        fprintf(file, "pos_b = ");
+        bi_fprint(file,pos_b);
+        fprintf(file, "neg_c = ");
+        bi_fprint(file,neg_c);
+        fprintf(file, "neg_d = ");
+        bi_fprint(file,neg_d);
+        fprintf(file, "z = ");
+        bi_fprint(file,z);
+
+        fprintf(file, "pp_mul = ");
+        bi_fprint(file,pp_mul);
+        fprintf(file, "nn_mul = ");
+        bi_fprint(file,nn_mul);
+        fprintf(file, "np_mul = ");
+        bi_fprint(file,np_mul);
+        fprintf(file, "pn_mul = ");
+        bi_fprint(file,pn_mul);
+
+        fprintf(file, "zp_mul = ");
+        bi_fprint(file,zp_mul);
+        fprintf(file, "zn_mul = ");
+        bi_fprint(file,zn_mul);
+        fprintf(file, "nz_mul = ");
+        bi_fprint(file,nz_mul);
+        fprintf(file, "pz_mul = ");
+        bi_fprint(file,pz_mul);
+        fprintf(file, "zz_mul = ");
+        bi_fprint(file,zz_mul);
+
+        fprintf(file, "if (pos_a * pos_b != pp_mul):\n \t print(f\"[pp_mul]: {pos_a:#x} + {pos_b:#x} != {pp_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * neg_d != nn_mul):\n \t print(f\"[nn_mul]: {neg_c:#x} + {neg_d:#x} != {nn_mul:#x}\\n\")\n");
+        fprintf(file, "if (pos_a * neg_d != pn_mul):\n \t print(f\"[pn_mul]: {pos_a:#x} + {neg_d:#x} != {pn_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * pos_b != np_mul):\n \t print(f\"[np_mul]: {neg_c:#x} + {pos_b:#x} != {np_mul:#x}\\n\")\n");
+
+        fprintf(file, "if (pos_b * z != pz_mul):\n \t print(f\"[pz_mul]: {pos_b:#x} - {z:#x} != {pz_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * z != nz_mul):\n \t print(f\"[nz_mul]: {neg_c:#x} - {z:#x} != {nz_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * pos_b != zp_mul):\n \t print(f\"[zp_mul]: {z:#x} - {pos_b:#x} != {zp_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * neg_c != zn_mul):\n \t print(f\"[zn_mul]: {z:#x} - {neg_c:#x} != {zn_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * z != zz_mul):\n \t print(f\"[zz_mul]: {z:#x} - {z:#x} != {zz_mul:#x}\\n\")\n");
+
+        bi_delete(&pos_a);
+        bi_delete(&pos_b);
+        bi_delete(&neg_c);
+        bi_delete(&neg_d);
+        bi_delete(&z);
+
+        bi_delete(&pp_mul);
+        bi_delete(&nn_mul);
+        bi_delete(&pn_mul);
+        bi_delete(&np_mul);
+
+        bi_delete(&pz_mul);
+        bi_delete(&zn_mul);
+        bi_delete(&nz_mul);
+        bi_delete(&zp_mul);
+        bi_delete(&zz_mul);
+    }   
+    fclose(file);
+}

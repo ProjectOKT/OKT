@@ -846,3 +846,114 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
     
     return error_msg;
 }
+
+
+/**
+ * @brief Multiplication two big integers
+ * 
+ * This function performs the Karatsuba Multiplication of two big integers (`src1` and `src2`), 
+ * This Multiplication performs multiplication by Karatsuba Multiplication.
+ * Consider sign of two integers, as the result of the muliplication with two negative integers is positive.
+ * 
+ * @param[out] dst Pointer to the result bigint that will hold the result of the multiplication.
+ * @param[in] src1 The first big integer for the multiplication.
+ * @param[in] src2 The second big integer for the multiplication.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
+#define min(a,b)  ((a) < (b) ? (a) : (b))
+#define max(a,b)  ((a) > (b) ? (a) : (b))
+
+int get_sign(bigint* src){
+    if (src->sign = NEGATIVE) return 1;
+    return 0;
+} 
+
+msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
+{
+    msg error_msg = FAILED;
+    bigint* temp_src1 = NULL;
+    bigint* temp_src2 = NULL;
+    bigint* a1 = NULL;
+    bigint* a0 = NULL; 
+    bigint* b1 = NULL;
+    bigint* b0 = NULL; 
+    bigint* t1 = NULL;
+    bigint* t0 = NULL;
+    bigint* r = NULL;
+    bigint* s1 = NULL;
+    bigint* s0 = NULL;
+    bigint* s = NULL;
+    bigint* temp = NULL;
+    bigint* sum_s = NULL;
+    bi_assign(&temp_src1, src1);
+    bi_assign(&temp_src2, src2);
+    temp_src1->sign = POSITIVE;
+    temp_src2->sign = POSITIVE;
+
+    int n = src1->word_len;
+    int m = src2->word_len;
+
+    //flag
+    if (10 >= min(n,m)) return bi_mul(dst,temp_src1,temp_src2);
+    //5
+    int l = (max(n,m) + 1) >> 1;
+    int lw = l*SIZEOFWORD;
+    //a mod 
+    bi_assign(a1, temp_src1);
+    for (int i = 0; i < l ; i++){
+        a1->a[i] = 0;
+    }
+    bi_sub(&a0, temp_src1, a1);
+    bi_delete(&temp_src1);
+    // a >> l
+    bi_bit_rshift(a1,lw);
+    
+    //b mod 
+    bi_assign(b1, temp_src2);
+    for (int i = 0; i < l ; i++){
+        b1->a[i] = 0;
+    }
+    bi_sub(&b0, temp_src2, b1);
+    bi_delete(&temp_src2);
+    // b >> l
+    bi_bit_rshift(b1,lw);
+    // t1, t0
+    bi_mul_k(&t1, a1, b1);
+    bi_mul_k(&t0, a0, b0);
+    // r = (t1 << 2*lw) + t0
+    bi_assign(&temp, t1);
+    bi_bit_lshift(temp,2*lw);
+    bi_add(&r, temp, t0);
+    // s1 = a0 - a1
+    bi_sub(&s1,a0,a1);
+    bi_delete(&a1);
+    bi_delete(&a0);
+    // s0 = b1 - b0
+    bi_sub(&s0,b1,b0);
+    bi_delete(&b1);
+    bi_delete(&b0);
+    //24,25
+    int s_sign = (-1)^(get_sign(s1) + get_sign(s0));
+    s1->sign = POSITIVE;
+    s0->sign = POSITIVE;
+    bi_mul_k(s,s1,s0);
+    bi_delete(&s0);
+    bi_delete(&s1);
+    s->sign = s_sign;
+    //s = s + t1
+    bi_add(&temp,s,t1);
+    bi_delete(&t1);
+    bi_delete(&s);
+    //s = s + t0
+    bi_add(&sum_s,temp,t0);
+    bi_delete(&temp);
+    bi_delete(&t0);
+    //s = s << lw
+    bi_bit_lshift(sum_s,lw);
+    bi_add(dst,r,sum_s);
+    bi_delete(&sum_s);
+    bi_delete(&r);
+
+    return SUCCESS;
+}

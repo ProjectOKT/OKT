@@ -26,4 +26,6 @@ msg bi_mul(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 msg bi_binary_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
 
 msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
+
+msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 #endif
