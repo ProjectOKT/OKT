@@ -948,11 +948,11 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_delete(&b0);
     //24,25
     int s_sign = 0;
-    if ((get_sign(s1) + get_sign(s0)) == 1){
-        s_sign = -1;
+    if (get_sign(s1) == get_sign(s0)){
+        s_sign = POSITIVE;
     }
     else {
-        s_sign = 1;
+        s_sign = NEGATIVE;
     }
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;

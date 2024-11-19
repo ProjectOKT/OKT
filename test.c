@@ -641,16 +641,16 @@ void sage_mul_k_test(const char* filename, int testnum) {
         fprintf(file, "zz_mul = ");
         bi_fprint(file,zz_mul);
 
-        fprintf(file, "if (pos_a * pos_b != pp_mul):\n \t print(f\"[pp_mul]: {pos_a:#x} + {pos_b:#x} != {pp_mul:#x}\\n\")\n");
-        fprintf(file, "if (neg_c * neg_d != nn_mul):\n \t print(f\"[nn_mul]: {neg_c:#x} + {neg_d:#x} != {nn_mul:#x}\\n\")\n");
-        fprintf(file, "if (pos_a * neg_d != pn_mul):\n \t print(f\"[pn_mul]: {pos_a:#x} + {neg_d:#x} != {pn_mul:#x}\\n\")\n");
-        fprintf(file, "if (neg_c * pos_b != np_mul):\n \t print(f\"[np_mul]: {neg_c:#x} + {pos_b:#x} != {np_mul:#x}\\n\")\n");
+        fprintf(file, "if (pos_a * pos_b != pp_mul):\n \t print(f\"[pp_mul]: {pos_a:#x} * {pos_b:#x} != {pp_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * neg_d != nn_mul):\n \t print(f\"[nn_mul]: {neg_c:#x} * {neg_d:#x} != {nn_mul:#x}\\n\")\n");
+        fprintf(file, "if (pos_a * neg_d != pn_mul):\n \t print(f\"[pn_mul]: {pos_a:#x} * {neg_d:#x} != {pn_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * pos_b != np_mul):\n \t print(f\"[np_mul]: {neg_c:#x} * {pos_b:#x} != {np_mul:#x}\\n\")\n");
 
-        fprintf(file, "if (pos_b * z != pz_mul):\n \t print(f\"[pz_mul]: {pos_b:#x} - {z:#x} != {pz_mul:#x}\\n\")\n");
-        fprintf(file, "if (neg_c * z != nz_mul):\n \t print(f\"[nz_mul]: {neg_c:#x} - {z:#x} != {nz_mul:#x}\\n\")\n");
-        fprintf(file, "if (z * pos_b != zp_mul):\n \t print(f\"[zp_mul]: {z:#x} - {pos_b:#x} != {zp_mul:#x}\\n\")\n");
-        fprintf(file, "if (z * neg_c != zn_mul):\n \t print(f\"[zn_mul]: {z:#x} - {neg_c:#x} != {zn_mul:#x}\\n\")\n");
-        fprintf(file, "if (z * z != zz_mul):\n \t print(f\"[zz_mul]: {z:#x} - {z:#x} != {zz_mul:#x}\\n\")\n");
+        fprintf(file, "if (pos_b * z != pz_mul):\n \t print(f\"[pz_mul]: {pos_b:#x} * {z:#x} != {pz_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * z != nz_mul):\n \t print(f\"[nz_mul]: {neg_c:#x} * {z:#x} != {nz_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * pos_b != zp_mul):\n \t print(f\"[zp_mul]: {z:#x} * {pos_b:#x} != {zp_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * neg_c != zn_mul):\n \t print(f\"[zn_mul]: {z:#x} * {neg_c:#x} != {zn_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * z != zz_mul):\n \t print(f\"[zz_mul]: {z:#x} * {z:#x} != {zz_mul:#x}\\n\")\n");
 
         bi_delete(&pos_a);
         bi_delete(&pos_b);

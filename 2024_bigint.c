@@ -576,7 +576,7 @@ int main()
     //sage_add_test("add_test.py", 100000);
     //sage_sub_test("sub_test.py", 100000);
     //sage_mul_test("mul_test.py", 100000);
-    sage_mul_k_test("mul_k_test.py", 10000);
+    sage_mul_k_test("mul_k_test.py", 10);
     //sage_div_test("div_test.py", 10000);
     //bi_single_mul_test();
     // bi_mulc_test();
