@@ -47,25 +47,25 @@ void bi_test1()
     bigint* test4 = NULL;
     int error_code = 0;
 
-    error_code = bi_new(&test1, 3);
+    error_code = bi_new(&test1, 2);
     if(error_code == FAILED)
     {
         fprintf(stderr, "failed\n");
     }
 
-    error_code = bi_new(&test2, 3);
+    error_code = bi_new(&test2, 2);
     if(error_code == FAILED)
     {
         fprintf(stderr, "failed\n");
     }
 
-    error_code = bi_new(&test3, 3);
+    error_code = bi_new(&test3, 2);
     if(error_code == FAILED)
     {
         fprintf(stderr, "failed\n");
     }
 
-    error_code = bi_new(&test4, 3);
+    error_code = bi_new(&test4, 2);
     if(error_code == FAILED)
     {
         fprintf(stderr, "failed\n");
@@ -73,14 +73,12 @@ void bi_test1()
 
     printf("[Bigint value]\n");
     test1->sign = POSITIVE;
-    test1->a[0] = 0xffffffff;
-    test1->a[1] = 0xcccccccc;
-    test1->a[2] = 0xaaaaaaaa;
+    test1->a[0] = (word)0xffffffffffffffff;
+    test1->a[1] = (word)0xcccccccccccccccc;
 
     test2->sign = NEGATIVE;
-    test2->a[0] = 0xdddddddd;
-    test2->a[1] = 0xeeeeeeee;
-    test2->a[2] = 0xffffffff;
+    test2->a[0] = (word)0xdddddddddddddddd;
+    test2->a[1] = (word)0xeeeeeeeeeeeeeeee;
 
     printf("[Positive]\n");
     bi_print(test1, 2);
@@ -563,21 +561,22 @@ void bi_division_test()
 
 int main()
 {   
-    //atexit(check_leaks);
+    atexit(check_leaks);
     
     srand(time(NULL));
 
-    //bignum_add_time_test();
-    //bignum_sub_time_test();
-    //bignum_mul_time_test();
-    //bignum_mul_k_time_test();
-    //bignum_div_time_test();
+    bignum_add_time_test();
+    bignum_sub_time_test();
+    bignum_mul_time_test();
+    bignum_mul_k_time_test();
+    bignum_div_time_test();
 
-    //sage_add_test("add_test.py", 10000);
-    //sage_sub_test("sub_test.py", 10000);
-    //sage_mul_test("mul_test.py", 10000);
-    sage_mul_k_test("mul_k_test.py", 10000);
-    //sage_div_test("div_test.py", 10000);
+
+    //sage_add_test("add_test.py", 1000);
+    //sage_sub_test("sub_test.py", 1000);
+    //sage_mul_test("mul_test.py", 1000);
+    //sage_mul_k_test("mul_k_test.py", 100);
+    //sage_div_test("div_test.py", 1000);
 
     return 0;
 }

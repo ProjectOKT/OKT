@@ -375,7 +375,10 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     }
     if(temp1 == 0)
     {
-        temp_src2->sign = (temp_src2->sign == POSITIVE) ? NEGATIVE : POSITIVE;
+        if(temp_src2->sign != ZERO)
+        {
+            temp_src2->sign = (temp_src2->sign == POSITIVE) ? NEGATIVE : POSITIVE;
+        }
         error_msg = bi_assign(dst, temp_src2);
     }
     else if(temp2 == 0)
@@ -722,7 +725,7 @@ msg bi_binary_long_division(OUT bigint** quotient, OUT bigint** remainder, IN co
 
         if (bi_compare(*remainder, src2) >= 0)
         {
-            (*quotient)->a[bitindex / word_bit_size] ^= 1<<(bitindex % word_bit_size);
+            (*quotient)->a[bitindex / word_bit_size] ^= (word)1<<(bitindex % word_bit_size);
             error_msg = bi_sub(remainder, *remainder, src2);
             if(error_msg == FAILED)
             {

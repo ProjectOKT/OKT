@@ -194,6 +194,8 @@ msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
  */
 msg bi_print(IN const bigint* src, IN int base)
 {
+    int temp = 0;
+
     if((src == NULL) || !(base == 2 || base == 10 || base == 16))
     {
         fprintf(stderr, ERR_INVALID_INPUT);
@@ -219,11 +221,26 @@ msg bi_print(IN const bigint* src, IN int base)
         {
             return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
-        for(int word_index = src->word_len ; word_index > 0 ; word_index--)
+        
+        temp = sizeof(word) * 8;
+        while(temp)
+        {
+            if((src->a[src->word_len - 1] >> (temp - 1) & 0x01))
+            {
+                break;
+            }
+            temp--;
+        }
+        for(int bit_index = temp - 1; bit_index >=0; bit_index--)
+        {
+            printf("%1u", (byte)((src->a[src->word_len - 1]) >> bit_index) & 0x01);
+        }
+
+        for(int word_index = src->word_len - 1; word_index > 0 ; word_index--)
         {
             for(int bit_index = 8 * sizeof(word) - 1; bit_index >=0 ; bit_index--)
             {
-                printf("%1u", ((src->a[word_index - 1]) >> bit_index) & (0x01));
+                printf("%1u", (byte)((src->a[word_index - 1]) >> bit_index) & 0x01);
             }
         }
         printf("\n");
@@ -245,9 +262,26 @@ msg bi_print(IN const bigint* src, IN int base)
             fprintf(stderr, ERR_INVALID_INPUT);
             return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
         }
-        for(int word_index = src->word_len; word_index > 0; word_index--)
+
+        temp = sizeof(word) * 2;
+        while(temp)
         {
-            printf("%08x", src->a[word_index - 1]);
+            if((src->a[src->word_len - 1] >> (temp - 1) * 4) & 0xf)
+            {
+                break;
+            }
+            temp--;
+        }
+        for(int byte_index = temp; byte_index > 0; byte_index--)
+        {
+            printf("%01x", (byte)((src->a[src->word_len - 1] >> ((byte_index - 1) * 4)) & 0xf));
+        }
+        for(int word_index = src->word_len - 1; word_index > 0; word_index--)
+        {
+            for(int byte_index = sizeof(word); byte_index > 0; byte_index--)
+            {
+                printf("%02x", (byte)((src->a[word_index - 1] >> ((byte_index - 1) * 8)) & 0xff));
+            }
         }
         printf("\n");
 
@@ -270,6 +304,8 @@ msg bi_print(IN const bigint* src, IN int base)
  */
 msg bi_fprint(IN FILE* file, IN bigint* src)
 {
+    int temp = 0;
+
     if (src == NULL) {
         fprintf(stderr, "Error: NULL pointer dereference in bi_fprint\n");
         return FAILED;
@@ -298,10 +334,26 @@ msg bi_fprint(IN FILE* file, IN bigint* src)
         return FAILED;
     }
 
-    // word_len을 사용하여 배열을 출력 (상위 워드부터 역순으로 출력)
-    fprintf(file, "%x", src->a[src->word_len - 1]);
-    for (int word_index = src->word_len - 1; word_index > 0; word_index--) {
-        fprintf(file, "%08x", src->a[word_index - 1]);
+    temp = sizeof(word) * 2;
+    while(temp)
+    {
+        if((src->a[src->word_len - 1] >> (temp - 1) * 4) & 0xf)
+        {
+            break;
+        }
+        temp--;
+    }
+
+    for(int byte_index = temp; byte_index > 0; byte_index--)
+    {
+        fprintf(file, "%01x", (byte)((src->a[src->word_len - 1] >> ((byte_index - 1) * 4)) & 0xf));
+    }
+    for(int word_index = src->word_len - 1; word_index > 0; word_index--)
+    {
+        for(int byte_index = sizeof(word); byte_index > 0; byte_index--)
+        {
+            fprintf(file, "%02x", (byte)((src->a[word_index - 1] >> ((byte_index - 1) * 8)) & 0xff));
+        }
     }
     fprintf(file, "\n");
 

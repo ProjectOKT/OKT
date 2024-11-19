@@ -9,8 +9,10 @@
 
 typedef int msg;
 typedef uint8_t byte;
-typedef uint16_t half_word;
-typedef uint32_t word;
+// typedef uint16_t half_word;
+// typedef uint32_t word;
+typedef uint32_t half_word;
+typedef uint64_t word;
 
 /**
  * @struct bigint
