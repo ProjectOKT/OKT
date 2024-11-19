@@ -308,6 +308,7 @@ void sub_test()
     bi_delete(&x2);
     bi_delete(&y);
 }
+
 void fillzero_test(){
     bigint* x1 = NULL;
     bigint* x2 = NULL;
@@ -440,7 +441,6 @@ void bi_connect_test(){
     }
 }
 
-
 void bi_bits_shift_test()
 {
     int error_msg = FAILED;
@@ -482,7 +482,6 @@ void bi_bits_shift_test()
         fprintf(stderr, "bi_shift_test\n");
     }
 }
-
 
 void bi_binary_division_test()
 {
@@ -564,27 +563,21 @@ void bi_division_test()
 
 int main()
 {   
-    //atexit(check_leaks);
-    //bi_test1();
-    //bi_test2();
-    //bi_test3();
-    //compare_test();
-    //sub_test();
-
+    atexit(check_leaks);
+    
     srand(time(NULL));
 
-    //sage_add_test("add_test.py", 100000);
-    //sage_sub_test("sub_test.py", 100000);
-    //sage_mul_test("mul_test.py", 100000);
-    sage_mul_k_test("mul_k_test.py", 10);
+    //bignum_add_time_test();
+    //bignum_sub_time_test();
+    //bignum_mul_time_test();
+    //bignum_mul_k_time_test();
+    bignum_div_time_test();
+
+    //sage_add_test("add_test.py", 10000);
+    //sage_sub_test("sub_test.py", 10000);
+    //sage_mul_test("mul_test.py", 10000);
+    //sage_mul_k_test("mul_k_test.py", 10000);
     //sage_div_test("div_test.py", 10000);
-    //bi_single_mul_test();
-    // bi_mulc_test();
-    //bi_mul_test();
-    //fillzero_test();
-    //bi_binary_division_test();
-    //bi_binary_division_test2();
-    //bi_compare_test();
-    //bi_division_test();
+
     return 0;
 }

@@ -688,4 +688,3 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
 
     return SUCCESS;
 }
-

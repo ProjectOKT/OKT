@@ -10,6 +10,438 @@
 #include "params.h"
 #include "verify.h"
 #include "operation.h"
+#include "test.h"
+
+
+/**
+ * @brief Runs a time test for bigint addition operation.
+ *
+ * This function measures the execution time of the bigint addition operation. 
+ * It is used to benchmark the performance of the addition function and 
+ * validate its efficiency.
+ *
+ * @return void
+ */
+void bignum_add_time_test()
+{
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL;
+    bigint *neg_c = NULL;
+    bigint *neg_d = NULL;
+    bigint *pp_add = NULL;
+    bigint *nn_add = NULL;
+    bigint *pn_add = NULL;
+    bigint *np_add = NULL;
+
+#if T_TEST_ALL_CASE == 1
+    bigint *z = NULL;
+    bigint *pz_add = NULL;
+    bigint *nz_add = NULL;
+    bigint *zp_add = NULL;
+    bigint *zn_add = NULL;
+    bigint *zz_add = NULL;
+#endif
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+
+        bi_add(&pp_add, pos_a, pos_b);
+        bi_add(&nn_add, neg_c, neg_d);
+        bi_add(&pn_add, pos_a, neg_d);
+        bi_add(&np_add, neg_c, pos_b);
+        
+#if T_TEST_ALL_CASE == 1
+        bi_new(&z,1);
+        bi_add(&pz_add, pos_b, z);
+        bi_add(&nz_add, neg_c, z);
+        bi_add(&zp_add, z, pos_b);
+        bi_add(&zn_add, z, neg_c);
+        bi_add(&zz_add, z, z);
+#endif
+    }
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&neg_c);
+    bi_delete(&neg_d);
+    bi_delete(&pp_add);
+    bi_delete(&nn_add);
+    bi_delete(&pn_add);
+    bi_delete(&np_add);
+
+#if T_TEST_ALL_CASE == 1
+    bi_delete(&z);
+    bi_delete(&pz_add);
+    bi_delete(&zn_add);
+    bi_delete(&nz_add);
+    bi_delete(&zp_add);
+    bi_delete(&zz_add);
+#endif
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Execution time: %f seconds\n", cpu_time_used);
+}
+
+
+/**
+ * @brief Runs a time test for bigint subtraction operation.
+ *
+ * This function measures the execution time of the bigint subtraction operation.
+ * It is used to benchmark the performance of the subtraction function and
+ * validate its efficiency.
+ *
+ * @return void
+ */
+void bignum_sub_time_test()
+{
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL;
+    bigint *neg_c = NULL;
+    bigint *neg_d = NULL;
+    bigint *pp_sub = NULL;
+    bigint *nn_sub = NULL;
+    bigint *pn_sub = NULL;
+    bigint *np_sub = NULL;
+
+#if T_TEST_ALL_CASE == 1
+    bigint *z = NULL;
+    bigint *pz_sub = NULL;
+    bigint *nz_sub = NULL;
+    bigint *zp_sub = NULL;
+    bigint *zn_sub = NULL;
+    bigint *zz_sub = NULL;
+#endif
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+
+        bi_sub(&pp_sub, pos_a, pos_b);
+        bi_sub(&nn_sub, neg_c, neg_d);
+        bi_sub(&pn_sub, pos_a, neg_d);
+        bi_sub(&np_sub, neg_c, pos_b);
+        
+#if T_TEST_ALL_CASE == 1
+        bi_new(&z,1);
+        bi_sub(&pz_sub, pos_b, z);
+        bi_sub(&nz_sub, neg_c, z);
+        bi_sub(&zp_sub, z, pos_b);
+        bi_sub(&zn_sub, z, neg_c);
+        bi_sub(&zz_sub, z, z);
+#endif
+    }
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&neg_c);
+    bi_delete(&neg_d);
+    bi_delete(&pp_sub);
+    bi_delete(&nn_sub);
+    bi_delete(&pn_sub);
+    bi_delete(&np_sub);
+
+#if T_TEST_ALL_CASE == 1
+    bi_delete(&z);
+    bi_delete(&pz_sub);
+    bi_delete(&zn_sub);
+    bi_delete(&nz_sub);
+    bi_delete(&zp_sub);
+    bi_delete(&zz_sub);
+#endif
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Execution time: %f seconds\n", cpu_time_used);
+}
+
+
+/**
+ * @brief Runs a time test for bigint multiplication operation.
+ *
+ * This function measures the execution time of the bigint multiplication operation.
+ * It is used to benchmark the performance of the multiplication function and
+ * validate its efficiency.
+ *
+ * @return void
+ */
+void bignum_mul_time_test()
+{
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL;
+    bigint *neg_c = NULL;
+    bigint *neg_d = NULL;
+    bigint *pp_mul = NULL;
+    bigint *nn_mul = NULL;
+    bigint *pn_mul = NULL;
+    bigint *np_mul = NULL;
+
+#if T_TEST_ALL_CASE == 1
+    bigint *z = NULL;
+    bigint *pz_mul = NULL;
+    bigint *nz_mul = NULL;
+    bigint *zp_mul = NULL;
+    bigint *zn_mul = NULL;
+    bigint *zz_mul = NULL;
+#endif
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+
+        bi_mul(&pp_mul, pos_a, pos_b);
+        bi_mul(&nn_mul, neg_c, neg_d);
+        bi_mul(&pn_mul, pos_a, neg_d);
+        bi_mul(&np_mul, neg_c, pos_b);
+        
+#if T_TEST_ALL_CASE == 1
+        bi_new(&z,1);
+        bi_mul(&pz_mul, pos_b, z);
+        bi_mul(&nz_mul, neg_c, z);
+        bi_mul(&zp_mul, z, pos_b);
+        bi_mul(&zn_mul, z, neg_c);
+        bi_mul(&zz_mul, z, z);
+#endif
+    }
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&neg_c);
+    bi_delete(&neg_d);
+    bi_delete(&pp_mul);
+    bi_delete(&nn_mul);
+    bi_delete(&pn_mul);
+    bi_delete(&np_mul);
+
+#if T_TEST_ALL_CASE == 1
+    bi_delete(&z);
+    bi_delete(&pz_mul);
+    bi_delete(&zn_mul);
+    bi_delete(&nz_mul);
+    bi_delete(&zp_mul);
+    bi_delete(&zz_mul);
+#endif
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Execution time: %f seconds\n", cpu_time_used);
+}
+
+
+/**
+ * @brief Runs a time test for bigint multiplication using Karatsuba algorithm.
+ *
+ * This function measures the execution time of the bigint multiplication 
+ * using the Karatsuba algorithm. It is used to benchmark the performance 
+ * of the Karatsuba multiplication approach for big numbers and validate 
+ * its efficiency.
+ *
+ * @return void
+ */
+void bignum_mul_k_time_test()
+{
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL;
+    bigint *neg_c = NULL;
+    bigint *neg_d = NULL;
+    bigint *pp_mul = NULL;
+    bigint *nn_mul = NULL;
+    bigint *pn_mul = NULL;
+    bigint *np_mul = NULL;
+
+#if T_TEST_ALL_CASE == 1
+    bigint *z = NULL;
+    bigint *pz_mul = NULL;
+    bigint *nz_mul = NULL;
+    bigint *zp_mul = NULL;
+    bigint *zn_mul = NULL;
+    bigint *zz_mul = NULL;
+#endif
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+
+        bi_mul_kara(&pp_mul, pos_a, pos_b);
+        bi_mul_kara(&nn_mul, neg_c, neg_d);
+        bi_mul_kara(&pn_mul, pos_a, neg_d);
+        bi_mul_kara(&np_mul, neg_c, pos_b);
+        
+#if T_TEST_ALL_CASE == 1
+        bi_new(&z,1);
+        bi_mul_kara(&pz_mul, pos_b, z);
+        bi_mul_kara(&nz_mul, neg_c, z);
+        bi_mul_kara(&zp_mul, z, pos_b);
+        bi_mul_kara(&zn_mul, z, neg_c);
+        bi_mul_kara(&zz_mul, z, z);
+#endif
+    }
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&neg_c);
+    bi_delete(&neg_d);
+    bi_delete(&pp_mul);
+    bi_delete(&nn_mul);
+    bi_delete(&pn_mul);
+    bi_delete(&np_mul);
+
+#if T_TEST_ALL_CASE == 1
+    bi_delete(&z);
+    bi_delete(&pz_mul);
+    bi_delete(&zn_mul);
+    bi_delete(&nz_mul);
+    bi_delete(&zp_mul);
+    bi_delete(&zz_mul);
+#endif
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Execution time: %f seconds\n", cpu_time_used);
+}
+
+
+/**
+ * @brief Runs a time test for bigint division operation.
+ *
+ * This function measures the execution time of the bigint division operation. 
+ * It is used to benchmark the performance of the division function and 
+ * validate its efficiency.
+ *
+ * @return void
+ */
+void bignum_div_time_test()
+{
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL;
+    bigint *neg_c = NULL;
+    bigint *neg_d = NULL;
+    bigint *pp_quotient = NULL;
+    bigint *pp_remainder = NULL;
+    bigint *nn_quotient = NULL;
+    bigint *nn_remainder = NULL;
+    bigint *pn_quotient = NULL;
+    bigint *pn_remainder = NULL;
+    bigint *np_quotient = NULL;
+    bigint *np_remainder = NULL;
+
+#if T_TEST_ALL_CASE == 1
+    bigint *z = NULL;
+    bigint *zp_quotient = NULL;
+    bigint *zp_remainder = NULL;
+    bigint *zn_quotient = NULL;
+    bigint *zn_remainder = NULL;
+#endif
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+
+        bi_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
+        bi_division(&nn_quotient, &nn_remainder, neg_c, neg_d);
+        bi_division(&pn_quotient, &pn_remainder, pos_a, neg_d);
+        bi_division(&np_quotient, &np_remainder, neg_c, pos_b);
+        
+#if T_TEST_ALL_CASE == 1
+        bi_new(&z,1);
+        bi_division(&zp_quotient, &zp_remainder, z, pos_b);
+        bi_division(&zn_quotient, &zn_remainder, z, neg_c);
+
+#endif
+    }
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&neg_c);
+    bi_delete(&neg_d);
+    bi_delete(&pp_quotient);
+    bi_delete(&pp_remainder);
+    bi_delete(&nn_quotient);
+    bi_delete(&nn_remainder);
+    bi_delete(&np_quotient);
+    bi_delete(&np_remainder);
+    bi_delete(&pn_quotient);
+    bi_delete(&pn_remainder);
+
+#if T_TEST_ALL_CASE == 1
+    bi_delete(&z);
+    bi_delete(&zp_quotient);
+    bi_delete(&zp_remainder);
+    bi_delete(&zn_quotient);
+    bi_delete(&zn_remainder);
+#endif
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Execution time: %f seconds\n", cpu_time_used);
+}
+
 
 /**
  * @brief Runs a specific addition test from a file for validation.
@@ -381,6 +813,127 @@ void sage_mul_test(const char* filename, int testnum) {
 
 
 /**
+ * @brief Runs a specific multiplication test from a file for validation.
+ *
+ * This function reads test cases from the specified file and executes a multiplication test based on the provided test number.
+ * It is commonly used for validating the correctness of bigint multiplication operations.
+ *
+ * @param filename The name of the file containing test cases.
+ * @param testnum The specific test case number to run from the file.
+ * @return void
+ */
+void sage_mul_k_test(const char* filename, int testnum) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    for (int i = 0; i < testnum; i++) {
+        //인자
+        bigint *pos_a = NULL;
+        bi_get_random(&pos_a,POSITIVE, rand() % 2 + 1);
+        bigint *pos_b = NULL;
+        bi_get_random(&pos_b,POSITIVE, rand() % 2 + 1);
+        bigint *neg_c = NULL;
+        bi_get_random(&neg_c,NEGATIVE, rand() % 2 + 1);
+        bigint *neg_d = NULL;
+        bi_get_random(&neg_d,NEGATIVE, rand() % 2 + 1);
+        bigint *z = NULL;
+        bi_new(&z,1);
+
+        //0이 아닌 결과
+        bigint *pp_mul = NULL;
+        bi_mul_kara(&pp_mul, pos_a, pos_b);
+
+        bigint *nn_mul = NULL;
+        bi_mul_kara(&nn_mul, neg_c, neg_d);
+
+        bigint *pn_mul = NULL;
+        bi_mul_kara(&pn_mul, pos_a, neg_d);
+
+        bigint *np_mul = NULL;
+        bi_mul_kara(&np_mul, neg_c, pos_b);
+        
+        //0일때
+        bigint *pz_mul = NULL;
+        bi_mul_kara(&pz_mul, pos_b, z);
+
+        bigint *nz_mul = NULL;
+        bi_mul_kara(&nz_mul, neg_c, z);
+
+        bigint *zp_mul = NULL;
+        bi_mul_kara(&zp_mul, z, pos_b);
+
+        bigint *zn_mul = NULL;
+        bi_mul_kara(&zn_mul, z, neg_c);
+
+        bigint *zz_mul = NULL;
+        bi_mul_kara(&zz_mul, z, z);
+
+        //
+        fprintf(file, "pos_a = ");
+        bi_fprint(file,pos_a);
+        fprintf(file, "pos_b = ");
+        bi_fprint(file,pos_b);
+        fprintf(file, "neg_c = ");
+        bi_fprint(file,neg_c);
+        fprintf(file, "neg_d = ");
+        bi_fprint(file,neg_d);
+        fprintf(file, "z = ");
+        bi_fprint(file,z);
+
+        fprintf(file, "pp_mul = ");
+        bi_fprint(file,pp_mul);
+        fprintf(file, "nn_mul = ");
+        bi_fprint(file,nn_mul);
+        fprintf(file, "np_mul = ");
+        bi_fprint(file,np_mul);
+        fprintf(file, "pn_mul = ");
+        bi_fprint(file,pn_mul);
+
+        fprintf(file, "zp_mul = ");
+        bi_fprint(file,zp_mul);
+        fprintf(file, "zn_mul = ");
+        bi_fprint(file,zn_mul);
+        fprintf(file, "nz_mul = ");
+        bi_fprint(file,nz_mul);
+        fprintf(file, "pz_mul = ");
+        bi_fprint(file,pz_mul);
+        fprintf(file, "zz_mul = ");
+        bi_fprint(file,zz_mul);
+
+        fprintf(file, "if (pos_a * pos_b != pp_mul):\n \t print(f\"[pp_mul]: {pos_a:#x} * {pos_b:#x} != {pp_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * neg_d != nn_mul):\n \t print(f\"[nn_mul]: {neg_c:#x} * {neg_d:#x} != {nn_mul:#x}\\n\")\n");
+        fprintf(file, "if (pos_a * neg_d != pn_mul):\n \t print(f\"[pn_mul]: {pos_a:#x} * {neg_d:#x} != {pn_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * pos_b != np_mul):\n \t print(f\"[np_mul]: {neg_c:#x} * {pos_b:#x} != {np_mul:#x}\\n\")\n");
+
+        fprintf(file, "if (pos_b * z != pz_mul):\n \t print(f\"[pz_mul]: {pos_b:#x} * {z:#x} != {pz_mul:#x}\\n\")\n");
+        fprintf(file, "if (neg_c * z != nz_mul):\n \t print(f\"[nz_mul]: {neg_c:#x} * {z:#x} != {nz_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * pos_b != zp_mul):\n \t print(f\"[zp_mul]: {z:#x} * {pos_b:#x} != {zp_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * neg_c != zn_mul):\n \t print(f\"[zn_mul]: {z:#x} * {neg_c:#x} != {zn_mul:#x}\\n\")\n");
+        fprintf(file, "if (z * z != zz_mul):\n \t print(f\"[zz_mul]: {z:#x} * {z:#x} != {zz_mul:#x}\\n\")\n");
+
+        bi_delete(&pos_a);
+        bi_delete(&pos_b);
+        bi_delete(&neg_c);
+        bi_delete(&neg_d);
+        bi_delete(&z);
+
+        bi_delete(&pp_mul);
+        bi_delete(&nn_mul);
+        bi_delete(&pn_mul);
+        bi_delete(&np_mul);
+
+        bi_delete(&pz_mul);
+        bi_delete(&zn_mul);
+        bi_delete(&nz_mul);
+        bi_delete(&zp_mul);
+        bi_delete(&zz_mul);
+    }   
+    fclose(file);
+}
+/**
  * @brief Runs a specific division test from a file for validation.
  *
  * This function reads test cases from the specified file and executes a division test based on the provided test number.
@@ -545,129 +1098,6 @@ void sage_div_test(const char* filename, int testnum) {
         bi_delete(&zn_remainder);
         // bi_delete(&zz_quotient);
         // bi_delete(&zz_remainder);
-    }   
-    fclose(file);
-}
-
-
-/**
- * @brief Runs a specific multiplication test from a file for validation.
- *
- * This function reads test cases from the specified file and executes a multiplication test based on the provided test number.
- * It is commonly used for validating the correctness of bigint multiplication operations.
- *
- * @param filename The name of the file containing test cases.
- * @param testnum The specific test case number to run from the file.
- * @return void
- */
-void sage_mul_k_test(const char* filename, int testnum) {
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        perror("파일 열기 실패");
-        return;
-    }
-
-    for (int i = 0; i < testnum; i++) {
-        //인자
-        bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 2 + 1);
-        bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 2 + 1);
-        bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 2 + 1);
-        bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 2 + 1);
-        bigint *z = NULL;
-        bi_new(&z,1);
-
-        //0이 아닌 결과
-        bigint *pp_mul = NULL;
-        bi_mul_kara(&pp_mul, pos_a, pos_b);
-
-        bigint *nn_mul = NULL;
-        bi_mul_kara(&nn_mul, neg_c, neg_d);
-
-        bigint *pn_mul = NULL;
-        bi_mul_kara(&pn_mul, pos_a, neg_d);
-
-        bigint *np_mul = NULL;
-        bi_mul_kara(&np_mul, neg_c, pos_b);
-        
-        //0일때
-        bigint *pz_mul = NULL;
-        bi_mul_kara(&pz_mul, pos_b, z);
-
-        bigint *nz_mul = NULL;
-        bi_mul_kara(&nz_mul, neg_c, z);
-
-        bigint *zp_mul = NULL;
-        bi_mul_kara(&zp_mul, z, pos_b);
-
-        bigint *zn_mul = NULL;
-        bi_mul_kara(&zn_mul, z, neg_c);
-
-        bigint *zz_mul = NULL;
-        bi_mul_kara(&zz_mul, z, z);
-
-        //
-        fprintf(file, "pos_a = ");
-        bi_fprint(file,pos_a);
-        fprintf(file, "pos_b = ");
-        bi_fprint(file,pos_b);
-        fprintf(file, "neg_c = ");
-        bi_fprint(file,neg_c);
-        fprintf(file, "neg_d = ");
-        bi_fprint(file,neg_d);
-        fprintf(file, "z = ");
-        bi_fprint(file,z);
-
-        fprintf(file, "pp_mul = ");
-        bi_fprint(file,pp_mul);
-        fprintf(file, "nn_mul = ");
-        bi_fprint(file,nn_mul);
-        fprintf(file, "np_mul = ");
-        bi_fprint(file,np_mul);
-        fprintf(file, "pn_mul = ");
-        bi_fprint(file,pn_mul);
-
-        fprintf(file, "zp_mul = ");
-        bi_fprint(file,zp_mul);
-        fprintf(file, "zn_mul = ");
-        bi_fprint(file,zn_mul);
-        fprintf(file, "nz_mul = ");
-        bi_fprint(file,nz_mul);
-        fprintf(file, "pz_mul = ");
-        bi_fprint(file,pz_mul);
-        fprintf(file, "zz_mul = ");
-        bi_fprint(file,zz_mul);
-
-        fprintf(file, "if (pos_a * pos_b != pp_mul):\n \t print(f\"[pp_mul]: {pos_a:#x} * {pos_b:#x} != {pp_mul:#x}\\n\")\n");
-        fprintf(file, "if (neg_c * neg_d != nn_mul):\n \t print(f\"[nn_mul]: {neg_c:#x} * {neg_d:#x} != {nn_mul:#x}\\n\")\n");
-        fprintf(file, "if (pos_a * neg_d != pn_mul):\n \t print(f\"[pn_mul]: {pos_a:#x} * {neg_d:#x} != {pn_mul:#x}\\n\")\n");
-        fprintf(file, "if (neg_c * pos_b != np_mul):\n \t print(f\"[np_mul]: {neg_c:#x} * {pos_b:#x} != {np_mul:#x}\\n\")\n");
-
-        fprintf(file, "if (pos_b * z != pz_mul):\n \t print(f\"[pz_mul]: {pos_b:#x} * {z:#x} != {pz_mul:#x}\\n\")\n");
-        fprintf(file, "if (neg_c * z != nz_mul):\n \t print(f\"[nz_mul]: {neg_c:#x} * {z:#x} != {nz_mul:#x}\\n\")\n");
-        fprintf(file, "if (z * pos_b != zp_mul):\n \t print(f\"[zp_mul]: {z:#x} * {pos_b:#x} != {zp_mul:#x}\\n\")\n");
-        fprintf(file, "if (z * neg_c != zn_mul):\n \t print(f\"[zn_mul]: {z:#x} * {neg_c:#x} != {zn_mul:#x}\\n\")\n");
-        fprintf(file, "if (z * z != zz_mul):\n \t print(f\"[zz_mul]: {z:#x} * {z:#x} != {zz_mul:#x}\\n\")\n");
-
-        bi_delete(&pos_a);
-        bi_delete(&pos_b);
-        bi_delete(&neg_c);
-        bi_delete(&neg_d);
-        bi_delete(&z);
-
-        bi_delete(&pp_mul);
-        bi_delete(&nn_mul);
-        bi_delete(&pn_mul);
-        bi_delete(&np_mul);
-
-        bi_delete(&pz_mul);
-        bi_delete(&zn_mul);
-        bi_delete(&nz_mul);
-        bi_delete(&zp_mul);
-        bi_delete(&zz_mul);
     }   
     fclose(file);
 }
