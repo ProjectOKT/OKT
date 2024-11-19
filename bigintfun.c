@@ -299,7 +299,8 @@ msg bi_fprint(IN FILE* file, IN bigint* src)
     }
 
     // word_len을 사용하여 배열을 출력 (상위 워드부터 역순으로 출력)
-    for (int word_index = src->word_len; word_index > 0; word_index--) {
+    fprintf(file, "%x", src->a[src->word_len - 1]);
+    for (int word_index = src->word_len - 1; word_index > 0; word_index--) {
         fprintf(file, "%08x", src->a[word_index - 1]);
     }
     fprintf(file, "\n");
