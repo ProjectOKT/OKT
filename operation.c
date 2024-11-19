@@ -873,6 +873,23 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 {
     bigint* temp_src1 = NULL;
     bigint* temp_src2 = NULL;
+    
+    bi_assign(&temp_src1, src1);
+    bi_assign(&temp_src2, src2);
+    temp_src1->sign = POSITIVE;
+    temp_src2->sign = POSITIVE;
+
+    int n = src1->word_len;
+    int m = src2->word_len;
+
+    //flag
+    if (10 >= min(n,m)) {
+        bi_mul(dst,temp_src1,temp_src2);
+        delete(temp_src1);
+        delete(temp_src2);
+        return SUCCESS;
+    }
+
     bigint* a1 = NULL;
     bigint* a0 = NULL; 
     bigint* b1 = NULL;
@@ -885,19 +902,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bigint* s = NULL;
     bigint* temp = NULL;
     bigint* sum_s = NULL;
-    bi_assign(&temp_src1, src1);
-    bi_assign(&temp_src2, src2);
-    temp_src1->sign = POSITIVE;
-    temp_src2->sign = POSITIVE;
 
-    int n = src1->word_len;
-    int m = src2->word_len;
-
-    //flag
-    if (10 >= min(n,m)) {
-        bi_mul(dst,temp_src1,temp_src2);
-        return SUCCESS;
-    } 
     //5
     int l = (max(n,m) + 1) >> 1;
     int lw = l*SIZEOFWORD;
