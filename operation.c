@@ -885,8 +885,8 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     //flag
     if (10 >= min(n,m)) {
         bi_mul(dst,temp_src1,temp_src2);
-        delete(temp_src1);
-        delete(temp_src2);
+        bi_delete(&temp_src1);
+        bi_delete(&temp_src2);
         return SUCCESS;
     }
 
