@@ -18,13 +18,13 @@ void bignum_mul_k_time_test();
 
 void bignum_div_time_test();
 
-void sage_add_test(const char* filename, int testnum);
+void python_add_test(const char* filename, int testnum);
 
-void sage_sub_test(const char* filename, int testnum);
+void python_sub_test(const char* filename, int testnum);
 
-void sage_mul_test(const char* filename, int testnum);
+void python_mul_test(const char* filename, int testnum);
 
-void sage_div_test(const char* filename, int testnum);
+void python_div_test(const char* filename, int testnum);
 
-void sage_mul_k_test(const char* filename, int testnum);
+void python_mul_k_test(const char* filename, int testnum);
 #endif

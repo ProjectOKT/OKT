@@ -453,7 +453,7 @@ void bignum_div_time_test()
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void sage_add_test(const char* filename, int testnum) {
+void python_add_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
@@ -576,7 +576,7 @@ void sage_add_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void sage_sub_test(const char* filename, int testnum) {
+void python_sub_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
@@ -699,7 +699,7 @@ void sage_sub_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void sage_mul_test(const char* filename, int testnum) {
+void python_mul_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
@@ -822,7 +822,7 @@ void sage_mul_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void sage_mul_k_test(const char* filename, int testnum) {
+void python_mul_k_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
@@ -933,6 +933,8 @@ void sage_mul_k_test(const char* filename, int testnum) {
     }   
     fclose(file);
 }
+
+
 /**
  * @brief Runs a specific division test from a file for validation.
  *
@@ -943,7 +945,7 @@ void sage_mul_k_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to execute from the file.
  * @return void
  */
-void sage_div_test(const char* filename, int testnum) {
+void python_div_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("파일 열기 실패");
