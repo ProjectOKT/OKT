@@ -563,7 +563,7 @@ void bi_division_test()
 
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     
     srand(time(NULL));
 
@@ -571,12 +571,12 @@ int main()
     //bignum_sub_time_test();
     //bignum_mul_time_test();
     //bignum_mul_k_time_test();
-    bignum_div_time_test();
+    //bignum_div_time_test();
 
     //sage_add_test("add_test.py", 10000);
     //sage_sub_test("sub_test.py", 10000);
     //sage_mul_test("mul_test.py", 10000);
-    //sage_mul_k_test("mul_k_test.py", 10000);
+    sage_mul_k_test("mul_k_test.py", 10000);
     //sage_div_test("div_test.py", 10000);
 
     return 0;
