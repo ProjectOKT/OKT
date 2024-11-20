@@ -726,6 +726,7 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
     {
         if(((dst->a[dst_len - 1]) >> (sizeof(word) * 8 - num_shift_bits)) != 0)
         {
+            printf("%016x\n", ((dst->a[dst_len - 1]) >> (sizeof(word) * 8 - num_shift_bits)));
             dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + 1));
             if(dst->a == NULL)
             {
