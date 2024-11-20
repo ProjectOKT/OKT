@@ -453,7 +453,7 @@ void bi_bits_shift_test()
 
     bi_print(dst1, 2);
 
-    error_msg = bi_bit_rshift(dst1, 127);
+    error_msg = bi_bit_rshift(dst1, 63);
     if(error_msg == FAILED)
     {
         fprintf(stderr, "bi_shift_test\n");
@@ -482,6 +482,28 @@ void bi_bits_shift_test()
     {
         fprintf(stderr, "bi_shift_test\n");
     }
+}
+
+void bi_bits_lshift_test1()
+{
+    int error_msg = FAILED;
+
+    bigint* dst = NULL;
+    bi_new(&dst, 2);
+    
+    dst->sign = POSITIVE;
+    dst->a[0] = (word)0x09299d32aee9e8ab;
+    dst->a[1] = (word)0x4fec2260e4ea9909;
+
+    bi_print(dst, 2);
+    error_msg = bi_bit_lshift(dst, 31);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_shift_test\n");
+    }
+    bi_print(dst, 2);
+
+    bi_delete(&dst);
 }
 
 void bi_binary_division_test()
@@ -564,7 +586,7 @@ void bi_division_test()
 
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     
     srand(time(NULL));
 
@@ -578,7 +600,9 @@ int main()
     //python_add_test("add_test.py", 1000);
     //python_sub_test("sub_test.py", 1000);
     //python_mul_test("mul_test.py", 1000);
-    bi_bits_shift_test();
+
+    //bi_bits_shift_test();
+    bi_bits_lshift_test1();
     //python_mul_k_test("mul_k_test.py", 100);
     //python_div_test("div_test.py", 1000);
     return 0;

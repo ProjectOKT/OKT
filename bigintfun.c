@@ -704,6 +704,7 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
     num_shift_words = num_bits / (sizeof(word) * 8);
     num_shift_bits = num_bits % (sizeof(word) * 8);
 
+    printf("%d, %d\n", num_shift_words, num_shift_bits);
     if(num_shift_words > 0)
     {
         dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + num_shift_words));
