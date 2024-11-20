@@ -1003,21 +1003,22 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
 }
 
 
-msg bi_word_divcc(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
-{
+// msg bi_word_divcc(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
+// {
 
-}
+//     return SUCCESS;
+// }
 
 
-msg bi_word_divc(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
-{
-    int error_msg = SUCCESS;
+// msg bi_word_divc(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
+// {
+//     if(bi_compare(src1, src2) == -1)
+//     {
+//         bi_assign(remainder, src1);
+//     }
 
-    if(bi_compare(src1, src2) == -1)
-    {
-        bi_assign(remainder, src1);
-    }
-}
+//     return SUCCESS;
+// }
 
 
 msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
@@ -1058,7 +1059,7 @@ msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const big
         temp->a[0] = src1->a[divc_num];
         temp->sign = (src1->a[divc_num])? POSITIVE : ZERO;
         bi_add(remainder, *remainder, temp);
-        bi_word_divc(quotient, remainder, *remainder, src2);
+        //bi_word_divc(quotient, remainder, *remainder, src2);
     }
 
     error_msg = bi_refine(*quotient);

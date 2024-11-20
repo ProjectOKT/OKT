@@ -3,16 +3,20 @@
 
 
 #include <stdint.h>
+#include "params.h"
 
 #define IN
 #define OUT
 
 typedef int msg;
 typedef uint8_t byte;
-// typedef uint16_t half_word;
-// typedef uint32_t word;
-typedef uint32_t half_word;
-typedef uint64_t word;
+#if SIZEOFWORD == 32
+    typedef uint16_t half_word;
+    typedef uint32_t word;
+#elif SIZEOFWORD == 64
+    typedef uint32_t half_word;
+    typedef uint64_t word;
+#endif
 
 /**
  * @struct bigint
