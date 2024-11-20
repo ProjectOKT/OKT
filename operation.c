@@ -726,9 +726,13 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     int lw = l*SIZEOFWORD;
     // a >> lw
     bi_assign(&a1, temp_src1);
+    printf("[728]: "); bi_print(a1, 16);
+    printf("[728]: "); bi_print(temp_src1, 16);
     bi_bit_rshift(a1,lw);
+    printf("[731]: "); bi_print(a1, 16);
     //a mod 
     bi_assign(&a0, temp_src1);
+    printf("[734]: "); bi_print(a0, 16);
     if (a0->word_len > l){
         for (int i = l; i < a0->word_len; i++)
         {
@@ -740,9 +744,12 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     
     // b >> lw
     bi_assign(&b1, temp_src2);
+    printf("[746]: "); bi_print(b1, 16);
     bi_bit_rshift(b1,lw);
+    printf("[748]: "); bi_print(b1, 16);
     //b mod 
     bi_assign(&b0, temp_src2);
+    printf("[751]: "); bi_print(b0, 16);
     if (b0->word_len > l){
         for (int i = l; i < b0->word_len; i++)
         {

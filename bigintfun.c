@@ -704,7 +704,6 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
     num_shift_words = num_bits / (sizeof(word) * 8);
     num_shift_bits = num_bits % (sizeof(word) * 8);
 
-    printf("%d, %d\n", num_shift_words, num_shift_bits);
     if(num_shift_words > 0)
     {
         dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + num_shift_words));
@@ -726,8 +725,8 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
     {
         if(((dst->a[dst_len - 1]) >> (sizeof(word) * 8 - num_shift_bits)) != 0)
         {
-            printf("%016x\n", ((dst->a[dst_len - 1]) >> (sizeof(word) * 8 - num_shift_bits)));
             dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + 1));
+            dst->a[dst_len] = 0;
             if(dst->a == NULL)
             {
                 fprintf(stderr, ERR_MEMORY_ALLOCATION);
@@ -739,11 +738,8 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
         
         for (int word_index = dst_len - 1; word_index > 0; word_index--)
         {
-            printf("[%d]: %016x\n", word_index, dst->a[word_index]);
             dst->a[word_index] <<= num_shift_bits;
-            printf("[%d]: %016x\n", word_index, dst->a[word_index]);
             dst->a[word_index] ^= (dst->a[word_index - 1] >> (sizeof(word) * 8 - num_shift_bits));
-            printf("[%d]: %016x\n", word_index, dst->a[word_index]);
         }
         dst->a[0] <<= num_shift_bits;
     }

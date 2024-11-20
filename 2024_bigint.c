@@ -490,13 +490,13 @@ void bi_bits_lshift_test1()
 
     bigint* dst = NULL;
     bi_new(&dst, 2);
-    
+
     dst->sign = POSITIVE;
     dst->a[0] = (word)0x09299d32aee9e8ab;
     dst->a[1] = (word)0x4fec2260e4ea9909;
 
     bi_print(dst, 2);
-    error_msg = bi_bit_lshift(dst, 31);
+    error_msg = bi_bit_lshift(dst, 64);
     if(error_msg == FAILED)
     {
         fprintf(stderr, "bi_shift_test\n");
