@@ -707,6 +707,7 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
     if(num_shift_words > 0)
     {
         dst->a = (word*)realloc(dst->a, sizeof(word) * (dst_len + num_shift_words));
+        array_init(dst->a + dst_len, num_shift_words);
         if(dst->a == NULL)
         {
             fprintf(stderr, ERR_MEMORY_ALLOCATION);
