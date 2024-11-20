@@ -739,8 +739,11 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
         
         for (int word_index = dst_len - 1; word_index > 0; word_index--)
         {
+            printf("[%d]: %016x\n", word_index, dst->a[word_index]);
             dst->a[word_index] <<= num_shift_bits;
+            printf("[%d]: %016x\n", word_index, dst->a[word_index]);
             dst->a[word_index] ^= (dst->a[word_index - 1] >> (sizeof(word) * 8 - num_shift_bits));
+            printf("[%d]: %016x\n", word_index, dst->a[word_index]);
         }
         dst->a[0] <<= num_shift_bits;
     }
