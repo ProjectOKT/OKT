@@ -584,6 +584,55 @@ void bi_division_test()
     bi_delete(&remainder);
 }
 
+void bi_mul_k_test()
+{
+    bigint *a = NULL;
+    bigint *b = NULL;
+    bigint *dst = NULL;
+
+    bi_new(&a, 16);
+    bi_new(&b, 16);
+
+    a->sign = POSITIVE;
+    a->a[0] = (word)0x09299d32aee9e8ab;
+    a->a[1] = (word)0x4fec2260e4ea9909;
+    a->a[2] = (word)0x09299d32aee9e8ab;
+    a->a[3] = (word)0x4fec2260e4ea9909;
+    a->a[4] = (word)0x09299d32aee9e8ab;
+    a->a[5] = (word)0x4fec2260e4ea9909;
+    a->a[6] = (word)0x09299d32aee9e8ab;
+    a->a[7] = (word)0x4fec2260e4ea9909;
+    a->a[8] = (word)0x09299d32aee9e8ab;
+    a->a[9] = (word)0x4fec2260e4ea9909;
+    a->a[10] = (word)0x09299d32aee9e8ab;
+    a->a[11] = (word)0x4fec2260e4ea9909;
+    a->a[12] = (word)0x09299d32aee9e8ab;
+    a->a[13] = (word)0x4fec2260e4ea9909;
+    a->a[14] = (word)0x09299d32aee9e8ab;
+    a->a[15] = (word)0x4fec2260e4ea9909;
+
+    b->sign = POSITIVE;
+    b->a[0] = (word)0x4fec2260e4ea9909;
+    b->a[1] = (word)0x09299d32aee9e8ab;
+    b->a[2] = (word)0x4fec2260e4ea9909;
+    b->a[3] = (word)0x09299d32aee9e8ab;
+    b->a[4] = (word)0x4fec2260e4ea9909;
+    b->a[5] = (word)0x09299d32aee9e8ab;
+    b->a[6] = (word)0x4fec2260e4ea9909;
+    b->a[7] = (word)0x09299d32aee9e8ab;
+    b->a[8] = (word)0x4fec2260e4ea9909;
+    b->a[9] = (word)0x09299d32aee9e8ab;
+    b->a[10] = (word)0x4fec2260e4ea9909;
+    b->a[11] = (word)0x09299d32aee9e8ab;
+    b->a[12] = (word)0x4fec2260e4ea9909;
+    b->a[13] = (word)0x09299d32aee9e8ab;
+    b->a[14] = (word)0x4fec2260e4ea9909;
+    b->a[15] = (word)0x09299d32aee9e8ab;
+
+    bi_mul_k(&dst, a, b);
+    bi_print(dst, 16);
+}
+
 int main()
 {   
     //atexit(check_leaks);
@@ -603,7 +652,9 @@ int main()
 
     //bi_bits_shift_test();
     //bi_bits_lshift_test1();
-    python_mul_k_test("mul_k_test.py", 1);
+    //python_mul_k_test("mul_k_test.py", 1);
     //python_div_test("div_test.py", 1000);
+
+    bi_mul_k_test();
     return 0;
 }
