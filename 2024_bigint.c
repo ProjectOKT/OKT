@@ -588,49 +588,25 @@ void bi_mul_k_test()
 {
     bigint *a = NULL;
     bigint *b = NULL;
-    bigint *dst = NULL;
+    bigint *dst1 = NULL;
+    bigint *dst2 = NULL;
+    
+    bi_set_from_string(&a, "ea012d8186173f166f0fb16e7588769e3988aeff40c6ee1c573bb4da2ee523e72edc05679c9a02dbf2851b537cc06cd730322111d1d5b83e46427856377c2f79e7fb329b58fb90719b04979d75bc8c183aeba5dee5ce49df769f8a238f63e13e50f42af67151e231a0249e231b94cdb8904bb13d32c899541fe86319f0b2308fa061674fa0b6ef733a7ea7be2560280f68eabd0772dda1f878b7790f108114c3", 16);
+    bi_set_from_string(&b, "93f407b865278d35df328dd8c1112ef7e9b39a416c4d3ba1f6de3571650524e3a20119abc207d1ef5ccb37722b471bfee6d032115e5b4fcbd80ae215abfcb0151c55d3d0788af41f71f0c6d6bc86c431", 16);
+    
+    bi_print(a, 16);
+    bi_print(b, 16);
 
-    bi_new(&a, 16);
-    bi_new(&b, 16);
+    bi_mul_k(&dst1, a, b);
+    bi_mul(&dst2, a, b);
 
-    a->sign = POSITIVE;
-    a->a[0] = (word)0x09299d32aee9e8ab;
-    a->a[1] = (word)0x4fec2260e4ea9909;
-    a->a[2] = (word)0x09299d32aee9e8ab;
-    a->a[3] = (word)0x4fec2260e4ea9909;
-    a->a[4] = (word)0x09299d32aee9e8ab;
-    a->a[5] = (word)0x4fec2260e4ea9909;
-    a->a[6] = (word)0x09299d32aee9e8ab;
-    a->a[7] = (word)0x4fec2260e4ea9909;
-    a->a[8] = (word)0x09299d32aee9e8ab;
-    a->a[9] = (word)0x4fec2260e4ea9909;
-    a->a[10] = (word)0x09299d32aee9e8ab;
-    a->a[11] = (word)0x4fec2260e4ea9909;
-    a->a[12] = (word)0x09299d32aee9e8ab;
-    a->a[13] = (word)0x4fec2260e4ea9909;
-    a->a[14] = (word)0x09299d32aee9e8ab;
-    a->a[15] = (word)0x4fec2260e4ea9909;
-
-    b->sign = POSITIVE;
-    b->a[0] = (word)0x4fec2260e4ea9909;
-    b->a[1] = (word)0x09299d32aee9e8ab;
-    b->a[2] = (word)0x4fec2260e4ea9909;
-    b->a[3] = (word)0x09299d32aee9e8ab;
-    b->a[4] = (word)0x4fec2260e4ea9909;
-    b->a[5] = (word)0x09299d32aee9e8ab;
-    b->a[6] = (word)0x4fec2260e4ea9909;
-    b->a[7] = (word)0x09299d32aee9e8ab;
-    b->a[8] = (word)0x4fec2260e4ea9909;
-    b->a[9] = (word)0x09299d32aee9e8ab;
-    b->a[10] = (word)0x4fec2260e4ea9909;
-    b->a[11] = (word)0x09299d32aee9e8ab;
-    b->a[12] = (word)0x4fec2260e4ea9909;
-    b->a[13] = (word)0x09299d32aee9e8ab;
-    b->a[14] = (word)0x4fec2260e4ea9909;
-    b->a[15] = (word)0x09299d32aee9e8ab;
-
-    bi_mul_k(&dst, a, b);
-    bi_print(dst, 16);
+    bi_print(dst1, 16);
+    bi_print(dst2, 16);
+    
+    if(bi_compare(dst1, dst2) != 0)
+    {
+        printf("\n\nwrong\n\n");
+    }
 }
 
 int main()
@@ -654,7 +630,8 @@ int main()
     //bi_bits_lshift_test1();
     //python_mul_k_test("mul_k_test.py", 1);
     //python_div_test("div_test.py", 1000);
-
+    
+    
     bi_mul_k_test();
     return 0;
 }
