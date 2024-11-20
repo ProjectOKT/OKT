@@ -757,23 +757,44 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
         }
     }
     bi_delete(&temp_src2);
+    printf("[761]: "); bi_print(a0, 16);
     bi_refine(a0);
+    printf("[761]: "); bi_print(a0, 16);
+    printf("[764]: "); bi_print(b0, 16);
     bi_refine(b0);
+    printf("[764]: "); bi_print(b0, 16);
+    printf("[767]: "); bi_print(a1, 16);
     bi_refine(a1);
+    printf("[767]: "); bi_print(a1, 16);
+    printf("[770]: "); bi_print(b1, 16);
     bi_refine(b1);
+    printf("[770]: "); bi_print(b1, 16);
     // t1, t0
+    printf("[774]: "); bi_print(t1, 16);
     bi_mul_k(&t1, a1, b1);
+    printf("[774]: "); bi_print(t1, 16);
+    printf("[777]: "); bi_print(t0, 16);
     bi_mul_k(&t0, a0, b0);
+    printf("[777]: "); bi_print(t0, 16);
     // r = (t1 << 2*lw) + t0
+    printf("[781]: "); bi_print(temp, 16);
     bi_assign(&temp, t1);
+    printf("[781]: "); bi_print(temp, 16);
     bi_bit_lshift(temp,2*lw);
+    printf("[783]: "); bi_print(temp, 16);
+    printf("[786]: "); bi_print(r, 16);
     bi_add(&r, temp, t0);
+    printf("[786]: "); bi_print(r, 16);
     // s1 = a0 - a1
+    printf("[790]: "); bi_print(s1, 16);
     bi_sub(&s1,a0,a1);
+    printf("[790]: "); bi_print(s1, 16);
     bi_delete(&a1);
     bi_delete(&a0);
     // s0 = b1 - b0
+    printf("[796]: "); bi_print(s0, 16);
     bi_sub(&s0,b1,b0);
+    printf("[796]: "); bi_print(s0, 16);
     bi_delete(&b1);
     bi_delete(&b0);
     //24,25
@@ -786,21 +807,31 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     }
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;
+    printf("[811]: "); bi_print(s, 16);
     bi_mul_k(&s,s1,s0);
+    printf("[811]: "); bi_print(s, 16);
     bi_delete(&s0);
     bi_delete(&s1);
     s->sign = s_sign;
     //s = s + t1
+    printf("[818]: "); bi_print(temp, 16);
     bi_add(&temp,s,t1);
+    printf("[818]: "); bi_print(temp, 16);
     bi_delete(&t1);
     bi_delete(&s);
     //s = s + t0
+    printf("[824]: "); bi_print(sum_s, 16);
     bi_add(&sum_s,temp,t0);
+    printf("[824]: "); bi_print(sum_s, 16);
     bi_delete(&temp);
     bi_delete(&t0);
     //s = s << lw
+    printf("[830]: "); bi_print(sum_s, 16);
     bi_bit_lshift(sum_s,lw);
+    printf("[830]: "); bi_print(sum_s, 16);
+    printf("[833]: "); bi_print(*dst, 16);
     bi_add(dst,r,sum_s);
+    printf("[833]: "); bi_print(*dst, 16);
     bi_delete(&sum_s);
     bi_delete(&r);
 
