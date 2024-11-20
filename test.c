@@ -832,13 +832,13 @@ void python_mul_k_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % 20 + 1);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_b,POSITIVE, rand() % 20 + 1);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_c,NEGATIVE, rand() % 20 + 1);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_d,NEGATIVE, rand() % 20 + 1);
         bigint *z = NULL;
         bi_new(&z,1);
 

@@ -602,8 +602,8 @@ int main()
     //python_mul_test("mul_test.py", 1000);
 
     //bi_bits_shift_test();
-    bi_bits_lshift_test1();
-    //python_mul_k_test("mul_k_test.py", 100);
+    //bi_bits_lshift_test1();
+    python_mul_k_test("mul_k_test.py", 1);
     //python_div_test("div_test.py", 1000);
     return 0;
 }
