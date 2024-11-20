@@ -578,8 +578,8 @@ int main()
     //python_add_test("add_test.py", 1000);
     //python_sub_test("sub_test.py", 1000);
     //python_mul_test("mul_test.py", 1000);
+    bi_bits_shift_test();
     //python_mul_k_test("mul_k_test.py", 100);
     //python_div_test("div_test.py", 1000);
-    bi_test2();
     return 0;
 }

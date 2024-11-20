@@ -619,6 +619,7 @@ msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
         if(dst->a == NULL)
         {
             fprintf(stderr, ERR_MEMORY_ALLOCATION);
+            return FAILED;
         }
         dst->sign = ZERO;
         dst->word_len = 1;
@@ -639,6 +640,7 @@ msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
         if(dst->a == NULL)
         {
             fprintf(stderr, ERR_MEMORY_ALLOCATION);
+            return FAILED;
         }
         dst->word_len -= num_shift_words;
 
@@ -660,6 +662,7 @@ msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
             if(dst->a == NULL)
             {
                 fprintf(stderr, ERR_MEMORY_ALLOCATION);
+                return FAILED;
             }
             dst->word_len--;
         }
@@ -707,6 +710,7 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
         if(dst->a == NULL)
         {
             fprintf(stderr, ERR_MEMORY_ALLOCATION);
+            return FAILED;
         }
         for (int word_index = dst_len - 1; word_index >= 0; word_index--)
         {
@@ -725,6 +729,7 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
             if(dst->a == NULL)
             {
                 fprintf(stderr, ERR_MEMORY_ALLOCATION);
+                return FAILED;
             }
             dst->word_len++;
             dst_len++;
