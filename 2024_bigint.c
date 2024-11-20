@@ -166,7 +166,10 @@ void bi_test2()
     printf("array:\n0x");
     for(int index=15;index>=0;index--)
     {
-        printf("%08x", array[index]);
+        for(int byteindex = sizeof(word); byteindex >0; byteindex--)
+        {
+            printf("%02x", (byte)((array[index] >> (byteindex - 1) * 8) & (0xff)));
+        }
     }
     printf("\n");
     bi_set_from_array(&test3, POSITIVE, 16, array);
@@ -565,11 +568,11 @@ int main()
     
     srand(time(NULL));
 
-    bignum_add_time_test();
-    bignum_sub_time_test();
-    bignum_mul_time_test();
-    bignum_mul_k_time_test();
-    bignum_div_time_test();
+    //bignum_add_time_test();
+    //bignum_sub_time_test();
+    //bignum_mul_time_test();
+    //bignum_mul_k_time_test();
+    //bignum_div_time_test();
 
 
     //python_add_test("add_test.py", 1000);
@@ -577,6 +580,6 @@ int main()
     //python_mul_test("mul_test.py", 1000);
     //python_mul_k_test("mul_k_test.py", 100);
     //python_div_test("div_test.py", 1000);
-
+    bi_test2();
     return 0;
 }
