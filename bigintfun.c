@@ -505,7 +505,6 @@ msg bi_assign(OUT bigint** dst, IN const bigint* src)
  * @param[in] toward The direction zero padding from msb or lsb
  * @return Returns 1 on success, -1 on failure.
  */
-
 msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward){
 
     int origin_len = dst->word_len;

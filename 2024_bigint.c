@@ -542,7 +542,7 @@ void bi_compare_test()
     bigint* src_2 = NULL;
 
     bi_new(&src_1, 1);
-    bi_get_random(&src_2, NEGATIVE, 2);
+    bi_get_random(&src_2, POSITIVE, 2);
 
     printf("%d\n", bi_compare(src_1, src_2));
 
@@ -609,9 +609,60 @@ void bi_mul_k_test()
     }
 }
 
+void bignum_squc_time_test()
+{
+    int error_msg = 0;
+    
+    word a = 0xac343874;
+
+    bigint* dst = NULL;
+
+    error_msg = bi_squc(&dst, a);
+
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_squc_test_error\n");
+    }
+
+    bi_print(dst, 16);
+
+    error_msg = bi_delete(&dst);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_squc_test_error\n");
+    }
+}
+
+void bignum_squ_time_test()
+{
+    int error_msg = 0;
+    
+    bigint* test_1 = NULL;
+    bigint* dst = NULL;
+
+    bi_get_random(&test_1, POSITIVE, 15);
+
+    bi_print(test_1, 16);
+
+    error_msg = bi_squ(&dst, test_1);
+
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_squ_test_error\n");
+    }
+
+    bi_print(dst, 16);
+    bi_delete(&test_1);
+    error_msg = bi_delete(&dst);
+    if(error_msg == FAILED)
+    {   
+        fprintf(stderr, "bi_squ_test_error\n");
+    }
+}
+
 int main()
 {   
-    //atexit(check_leaks);
+    atexit(check_leaks);
     
     srand(time(NULL));
 
@@ -620,12 +671,13 @@ int main()
     //bignum_mul_time_test();
     //bignum_mul_k_time_test();
     //bignum_div_time_test();
-
+    //bignum_squc_time_test();
+    bignum_squ_time_test();
 
     //python_add_test("add_test.py", 10000);
     //python_sub_test("sub_test.py", 10000);
     //python_mul_test("mul_test.py", 10000);
-    python_mul_k_test("mul_k_test.py", 10000);
+    //python_mul_k_test("mul_k_test.py", 10000);
     //python_div_test("div_test.py", 10000);
 
     return 0;
