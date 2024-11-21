@@ -1001,3 +1001,82 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
     
     return error_msg;
 }
+
+/**
+ * @brief karatsuba squaring of big integer.
+ * 
+ * This function performs the karatsuba squaring of two big integer (`src`). 
+ * The function handles positive and for the input integer. 
+ *  
+ * @param[in] src The squaring big integer.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
+msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
+{
+    if (src->sign == ZERO){
+        (*dst)->sign = ZERO;
+        return SUCCESS;
+    }
+    bigint* temp_src = NULL;
+    
+    bi_assign(&temp_src, src);
+
+    temp_src->sign = POSITIVE;
+
+    int n = src->word_len;
+
+    //flag
+    if (10 >= n) {
+        bi_squ(dst,temp_src);
+        bi_delete(&temp_src);
+        return SUCCESS;
+    }
+
+    bigint* a1 = NULL;
+    bigint* a0 = NULL; 
+    bigint* t1 = NULL;
+    bigint* t0 = NULL;
+    bigint* r = NULL;
+    bigint* s = NULL;
+
+    //5
+    int l = (n + 1) >> 1;
+    int lw = l*SIZEOFWORD;
+    // a >> lw
+    bi_assign(&a1, temp_src);
+    bi_bit_rshift(a1,lw);
+    //a mod 
+    bi_assign(&a0, temp_src);
+    if (a0->word_len > l){
+        for (int i = l; i < a0->word_len; i++)
+        {
+            a0->a[i] = 0;
+        }
+    }
+    bi_delete(&temp_src);
+    
+    bi_refine(a0);
+    bi_refine(a1);
+
+    // t1, t0
+    bi_squ_kara(&t1, a1);
+    bi_squ_kara(&t0, a0);
+    // r = (t1 << 2*lw) + t0
+    bi_bit_lshift(t1,2*lw);
+    bi_add(&r, t1, t0);
+    bi_delete(&t1);
+    bi_delete(&t0);
+    
+    bi_mul_k(&s,a1,a0);
+    bi_delete(&a1);
+    bi_delete(&a0);
+
+    bi_bit_lshift(s, lw+1);
+    bi_add(dst,r,s);
+
+    bi_delete(&s);
+    bi_delete(&r);
+
+    return SUCCESS;
+}
