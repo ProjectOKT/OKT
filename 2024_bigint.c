@@ -708,7 +708,7 @@ void bignum_kara_squ_test()
 
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     
     srand(time(NULL));
 
@@ -721,14 +721,15 @@ int main()
     //bignum_squ_time_test();
     //bignum_squ__vs_mul_time_test();
 
-    bignum_kara_squ_test();
+    //bignum_kara_squ_test();
     //bignum_squ_test();
     //python_add_test("add_test.py", 10000);
     //python_sub_test("sub_test.py", 10000);
     //python_mul_test("mul_test.py", 10000);
-    //python_mul_k_test("mul_k_test.py", 10000);
+    //python_mul_k_test("mul_k_test.py", 100);
     //python_div_test("div_test.py", 10000);
     //python_squ_test("squ_test.py", 10000);
+    python_squ_k_test("squ_k_test.py", 10000);
 
     return 0;
 }

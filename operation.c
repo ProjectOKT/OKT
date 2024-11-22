@@ -575,7 +575,7 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
             bi_delete(&tempT1);
             bi_delete(&tempT0);
         }
-        bi_bit_lshift(temp, temp->word_len + idx2);
+        bi_fillzero(temp, temp->word_len + idx2, BOTTOM);
         if (bi_compare(temp, tempC) == 1){
             add_same_sign(&tempC_result, temp, tempC);
         }
@@ -1070,7 +1070,7 @@ msg bi_squc(OUT bigint** dst, IN word src1)
     return SUCCESS;
 }
 
-msg bi_squ(OUT bigint** dst, IN bigint* src1)
+msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 {
     bigint* C1 = NULL;
     bigint* C2 = NULL;
@@ -1131,7 +1131,6 @@ msg bi_squ(OUT bigint** dst, IN bigint* src1)
 }
 
 
-
 /**
  * @brief karatsuba squaring of big integer.
  * 
@@ -1148,18 +1147,11 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
         (*dst)->sign = ZERO;
         return SUCCESS;
     }
-    bigint* temp_src = NULL;
-    
-    bi_assign(&temp_src, src);
-
-    temp_src->sign = POSITIVE;
-
     int n = src->word_len;
 
     //flag
     if (10 >= n) {
-        bi_squ(dst,temp_src);
-        bi_delete(&temp_src);
+        bi_squ(dst,src);
         return SUCCESS;
     }
 
@@ -1169,7 +1161,10 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
     bigint* t0 = NULL;
     bigint* r = NULL;
     bigint* s = NULL;
-
+    bigint* temp_src = NULL;
+    
+    bi_assign(&temp_src, src);
+    temp_src->sign = POSITIVE;
     //5
     int l = (n + 1) >> 1;
     int lw = l*SIZEOFWORD;
@@ -1178,17 +1173,13 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
     bi_bit_rshift(a1,lw);
     //a mod 
     bi_assign(&a0, temp_src);
-    if (a0->word_len > l){
-        for (int i = l; i < a0->word_len; i++)
-        {
-            a0->a[i] = 0;
-        }
-    }
     bi_delete(&temp_src);
-    
+    for (int i = l; i < n; i++)
+    {
+        a0->a[i] = 0;
+    }
     bi_refine(a0);
     bi_refine(a1);
-
     // t1, t0
     bi_squ_kara(&t1, a1);
     bi_squ_kara(&t0, a0);
@@ -1198,13 +1189,13 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
     bi_delete(&t1);
     bi_delete(&t0);
     
-    bi_mul_k(&s,a1,a0);
+    bi_mul_kara(&s,a1,a0);
     bi_delete(&a1);
     bi_delete(&a0);
 
-    bi_bit_lshift(s, lw+1);
+    bi_bit_lshift(s, (lw+1));
     bi_add(dst,r,s);
-
+    (*dst)->sign = POSITIVE;
     bi_delete(&s);
     bi_delete(&r);
 
