@@ -575,7 +575,7 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
             bi_delete(&tempT1);
             bi_delete(&tempT0);
         }
-        bi_fillzero(temp, temp->word_len + idx2, BOTTOM);
+        bi_bit_lshift(temp, temp->word_len + idx2);
         if (bi_compare(temp, tempC) == 1){
             add_same_sign(&tempC_result, temp, tempC);
         }
@@ -1005,7 +1005,26 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
     return error_msg;
 }
 
-
+/**
+ * @brief Squaring of single word.
+ * 
+ * This function performs Squaring of single words (`src1`)
+ * The function handles positive and negative values for the input integers. The signs of the `quotient` and `remainder` 
+ * are determined based on the signs of the input integers:
+ * 
+ * - Division between two integers with the same sign produces a positive `quotient`.
+ * - Division between two integers with different signs produces a negative `quotient`.
+ * - The `remainder` always takes the same sign as the divisor (`src2`).
+ * 
+ * If the division is not possible (e.g., `src2` is zero), the function returns an error.
+ * 
+ * @param[out] quotient Pointer to the result bigint that will hold the quotient of the division.
+ * @param[out] remainder Pointer to the result bigint that will hold the remainder of the division.
+ * @param[in] src1 The dividend big integer for the division.
+ * @param[in] src2 The divisor big integer for the division.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or division by zero).
+ */
 msg bi_squc(OUT bigint** dst, IN word src1)
 {   
     int error_msg = 0;
@@ -1016,56 +1035,43 @@ msg bi_squc(OUT bigint** dst, IN word src1)
     if((*dst) != NULL)
     {
         error_msg = bi_delete(dst);
-        if(error_msg == FAILED )
-        {
-            return FAILED;
-        }
-        error_msg = bi_new(dst, 1);
-        if(error_msg == FAILED )
-        {
-            return FAILED;
-        }
+ 
     }
+    
+    error_msg = bi_new(dst, 2);
+
 
     error_msg = bi_new(&C, 2);
-    if(error_msg == FAILED )
-    {
-        return FAILED;
-    }
+
     C->sign = POSITIVE;
 
     error_msg = bi_new(&T, 1);
-    if(error_msg == FAILED )
-    {
-        return FAILED;
-    }
+
     T->sign = POSITIVE;
 
     A1 = src1 >> (sizeof(half_word) * 8);
     A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
     C->a[1] = A1*A1;
     C->a[0] = A0*A0;
-    T->a[0] = A0 * A1;
+    T->a[0] = A0*A1;
     error_msg = bi_bit_lshift(T, SIZEOFWORD/2 + 1);
+
+
+    error_msg = add_same_sign(dst, C, T);
+
+    bi_delete(&C);
+    bi_delete(&T);
+
     if(error_msg == FAILED )
     {
-        printf("%d", 1052);
         return FAILED;
     }
 
-    error_msg = bi_add(dst, C, T);
-    if(error_msg == FAILED )
-    {
-        return FAILED;
-    }
-    bi_delete(&C);
-    bi_delete(&T);
     return SUCCESS;
 }
 
 msg bi_squ(OUT bigint** dst, IN bigint* src1)
 {
-    int error_msg = 0;
     bigint* C1 = NULL;
     bigint* C2 = NULL;
     bigint* C1_sum = NULL;
@@ -1073,59 +1079,40 @@ msg bi_squ(OUT bigint** dst, IN bigint* src1)
     bigint* T1 = NULL;
     bigint* T2 = NULL;
 
+    if(src1 == ZERO)
+    {
+        bi_delete(dst);
+        bi_new(dst, 1);
+
+        if(dst == NULL){
+            return FAILED;
+        }
+        return SUCCESS;
+    }
+
+    bi_new(&C2, 1);
     for(int idx1 = 0; idx1 < src1->word_len; idx1++)
     {
-        error_msg = bi_squc(&T1, src1->a[idx1]);
-        
-        if(error_msg == FAILED )
+        bi_squc(&T1, src1->a[idx1]);
+
+        if(T1->word_len == 1)
         {
-            return FAILED;
+            bi_fillzero(T1, 2, TOP);
         }
-        printf(" OK %d \n", 1084);
-        error_msg = bi_bit_lshift(T1, 2 * idx1 * SIZEOFWORD);
-        if(error_msg == FAILED )
-        {
-            return FAILED;
-        }
-        printf(" OK %d \n", 1090);
-        error_msg = bi_add(&C1_sum, T1, C1);
-        if(error_msg == FAILED )
-        {
-            return FAILED;
-        }
-        printf(" OK %d \n", 1096);
-        error_msg = bi_assign(&C1, C1_sum);
-        if(error_msg == FAILED )
-        {
-            return FAILED;
-        }
-        printf(" OK %d \n", 1102);
+        bi_connect(&C1_sum, T1, C1);
+
+         bi_assign(&C1, C1_sum);
+
         for(int idx2 = idx1 + 1; idx2 < src1->word_len; idx2++)
         {
-            error_msg = bi_smul(&T2, src1->a[idx1], src1->a[idx2]);
-            if(error_msg == FAILED )
-            {
-                return FAILED;
-            }
-            printf(" OK %d \n", 1110);
-            error_msg = bi_bit_lshift(T2, (idx1 + idx2) * SIZEOFWORD);
-            if(error_msg == FAILED )
-            {
-                return FAILED;
-            }
-            printf(" OK %d \n", 1116);
-            error_msg = bi_add(&C2_sum, C2, T2);
-            if(error_msg == FAILED )
-            {
-                return FAILED;
-            }
-            printf(" OK %d \n", 1122);
-            error_msg = bi_assign(&C2, C2_sum);
-            if(error_msg == FAILED )
-            {
-                return FAILED;
-            }
-            printf(" OK %d \n", 1128);
+            bi_smul(&T2, src1->a[idx1], src1->a[idx2]);
+
+            bi_bit_lshift(T2, (idx1 + idx2) * SIZEOFWORD);
+
+            bi_add(&C2_sum, C2, T2);
+
+            bi_assign(&C2, C2_sum);
+
             bi_delete(&C2_sum);
             bi_delete(&T2);
         }
@@ -1133,16 +1120,11 @@ msg bi_squ(OUT bigint** dst, IN bigint* src1)
         bi_delete(&C1_sum);
     }
 
-    error_msg = bi_bit_lshift(C2, 1);
-    if(error_msg == FAILED )
-    {
-        return FAILED;
-    }
-    error_msg = bi_add(dst, C1, C2);
-    if(error_msg == FAILED )
-    {
-        return FAILED;
-    }
+    bi_bit_lshift(C2, 1);
+
+    add_same_sign(dst, C1, C2);
+
+
     bi_delete(&C1);
     bi_delete(&C2);
     return SUCCESS;
@@ -1160,71 +1142,71 @@ msg bi_squ(OUT bigint** dst, IN bigint* src1)
  * 
  * @return Returns 1 on success, -1 on failure.
  */
-// msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
-// {
-//     if (src->sign == ZERO){
-//         (*dst)->sign = ZERO;
-//         return SUCCESS;
-//     }
-//     bigint* temp_src = NULL;
+msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
+{
+    if (src->sign == ZERO){
+        (*dst)->sign = ZERO;
+        return SUCCESS;
+    }
+    bigint* temp_src = NULL;
     
-//     bi_assign(&temp_src, src);
+    bi_assign(&temp_src, src);
 
-//     temp_src->sign = POSITIVE;
+    temp_src->sign = POSITIVE;
 
-//     int n = src->word_len;
+    int n = src->word_len;
 
-//     //flag
-//     if (10 >= n) {
-//         bi_squ(dst,temp_src);
-//         bi_delete(&temp_src);
-//         return SUCCESS;
-//     }
+    //flag
+    if (10 >= n) {
+        bi_squ(dst,temp_src);
+        bi_delete(&temp_src);
+        return SUCCESS;
+    }
 
-//     bigint* a1 = NULL;
-//     bigint* a0 = NULL; 
-//     bigint* t1 = NULL;
-//     bigint* t0 = NULL;
-//     bigint* r = NULL;
-//     bigint* s = NULL;
+    bigint* a1 = NULL;
+    bigint* a0 = NULL; 
+    bigint* t1 = NULL;
+    bigint* t0 = NULL;
+    bigint* r = NULL;
+    bigint* s = NULL;
 
-//     //5
-//     int l = (n + 1) >> 1;
-//     int lw = l*SIZEOFWORD;
-//     // a >> lw
-//     bi_assign(&a1, temp_src);
-//     bi_bit_rshift(a1,lw);
-//     //a mod 
-//     bi_assign(&a0, temp_src);
-//     if (a0->word_len > l){
-//         for (int i = l; i < a0->word_len; i++)
-//         {
-//             a0->a[i] = 0;
-//         }
-//     }
-//     bi_delete(&temp_src);
+    //5
+    int l = (n + 1) >> 1;
+    int lw = l*SIZEOFWORD;
+    // a >> lw
+    bi_assign(&a1, temp_src);
+    bi_bit_rshift(a1,lw);
+    //a mod 
+    bi_assign(&a0, temp_src);
+    if (a0->word_len > l){
+        for (int i = l; i < a0->word_len; i++)
+        {
+            a0->a[i] = 0;
+        }
+    }
+    bi_delete(&temp_src);
     
-//     bi_refine(a0);
-//     bi_refine(a1);
+    bi_refine(a0);
+    bi_refine(a1);
 
-//     // t1, t0
-//     bi_squ_kara(&t1, a1);
-//     bi_squ_kara(&t0, a0);
-//     // r = (t1 << 2*lw) + t0
-//     bi_bit_lshift(t1,2*lw);
-//     bi_add(&r, t1, t0);
-//     bi_delete(&t1);
-//     bi_delete(&t0);
+    // t1, t0
+    bi_squ_kara(&t1, a1);
+    bi_squ_kara(&t0, a0);
+    // r = (t1 << 2*lw) + t0
+    bi_bit_lshift(t1,2*lw);
+    bi_add(&r, t1, t0);
+    bi_delete(&t1);
+    bi_delete(&t0);
     
-//     bi_mul_k(&s,a1,a0);
-//     bi_delete(&a1);
-//     bi_delete(&a0);
+    bi_mul_k(&s,a1,a0);
+    bi_delete(&a1);
+    bi_delete(&a0);
 
-//     bi_bit_lshift(s, lw+1);
-//     bi_add(dst,r,s);
+    bi_bit_lshift(s, lw+1);
+    bi_add(dst,r,s);
 
-//     bi_delete(&s);
-//     bi_delete(&r);
+    bi_delete(&s);
+    bi_delete(&r);
 
-//     return SUCCESS;
-// }
+    return SUCCESS;
+}

@@ -609,7 +609,7 @@ void bi_mul_k_test()
     }
 }
 
-void bignum_squc_time_test()
+void bignum_squc_test()
 {
     int error_msg = 0;
     
@@ -633,7 +633,7 @@ void bignum_squc_time_test()
     }
 }
 
-void bignum_squ_time_test()
+void bignum_squ_test()
 {
     int error_msg = 0;
     
@@ -641,7 +641,7 @@ void bignum_squ_time_test()
     bigint* dst = NULL;
 
     bi_get_random(&test_1, POSITIVE, 15);
-
+    //bi_new(&test_1, 15);
     bi_print(test_1, 16);
 
     error_msg = bi_squ(&dst, test_1);
@@ -660,6 +660,52 @@ void bignum_squ_time_test()
     }
 }
 
+void bignum_kara_squ_test()
+{
+    int error_msg = 0;
+    
+    bigint* test_1 = NULL;
+    bigint* test_2 = NULL;
+    bigint* dst = NULL;
+    bigint* dst1 = NULL;
+
+    bi_get_random(&test_1, POSITIVE, 15);
+    bi_get_random(&test_2, POSITIVE, 7);
+    //bi_new(&test_1, 15);
+    bi_print(test_1, 16);
+    bi_print(test_2, 16);
+
+    error_msg = bi_squ_kara(&dst, test_1);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_squ_kara_test_error up 10\n");
+    }
+
+    bi_print(dst, 16);
+    bi_delete(&test_1);
+
+    error_msg = bi_delete(&dst);
+    if(error_msg == FAILED)
+    {   
+        fprintf(stderr, "bi_squ_test_error\n");
+    }
+
+    error_msg = bi_squ_kara(&dst1, test_2);
+    if(error_msg == FAILED)
+    {
+        fprintf(stderr, "bi_squ_kara_test_error down 10\n");
+    }
+
+    bi_print(dst1, 16);
+    bi_delete(&test_2);
+    
+    error_msg = bi_delete(&dst1);
+    if(error_msg == FAILED)
+    {   
+        fprintf(stderr, "bi_squ_test_error\n");
+    }
+}
+
 int main()
 {   
     atexit(check_leaks);
@@ -672,13 +718,17 @@ int main()
     //bignum_mul_k_time_test();
     //bignum_div_time_test();
     //bignum_squc_time_test();
-    bignum_squ_time_test();
+    //bignum_squ_time_test();
+    //bignum_squ__vs_mul_time_test();
 
+    bignum_kara_squ_test();
+    //bignum_squ_test();
     //python_add_test("add_test.py", 10000);
     //python_sub_test("sub_test.py", 10000);
     //python_mul_test("mul_test.py", 10000);
     //python_mul_k_test("mul_k_test.py", 10000);
     //python_div_test("div_test.py", 10000);
+    //python_squ_test("squ_test.py", 10000);
 
     return 0;
 }
