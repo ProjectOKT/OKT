@@ -1238,3 +1238,44 @@ void python_squ_test(const char* filename, int testnum) {
     }   
     fclose(file);
 }
+
+
+void python_squ_k_test(const char* filename, int testnum) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    for (int i = 0; i < testnum; i++) {
+        //인자
+        bigint *pos_a = NULL;
+        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bigint *neg_b = NULL;
+        bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+
+        bigint *p_squ = NULL;
+        bi_squ_kara(&p_squ, pos_a);
+
+        bigint *n_squ = NULL;
+        bi_squ_kara(&n_squ, neg_b);
+        
+        fprintf(file, "pos_a = ");
+        bi_fprint(file,pos_a);
+        fprintf(file, "neg_b = ");
+        bi_fprint(file,neg_b);
+
+        fprintf(file, "p_squ = ");
+        bi_fprint(file,p_squ);
+        fprintf(file, "n_squ = ");
+        bi_fprint(file,n_squ);
+
+        fprintf(file, "if (pos_a * pos_a != p_squ):\n \t print(f\"[p_squ]: {pos_a:#x} ^ 2 != {p_squ:#x}\\n\")\n\n");
+        fprintf(file, "if (neg_b * neg_b != n_squ):\n \t print(f\"[n_squ]: {neg_b:#x} ^ 2 != {n_squ:#x}\\n\")\n\n");
+        bi_delete(&pos_a);
+        bi_delete(&neg_b);
+        bi_delete(&p_squ);
+        bi_delete(&n_squ);
+    }   
+    fclose(file);
+}

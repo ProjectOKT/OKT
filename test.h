@@ -31,4 +31,6 @@ void python_div_test(const char* filename, int testnum);
 void python_mul_k_test(const char* filename, int testnum);
 
 void python_squ_test(const char* filename, int testnum);
+
+void python_squ_k_test(const char* filename, int testnum);
 #endif

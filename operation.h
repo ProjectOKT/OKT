@@ -31,9 +31,9 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
 msg bi_mul_kara(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
-msg bi_squc(OUT bigint** dst, IN word src1);
+msg bi_squc(OUT bigint** dst, IN const word src1);
 
-msg bi_squ(OUT bigint** dst, IN bigint* src1);
+msg bi_squ(OUT bigint** dst, IN const bigint* src1);
 
 msg bi_squ_kara(OUT bigint** dst, IN const bigint* src);
 #endif
