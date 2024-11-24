@@ -1240,26 +1240,30 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
         return FAILED;
     }
 
+    bigint* dst_buf = NULL;
     bigint* quotient_buf = NULL;
 
-    bi_new(dst, 1);
-    (*dst)->sign = POSITIVE;
-    (*dst)->a[0] = 1;
+    bi_new(&dst_buf, 1);
+    dst_buf->sign = POSITIVE;
+    dst_buf->a[0] = 1;
 
     for(int word_index = exp->word_len - 1; word_index >= 0; word_index--)
     {
         for(int bit_index = sizeof(word) * 8 - 1; bit_index >= 0; bit_index--)
         {
-            bi_squ(dst, *dst);
-            bi_division(&quotient_buf, dst, *dst, mod);
+            bi_squ(&dst_buf, dst_buf);
+            bi_division(&quotient_buf, &dst_buf, dst_buf, mod);
             if((exp->a[word_index] >> bit_index) & 0x01)
             {
-                bi_mul(dst, *dst, base);
-                bi_division(&quotient_buf, dst, *dst, mod);
+                bi_mul(&dst_buf, dst_buf, base);
+                bi_division(&quotient_buf, &dst_buf, dst_buf, mod);
             }
         }
     }
 
+    bi_assign(dst, dst_buf);
+
+    bi_delete(&dst_buf);
     bi_delete(&quotient_buf);
 
     return SUCCESS;
@@ -1288,12 +1292,13 @@ msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
         return FAILED;
     }
 
+    bigint* dst_buf = NULL;
     bigint* quotient_buf = NULL;
     bigint* t1 = NULL;
 
-    bi_new(dst, 1);
-    (*dst)->sign = POSITIVE;
-    (*dst)->a[0] = 1;
+    bi_new(&dst_buf, 1);
+    dst_buf->sign = POSITIVE;
+    dst_buf->a[0] = 1;
 
     bi_assign(&t1, base);
 
@@ -1303,14 +1308,17 @@ msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
         {
             if((exp->a[word_index] >> bit_index) & 0x01)
             {
-                bi_mul(dst, *dst, t1);
-                bi_division(&quotient_buf, dst, *dst, mod);
+                bi_mul(&dst_buf, dst_buf, t1);
+                bi_division(&quotient_buf, &dst_buf, dst_buf, mod);
             }
             bi_squ(&t1, t1);
             bi_division(&quotient_buf, &t1, t1, mod);
         }
     }
 
+    bi_assign(dst, dst_buf);
+
+    bi_delete(&dst_buf);
     bi_delete(&quotient_buf);
     bi_delete(&t1);
 
