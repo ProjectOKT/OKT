@@ -1357,3 +1357,87 @@ void python_squ_k_test(const char* filename, int testnum) {
     }   
     fclose(file);
 }
+
+
+void python_l2r_test(const char* filename, int testnum) 
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    for (int i = 0; i < testnum; i++) {
+        //인자
+        bigint *base = NULL;
+        bi_get_random(&base, POSITIVE, rand() % 63 + 1);
+        bigint *exp = NULL;
+        bi_get_random(&exp, POSITIVE, rand() % 5 + 1);
+        bigint *mod = NULL;
+        bi_get_random(&mod, POSITIVE, rand() % 31 + 1);
+
+        bigint *mod_exp_result = NULL;
+        bi_mod_exp_l2r(&mod_exp_result, base, exp, mod);
+        
+        fprintf(file, "base = ");
+        bi_fprint(file,base);
+        fprintf(file, "exp = ");
+        bi_fprint(file,exp);
+
+        fprintf(file, "mod = ");
+        bi_fprint(file,mod);
+        fprintf(file, "mod_exp_result = ");
+        bi_fprint(file,mod_exp_result);
+
+        fprintf(file, "temp = pow(base, exp, mod)\n");
+        fprintf(file, "if (mod_exp_result != temp):\n \t print(f\"[l2r]: {base:#x} ^ {exp:#x} mod {mod:#x} != {mod_exp_result:#x}\\n\")\n\n");
+
+        bi_delete(&base);
+        bi_delete(&exp);
+        bi_delete(&mod);
+        bi_delete(&mod_exp_result);
+    }   
+    fclose(file);
+}
+
+
+void python_r2l_test(const char* filename, int testnum) 
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    for (int i = 0; i < testnum; i++) {
+        //인자
+        bigint *base = NULL;
+        bi_get_random(&base, POSITIVE, rand() % 63 + 1);
+        bigint *exp = NULL;
+        bi_get_random(&exp, POSITIVE, rand() % 5 + 1);
+        bigint *mod = NULL;
+        bi_get_random(&mod, POSITIVE, rand() % 31 + 1);
+
+        bigint *mod_exp_result = NULL;
+        bi_mod_exp_r2l(&mod_exp_result, base, exp, mod);
+        
+        fprintf(file, "base = ");
+        bi_fprint(file,base);
+        fprintf(file, "exp = ");
+        bi_fprint(file,exp);
+
+        fprintf(file, "mod = ");
+        bi_fprint(file,mod);
+        fprintf(file, "mod_exp_result = ");
+        bi_fprint(file,mod_exp_result);
+
+        fprintf(file, "temp = pow(base, exp, mod)\n");
+        fprintf(file, "if (mod_exp_result != temp):\n \t print(f\"[l2r]: {base:#x} ^ {exp:#x} mod {mod:#x} != {mod_exp_result:#x}\\n\")\n\n");
+
+        bi_delete(&base);
+        bi_delete(&exp);
+        bi_delete(&mod);
+        bi_delete(&mod_exp_result);
+    }   
+    fclose(file);
+}

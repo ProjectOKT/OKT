@@ -706,6 +706,32 @@ void bignum_kara_squ_test()
     }
 }
 
+
+void bignum_l2r_test()
+{
+    bigint* base = NULL;
+    bigint* exp = NULL;
+    bigint* mod = NULL;
+    bigint* dst1 = NULL;
+    bigint* dst2 = NULL;
+
+    bi_get_random(&base, POSITIVE, 10);
+    bi_get_random(&exp, POSITIVE, 3);
+    bi_get_random(&mod, POSITIVE, 5);
+
+    bi_print(base, 16);
+    bi_print(exp, 16);
+    bi_print(mod, 16);
+
+    bi_mod_exp_l2r(&dst1, base, exp, mod);
+    bi_mod_exp_r2l(&dst2, base, exp, mod);
+
+
+    bi_print(dst1, 16);
+    bi_print(dst2, 16);
+}
+
+
 int main()
 {   
     //atexit(check_leaks);
@@ -729,7 +755,9 @@ int main()
     //python_mul_k_test("mul_k_test.py", 100);
     //python_div_test("div_test.py", 10000);
     //python_squ_test("squ_test.py", 10000);
-    python_squ_k_test("squ_k_test.py", 10000);
+    //python_squ_k_test("squ_k_test.py", 10000);
+    python_l2r_test("l2r_test.py", 10);
+    python_r2l_test("r2l_test.py", 10);
 
     return 0;
 }

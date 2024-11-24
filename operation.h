@@ -36,4 +36,9 @@ msg bi_squc(OUT bigint** dst, IN const word src1);
 msg bi_squ(OUT bigint** dst, IN const bigint* src1);
 
 msg bi_squ_kara(OUT bigint** dst, IN const bigint* src);
+
+msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod);
+
+msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod);
+
 #endif

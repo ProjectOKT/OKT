@@ -39,4 +39,9 @@ void python_lshift_test(const char* filename, int testnum);
 void python_rshift_test(const char* filename, int testnum);
 
 void python_squ_k_test(const char* filename, int testnum);
+
+void python_l2r_test(const char* filename, int testnum) ;
+
+void python_r2l_test(const char* filename, int testnum);
+
 #endif

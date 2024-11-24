@@ -963,7 +963,7 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
         }
         else
         {
-            error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, src1) == FAILED) ? FAILED : SUCCESS;
+            error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
         }
         (*remainder)->sign = src2->sign;
     }
@@ -1213,3 +1213,76 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
     return SUCCESS;
 }
 
+
+msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod)
+{
+    if((base == NULL)|| (exp == NULL) || (mod == NULL) || (base->a == NULL) || 
+        (exp->a == NULL) || (mod->a == NULL) || (base->sign != POSITIVE) || (exp->sign != POSITIVE) || (mod->sign != POSITIVE))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* quotient_buf = NULL;
+
+    bi_new(dst, 1);
+    (*dst)->sign = POSITIVE;
+    (*dst)->a[0] = 1;
+
+    for(int word_index = exp->word_len - 1; word_index >= 0; word_index--)
+    {
+        for(int bit_index = sizeof(word) * 8 - 1; bit_index >= 0; bit_index--)
+        {
+            bi_squ(dst, *dst);
+            bi_division(&quotient_buf, dst, *dst, mod);
+            if((exp->a[word_index] >> bit_index) & 0x01)
+            {
+                bi_mul(dst, *dst, base);
+                bi_division(&quotient_buf, dst, *dst, mod);
+            }
+        }
+    }
+
+    bi_delete(&quotient_buf);
+
+    return SUCCESS;
+}
+
+
+msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod)
+{
+    if((base == NULL)|| (exp == NULL) || (mod == NULL) || (base->a == NULL) || 
+        (exp->a == NULL) || (mod->a == NULL) || (base->sign != POSITIVE) || (exp->sign != POSITIVE) || (mod->sign != POSITIVE))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* quotient_buf = NULL;
+    bigint* t1 = NULL;
+
+    bi_new(dst, 1);
+    (*dst)->sign = POSITIVE;
+    (*dst)->a[0] = 1;
+
+    bi_assign(&t1, base);
+
+    for(int word_index = 0; word_index < exp->word_len; word_index++)
+    {
+        for(int bit_index = 0; bit_index < (int)(sizeof(word) * 8); bit_index++)
+        {
+            if((exp->a[word_index] >> bit_index) & 0x01)
+            {
+                bi_mul(dst, *dst, t1);
+                bi_division(&quotient_buf, dst, *dst, mod);
+            }
+            bi_squ(&t1, t1);
+            bi_division(&quotient_buf, &t1, t1, mod);
+        }
+    }
+
+    bi_delete(&quotient_buf);
+    bi_delete(&t1);
+
+    return SUCCESS;
+}
