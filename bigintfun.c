@@ -554,13 +554,21 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
     
     int dst_len;
 
-    if(src1 == NULL || src1->sign == ZERO){
-        bi_assign(dst, src2);
-        return SUCCESS;
+    if(src1 == NULL){
+        if(src2 == NULL){
+            fprintf(stderr, ERR_INVALID_INPUT);
+            return FAILED;
+        }
+        else{
+            bi_assign(dst, src2);
+            return SUCCESS;
+        }
     }
-    else if(src2 == NULL){
-        bi_assign(dst, src1);
-        return SUCCESS;
+    else{
+        if(src2 == NULL){
+            bi_assign(dst, src1);
+            return SUCCESS;        
+        }
     }
     
     dst_len = src1->word_len + src2->word_len;

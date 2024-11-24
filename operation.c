@@ -1089,10 +1089,10 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
     bigint* C2_sum = NULL;
     bigint* T1 = NULL;
     bigint* T2 = NULL;
+    bigint* temp_src1 = NULL;
 
-    if(src1 == ZERO)
+    if(src1->sign == ZERO)
     {
-        bi_delete(dst);
         bi_new(dst, 1);
 
         if(dst == NULL){
@@ -1100,11 +1100,14 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
         }
         return SUCCESS;
     }
+    
+    bi_assign(&temp_src1, src1);
 
     bi_new(&C2, 1);
-    for(int idx1 = 0; idx1 < src1->word_len; idx1++)
+    
+    for(int idx1 = 0; idx1 < temp_src1->word_len; idx1++)
     {
-        bi_squc(&T1, src1->a[idx1]);
+        bi_squc(&T1, temp_src1->a[idx1]);
 
         if(T1->word_len == 1)
         {
@@ -1112,11 +1115,11 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
         }
         bi_connect(&C1_sum, T1, C1);
 
-         bi_assign(&C1, C1_sum);
+        bi_assign(&C1, C1_sum);
 
-        for(int idx2 = idx1 + 1; idx2 < src1->word_len; idx2++)
+        for(int idx2 = idx1 + 1; idx2 < temp_src1->word_len; idx2++)
         {
-            bi_smul(&T2, src1->a[idx1], src1->a[idx2]);
+            bi_smul(&T2, temp_src1->a[idx1], temp_src1->a[idx2]);
 
             bi_bit_lshift(T2, (idx1 + idx2) * SIZEOFWORD);
 
@@ -1133,9 +1136,9 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 
     bi_bit_lshift(C2, 1);
 
-    add_same_sign(dst, C1, C2);
+    bi_add(dst, C1, C2);
 
-
+    bi_delete(&temp_src1);
     bi_delete(&C1);
     bi_delete(&C2);
     return SUCCESS;

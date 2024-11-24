@@ -756,8 +756,8 @@ int main()
     //python_div_test("div_test.py", 10000);
     //python_squ_test("squ_test.py", 10000);
     //python_squ_k_test("squ_k_test.py", 10000);
-    python_l2r_test("l2r_test.py", 10);
-    python_r2l_test("r2l_test.py", 10);
+    python_l2r_test("l2r_test.py", 10000);
+    //python_r2l_test("r2l_test.py", 10000);
 
     return 0;
 }
