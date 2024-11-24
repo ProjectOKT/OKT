@@ -1359,6 +1359,17 @@ void python_squ_k_test(const char* filename, int testnum) {
 }
 
 
+/**
+ * @brief Test function for left-to-right modular exponentiation using Python data.
+ * 
+ * This function tests the left-to-right modular exponentiation implementation 
+ * using test cases loaded from a Python-generated file.
+ * 
+ * @param[in] filename The name of the file containing test data.
+ * @param[in] testnum The number of test cases to execute.
+ * 
+ * @return void
+ */
 void python_l2r_test(const char* filename, int testnum) 
 {
     FILE* file = fopen(filename, "w");
@@ -1401,6 +1412,18 @@ void python_l2r_test(const char* filename, int testnum)
 }
 
 
+
+/**
+ * @brief Test function for right-to-left modular exponentiation using Python data.
+ * 
+ * This function tests the right-to-left modular exponentiation implementation 
+ * using test cases loaded from a Python-generated file.
+ * 
+ * @param[in] filename The name of the file containing test data.
+ * @param[in] testnum The number of test cases to execute.
+ * 
+ * @return void
+ */
 void python_r2l_test(const char* filename, int testnum) 
 {
     FILE* file = fopen(filename, "w");

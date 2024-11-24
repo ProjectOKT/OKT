@@ -1137,7 +1137,8 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
     bi_bit_lshift(C2, 1);
 
     bi_add(dst, C1, C2);
-
+    bi_refine(*dst); // sungbin: NOV_24 추가
+    
     bi_delete(&temp_src1);
     bi_delete(&C1);
     bi_delete(&C2);
@@ -1217,6 +1218,19 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
 }
 
 
+/**
+ * @brief Modular exponentiation using left-to-right binary method.
+ * 
+ * This function computes the modular exponentiation (`base^exp % mod`) 
+ * using the left-to-right binary method. The result is stored in `dst`. 
+ * 
+ * @param[out] dst Pointer to the output big integer result.
+ * @param[in] base The base big integer.
+ * @param[in] exp The exponent big integer.
+ * @param[in] mod The modulus big integer.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
 msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod)
 {
     if((base == NULL)|| (exp == NULL) || (mod == NULL) || (base->a == NULL) || 
@@ -1252,6 +1266,19 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
 }
 
 
+/**
+ * @brief Modular exponentiation using right-to-left binary method.
+ * 
+ * This function computes the modular exponentiation (`base^exp % mod`) 
+ * using the right-to-left binary method. The result is stored in `dst`.
+ * 
+ * @param[out] dst Pointer to the output big integer result.
+ * @param[in] base The base big integer.
+ * @param[in] exp The exponent big integer.
+ * @param[in] mod The modulus big integer.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
 msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod)
 {
     if((base == NULL)|| (exp == NULL) || (mod == NULL) || (base->a == NULL) || 

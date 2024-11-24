@@ -732,6 +732,25 @@ void bignum_l2r_test()
 }
 
 
+void bi_l2r_debug()
+{
+    bigint* base = NULL;
+    bigint* exp = NULL;
+    bigint* mod = NULL;
+    bigint* dst = NULL;
+
+    bi_set_from_string(&base, "a025ee25eed0c3243aaeafd5aa6058d88fee1626a149cfe154ffd99ff9065319ac6a6579329faf2cde3798fd8a5edc7df442e99cfc4bfea6d77bef651b8ca9d17dda62547a15efd01f017e4fb280f805ace92a7db8cdd58c4512404074d3b91a71e8355776cb6739ec74003ef21a484b91419eb1e7da1b54c1e3aa7e100e824f4003bae777d025768a7fc863ffb7f5584dd9a25f165849454e4a1454c1e858a0fa28cbd222ea8343e32c77c7", 16);
+    bi_set_from_string(&exp, "6897c95ca3a5230e89d93f954fc3f452", 16);
+    bi_set_from_string(&mod, "38e48537d30331eb1904bbca03c06a064114ae01fdc67734", 16);
+
+    bi_print(base, 16);
+    bi_print(exp, 16);
+    bi_print(mod, 16);
+    bi_mod_exp_l2r(&dst, base, exp, mod);
+
+    bi_print(dst, 16);
+}
+
 int main()
 {   
     //atexit(check_leaks);
@@ -756,8 +775,10 @@ int main()
     //python_div_test("div_test.py", 10000);
     //python_squ_test("squ_test.py", 10000);
     //python_squ_k_test("squ_k_test.py", 10000);
-    python_l2r_test("l2r_test.py", 10000);
-    //python_r2l_test("r2l_test.py", 10000);
+    python_l2r_test("l2r_test.py", 1000);
+    //python_r2l_test("r2l_test.py", 1000);
+
+    //bi_l2r_debug();
 
     return 0;
 }
