@@ -575,7 +575,7 @@ msg bi_mulc(OUT bigint** dst, IN bigint* src1, IN bigint* src2)
             bi_delete(&tempT1);
             bi_delete(&tempT0);
         }
-        bi_bit_lshift(temp, temp->word_len + idx2);
+        bi_fillzero(temp, temp->word_len + idx2, BOTTOM);
         if (bi_compare(temp, tempC) == 1){
             add_same_sign(&tempC_result, temp, tempC);
         }
@@ -1138,7 +1138,6 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 }
 
 
-
 /**
  * @brief karatsuba squaring of big integer.
  * 
@@ -1203,7 +1202,7 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
 
     bi_bit_lshift(s, (lw+1));
     bi_add(dst,r,s);
-
+    (*dst)->sign = POSITIVE;
     bi_delete(&s);
     bi_delete(&r);
 

@@ -33,4 +33,10 @@ void python_mul_k_test(const char* filename, int testnum);
 void python_squ_test(const char* filename, int testnum);
 
 void python_squ_k_test(const char* filename, int testnum);
+
+void python_lshift_test(const char* filename, int testnum);
+
+void python_rshift_test(const char* filename, int testnum);
+
+void python_squ_k_test(const char* filename, int testnum);
 #endif

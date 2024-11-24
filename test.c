@@ -1240,6 +1240,84 @@ void python_squ_test(const char* filename, int testnum) {
 }
 
 
+void python_rshift_test(const char* filename, int testnum) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    srand(time(NULL)); // 랜덤 시드 설정
+
+    for (int i = 0; i < testnum; i++) {
+        // 임의의 bigint 생성
+        bigint *num = NULL;
+        bi_get_random(&num, POSITIVE, rand() % 63 + 1);
+        
+        // 오른쪽 시프트 수행
+        int shift_bits = rand() % 63 + 1; // 시프트 비트 수
+        bigint *rshift_result = NULL;
+        bi_assign(&rshift_result, num); // rshift_result를 num의 복사본으로 초기화
+        bi_bit_rshift(rshift_result, shift_bits);
+        
+        // 파일에 기록
+        fprintf(file, "# 테스트 %d\n", i + 1);
+        fprintf(file, "num = ");
+        bi_fprint(file, num);
+        fprintf(file, "shift_bits = %d\n", shift_bits);
+        fprintf(file, "rshift_result = ");
+        bi_fprint(file, rshift_result);
+
+        fprintf(file, "if (num >> %d != rshift_result):\n", shift_bits);
+        fprintf(file, "\tprint(f\"[rshift_result]: {num:#x} >> %d != {rshift_result:#x}\\n\")\n", shift_bits);
+
+        // 메모리 해제
+        bi_delete(&num);
+        bi_delete(&rshift_result);
+    }
+
+    fclose(file);
+}
+
+void python_lshift_test(const char* filename, int testnum) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    srand(time(NULL)); // 랜덤 시드 설정
+
+    for (int i = 0; i < testnum; i++) {
+        // 임의의 bigint 생성
+        bigint *num = NULL;
+        bi_get_random(&num, POSITIVE, rand() % 63 + 1);
+        
+        // 오른쪽 시프트 수행
+        int shift_bits = rand() % 63 + 1; // 시프트 비트 수
+        bigint *lshift_result = NULL;
+        bi_assign(&lshift_result, num); // rshift_result를 num의 복사본으로 초기화
+        bi_bit_lshift(lshift_result, shift_bits);
+        
+        // 파일에 기록
+        fprintf(file, "# 테스트 %d\n", i + 1);
+        fprintf(file, "num = ");
+        bi_fprint(file, num);
+        fprintf(file, "shift_bits = %d\n", shift_bits);
+        fprintf(file, "lshift_result = ");
+        bi_fprint(file, lshift_result);
+
+        fprintf(file, "if (num << %d != lshift_result):\n", shift_bits);
+        fprintf(file, "\tprint(f\"[lshift_result]: {num:#x} >> %d != {lshift_result:#x}\\n\")\n", shift_bits);
+
+        // 메모리 해제
+        bi_delete(&num);
+        bi_delete(&lshift_result);
+    }
+
+    fclose(file);
+}
+
 void python_squ_k_test(const char* filename, int testnum) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
