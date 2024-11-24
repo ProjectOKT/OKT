@@ -1015,22 +1015,13 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
 /**
  * @brief Squaring of single word.
  * 
- * This function performs Squaring of single words (`src1`)
- * The function handles positive and negative values for the input integers. The signs of the `quotient` and `remainder` 
- * are determined based on the signs of the input integers:
+ * This function performs Squaring of single word (`src1`)
+ * The sign of the result is always POSITIVE.
  * 
- * - Division between two integers with the same sign produces a positive `quotient`.
- * - Division between two integers with different signs produces a negative `quotient`.
- * - The `remainder` always takes the same sign as the divisor (`src2`).
+ * @param[out] dst Pointer to the result bigint that squared by src1.
+ * @param[in] src1 The single word for the squaring.
  * 
- * If the division is not possible (e.g., `src2` is zero), the function returns an error.
- * 
- * @param[out] quotient Pointer to the result bigint that will hold the quotient of the division.
- * @param[out] remainder Pointer to the result bigint that will hold the remainder of the division.
- * @param[in] src1 The dividend big integer for the division.
- * @param[in] src2 The divisor big integer for the division.
- * 
- * @return Returns 1 on success, -1 on failure (e.g., invalid input or division by zero).
+ * @return Returns 1 on success, -1 on failure.
  */
 msg bi_squc(OUT bigint** dst, IN const word src1)
 {   
@@ -1077,6 +1068,19 @@ msg bi_squc(OUT bigint** dst, IN const word src1)
     return SUCCESS;
 }
 
+/**
+ * @brief Squaring of positive or negative bigint.
+ * 
+ * This function performs Squaring of big int (`src1`)
+ * The sign of the result is always POSITIVE.
+ * It's like to multiplication of two same bigint.
+ * By multiply 2 after the multiplication same single word, and connect the result of single word squaring.
+ * 
+ * @param[out] dst Pointer to the result bigint that squared by src1.
+ * @param[in] src1 The single word for the squaring.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
 msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 {
     bigint* C1 = NULL;
