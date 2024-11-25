@@ -1023,19 +1023,16 @@ msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* 
 msg bi_squc(OUT bigint** dst, IN const word src1)
 {   
     int error_msg = 0;
-    half_word A1 = 0, A0 = 0;
-    bigint* C = NULL;
+    word A1 = 0, A0 = 0;
     bigint* T = NULL;
+    bigint* C = NULL;
 
     if((*dst) != NULL)
     {
         error_msg = bi_delete(dst);
- 
     }
     
     error_msg = bi_new(dst, 2);
-
-
     error_msg = bi_new(&C, 2);
 
     C->sign = POSITIVE;
@@ -1046,11 +1043,10 @@ msg bi_squc(OUT bigint** dst, IN const word src1)
 
     A1 = src1 >> (sizeof(half_word) * 8);
     A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
-    C->a[1] = A1*A1;
-    C->a[0] = A0*A0;
+    C->a[1] = (A1*A1);
+    C->a[0] = (A0*A0);
     T->a[0] = A0*A1;
     error_msg = bi_bit_lshift(T, SIZEOFWORD/2 + 1);
-
 
     error_msg = add_same_sign(dst, C, T);
 
@@ -1097,21 +1093,18 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
         }
         return SUCCESS;
     }
-    
-    bi_assign(&temp_src1, src1);
 
+    bi_assign(&temp_src1, src1);
     bi_new(&C2, 1);
     
     for(int idx1 = 0; idx1 < temp_src1->word_len; idx1++)
     {
         bi_squc(&T1, temp_src1->a[idx1]);
-
         if(T1->word_len == 1)
         {
             bi_fillzero(T1, 2, TOP);
         }
         bi_connect(&C1_sum, T1, C1);
-
         bi_assign(&C1, C1_sum);
 
         for(int idx2 = idx1 + 1; idx2 < temp_src1->word_len; idx2++)

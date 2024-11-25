@@ -751,9 +751,57 @@ void bi_l2r_debug()
     bi_print(dst, 16);
 }
 
+void bi_squ_debug()
+{
+    bigint *pos_a = NULL;
+    bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+    // bigint *neg_b = NULL;
+    // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+    printf("pos a : ");
+    bi_print(pos_a, 16);
+    printf("\n");
+    bigint *p_squ = NULL;
+    bi_squ(&p_squ, pos_a);
+
+    printf("p_squ : ");
+    bi_print(p_squ, 16);
+    printf("\n");
+
+    // bi_print(neg_b, 16);
+
+    // bigint *n_squ = NULL;
+    // bi_squ(&n_squ, neg_b);
+
+    // bi_print(n_squ, 16);    
+}
+
+void bi_squc_debug()
+{
+    bigint *pos_a = NULL;
+    bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+    // bigint *neg_b = NULL;
+    // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+    printf("pos a : ");
+    bi_print(pos_a, 16);
+    printf("\n");
+    bigint *p_squ = NULL;
+    bi_squ(&p_squ, pos_a);
+
+    printf("p_squ : ");
+    bi_print(p_squ, 16);
+    printf("\n");
+
+    // bi_print(neg_b, 16);
+
+    // bigint *n_squ = NULL;
+    // bi_squ(&n_squ, neg_b);
+
+    // bi_print(n_squ, 16);    
+}
+
 int main()
 {   
-    //atexit(check_leaks);
+    atexit(check_leaks);
     
     srand(time(NULL));
 
@@ -765,20 +813,21 @@ int main()
     //bignum_squc_time_test();
     //bignum_squ_time_test();
     //bignum_squ__vs_mul_time_test();
-
     //bignum_kara_squ_test();
     //bignum_squ_test();
-    //python_add_test("add_test.py", 10000);
-    //python_sub_test("sub_test.py", 10000);
-    //python_mul_test("mul_test.py", 10000);
-    //python_mul_k_test("mul_k_test.py", 10000);
-    //python_div_test("div_test.py", 10000);
-    python_squ_test("squ_test.py", 10000);
-    //python_squ_k_test("squ_k_test.py", 10000);
-    // python_l2r_test("l2r_test.py", 1000);
-    //python_r2l_test("r2l_test.py", 1000);
 
+
+    python_add_test("add_test.py", 1000);
+    python_sub_test("sub_test.py", 1000);
+    python_mul_test("mul_test.py", 1000);
+    python_mul_k_test("mul_k_test.py", 1000);
+    python_div_test("div_test.py", 1000);
+    python_squ_test("squ_test.py", 1000);
+    python_squ_k_test("squ_k_test.py", 1000);
+    python_l2r_test("l2r_test.py", 1000);
+    python_r2l_test("r2l_test.py", 1000);
+    //bignum_squc_test();
     //bi_l2r_debug();
-
+    //bi_squ_debug();
     return 0;
 }

@@ -565,8 +565,13 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
         }
     }
     else if(src1->sign == ZERO){
-        bi_assign(dst, src2);
-        return SUCCESS;
+        if(src2 == NULL){
+            bi_assign(dst, src1);
+            return SUCCESS;
+        }
+        else{
+            bi_assign(dst, src2);
+        }
     }
     else{
         if(src2 == NULL){
@@ -731,6 +736,7 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
         }
         dst->word_len += num_shift_words;
     }
+    
     
     dst_len = dst->word_len;
     if (num_shift_bits > 0)
