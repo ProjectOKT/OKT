@@ -564,6 +564,10 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
             return SUCCESS;
         }
     }
+    else if(src1->sign == ZERO){
+        bi_assign(dst, src2);
+        return SUCCESS;
+    }
     else{
         if(src2 == NULL){
             bi_assign(dst, src1);
