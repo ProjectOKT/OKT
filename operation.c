@@ -758,16 +758,14 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_refine(a1);
     bi_refine(b1);
     // t1, t0
-    bi_mul_k(&t1, a1, b1);
-    bi_mul_k(&t0, a0, b0);
-    bi_refine(t1);
-    bi_refine(t0);
+    bi_mul_kara(&t1, a1, b1);
+    bi_mul_kara(&t0, a0, b0);
+    
     // r = (t1 << 2*lw) + t0
     bi_assign(&temp, t1);
     bi_bit_lshift(temp,2*lw);
     bi_add(&r, temp, t0);
-    bi_refine(temp);
-    bi_refine(r);
+    
     // s1 = a0 - a1
     bi_sub(&s1,a0,a1);
     bi_delete(&a1);
@@ -786,18 +784,18 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     }
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;
-    bi_mul_k(&s,s1,s0);
+    bi_mul_kara(&s,s1,s0);
     bi_delete(&s0);
     bi_delete(&s1);
     s->sign = s_sign;
     //s = s + t1
     bi_add(&temp,s,t1);
-    bi_refine(temp);
+
     bi_delete(&t1);
     bi_delete(&s);
     //s = s + t0
     bi_add(&sum_s,temp,t0);
-    bi_refine(sum_s);
+
     bi_delete(&temp);
     bi_delete(&t0);
     //s = s << lw
@@ -812,16 +810,15 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 
 msg bi_mul_kara(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
 {
+    bi_mul_k(dst,src1,src2);
     if (src1->sign == ZERO || src2->sign == ZERO){
         (*dst)->sign= ZERO;
     }
     else if(src1->sign != src2->sign){
         (*dst)->sign= NEGATIVE;
-        bi_mul_k(dst,src1,src2);
     }
     else{
         (*dst)->sign= POSITIVE;
-        bi_mul_k(dst,src1,src2);
     }
 
     return SUCCESS;
