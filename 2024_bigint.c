@@ -801,7 +801,7 @@ void bi_squc_debug()
 
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     
     srand(time(NULL));
 
@@ -817,15 +817,16 @@ int main()
     //bignum_squ_test();
 
 
-    python_add_test("add_test.py", 1000);
-    python_sub_test("sub_test.py", 1000);
-    python_mul_test("mul_test.py", 1000);
-    python_mul_k_test("mul_k_test.py", 1000);
-    python_div_test("div_test.py", 1000);
-    python_squ_test("squ_test.py", 1000);
-    python_squ_k_test("squ_k_test.py", 1000);
-    python_l2r_test("l2r_test.py", 1000);
-    python_r2l_test("r2l_test.py", 1000);
+    //python_add_test("add_test.py", 1000);
+    //python_sub_test("sub_test.py", 1000);
+    //python_mul_test("mul_test.py", 1000);
+    //python_mul_k_test("mul_k_test.py", 1000);
+    //python_div_test("div_test.py", 1000);
+    //python_squ_test("squ_test.py", 1000);
+    //python_squ_k_test("squ_k_test.py", 1000);
+    //python_l2r_test("l2r_test.py", 1000);
+    //python_r2l_test("r2l_test.py", 100);
+    python_MaS_test("MaS_test.py", 100);
     //bignum_squc_test();
     //bi_l2r_debug();
     //bi_squ_debug();

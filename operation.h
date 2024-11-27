@@ -41,4 +41,6 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
 
 msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod);
 
+msg bi_mod_exp_MaS(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod);
+
 #endif
