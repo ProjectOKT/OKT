@@ -1433,3 +1433,54 @@ msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
 
     return SUCCESS;
 }
+
+
+/**
+ * @brief Modular exponentiation using multiply and square binary method.
+ * 
+ * This function computes the modular exponentiation (`base^exp % mod`) 
+ * using the multiply and square binary method. The result is stored in `dst`.
+ * 
+ * @param[out] dst Pointer to the output big integer result.
+ * @param[in] base The base big integer.
+ * @param[in] exp The exponent big integer.
+ * @param[in] mod The modulus big integer.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
+msg bi_mod_exp_MaS(OUT bigint** dst, IN const bigint* base, IN const bigint* exp, IN const bigint* mod)
+{
+    if((base == NULL)|| (exp == NULL) || (mod == NULL) || (base->a == NULL) || 
+        (exp->a == NULL) || (mod->a == NULL) || (base->sign != POSITIVE) || (exp->sign != POSITIVE) || (mod->sign != POSITIVE))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* quotient_buf = NULL;
+    bigint* t[2] = {NULL,NULL};
+    bi_new(&t[0], 1);
+    t[0]->sign = POSITIVE;
+    t[0]->a[0] = 1;
+    bi_new(&t[1], base->word_len);
+    bi_assign(&t[1], base);
+
+    for(int word_index = exp->word_len-1; word_index >= 0; word_index--)
+    {
+        for(int bit_index = (int)(sizeof(word) * 8) - 1; bit_index >= 0; bit_index--)
+        {
+            int n = (exp->a[word_index] >> bit_index) & 0x01;
+
+            bi_mul(&t[1-n], t[0], t[1]);
+            bi_squ(&t[n],t[n]);
+            bi_division(&quotient_buf, &t[0], t[0], mod);
+            bi_division(&quotient_buf, &t[1], t[1], mod);
+        }
+    }
+    bi_assign(dst,t[0]);
+    bi_delete(&quotient_buf);
+    bi_delete(&t[1]);
+    bi_delete(&t[0]);
+
+    return SUCCESS;
+}

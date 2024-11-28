@@ -44,4 +44,6 @@ void python_l2r_test(const char* filename, int testnum) ;
 
 void python_r2l_test(const char* filename, int testnum);
 
+void python_MaS_test(const char* filename, int testnum);
+
 #endif
