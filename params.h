@@ -8,7 +8,7 @@
 
 #define ZERORIZE       1 // Unsecure delete: 0, Secure delete: 1 
 #define ENDIAN         0 // Little endian: 0, Big endian: 1
-#define SIZEOFWORD     64 //bitsize of word
+#define SIZEOFWORD     32 //bitsize of word
 
 #define TOP            1 //zero padding to msb
 #define BOTTOM        -1 //zero padding to lsb

@@ -7,6 +7,7 @@
 
 #define IN
 #define OUT
+#define INOUT
 
 typedef int msg;
 typedef uint8_t byte;

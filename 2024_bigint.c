@@ -781,6 +781,7 @@ void bi_squc_debug()
     bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
     // bigint *neg_b = NULL;
     // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+
     printf("pos a : ");
     bi_print(pos_a, 16);
     printf("\n");
@@ -799,33 +800,53 @@ void bi_squc_debug()
     // bi_print(n_squ, 16);    
 }
 
+void bi_add_replace_test()
+{
+    bigint *a = NULL;
+    bigint *b = NULL;
+
+    bi_get_random(&a, NEGATIVE, 32);
+    bi_get_random(&b, NEGATIVE, 32);
+
+    bi_print(a, 16);
+    bi_print(b, 16);
+
+    bi_add_replace(&a, b);
+    bi_print(a, 16);
+
+    bi_delete(&a);
+    bi_delete(&b);
+}
+
+
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     
     srand(time(NULL));
 
     //bignum_add_time_test();
     //bignum_sub_time_test();
-    //bignum_mul_time_test();
-    //bignum_mul_k_time_test();
+    // bignum_mul_time_test();
+    // bignum_mul_k_time_test();
     //bignum_div_time_test();
     //bignum_squc_time_test();
     //bignum_squ_time_test();
     //bignum_squ__vs_mul_time_test();
     //bignum_kara_squ_test();
     //bignum_squ_test();
+    bi_add_replace_test();
 
+    // python_add_test("add_test.py", 100);
+    // python_sub_test("sub_test.py", 100);
+    // python_mul_test("mul_test.py", 100);
+    // python_mul_k_test("mul_k_test.py", 100);
+    // python_div_test("div_test.py", 100);
+    // python_squ_test("squ_test.py", 100);
+    // python_squ_k_test("squ_k_test.py", 100);
+    // python_l2r_test("l2r_test.py", 100);
+    // python_r2l_test("r2l_test.py", 100);
 
-    python_add_test("add_test.py", 1000);
-    python_sub_test("sub_test.py", 1000);
-    python_mul_test("mul_test.py", 1000);
-    python_mul_k_test("mul_k_test.py", 1000);
-    python_div_test("div_test.py", 1000);
-    python_squ_test("squ_test.py", 1000);
-    python_squ_k_test("squ_k_test.py", 1000);
-    python_l2r_test("l2r_test.py", 1000);
-    python_r2l_test("r2l_test.py", 1000);
     //bignum_squc_test();
     //bi_l2r_debug();
     //bi_squ_debug();

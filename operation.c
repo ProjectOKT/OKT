@@ -171,6 +171,67 @@ msg add_same_sign(OUT bigint** dst, IN bigint* src1, IN bigint* src2){
     return SUCCESS;
 }
 
+msg add_same_sign_replace(INOUT bigint** dst, IN bigint* src1){
+    msg error_msg = 0;
+    word result;
+    int max_len;
+    int c = 0;
+    
+    bigint *temp_dst = NULL;
+    
+    bi_assign(&temp_dst, *dst);
+
+    if(src1->sign == POSITIVE){   //더 긴 길이의 bigint만큼 생성
+        max_len = src1->word_len;
+        error_msg = bi_new(dst, max_len + 1);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+        (*dst)->sign = POSITIVE;
+    }
+    else{
+        max_len = temp_dst->word_len;
+        error_msg = bi_new(dst, max_len + 1);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+        (*dst)->sign = NEGATIVE;          //더 긴 길이의 bigint만큼 생성
+    }
+
+    if((src1->word_len) > (temp_dst->word_len)){
+        error_msg = bi_fillzero(temp_dst, src1->word_len, TOP);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+    }
+    else{
+        error_msg = bi_fillzero(src1, temp_dst->word_len, TOP);
+        if(error_msg == FAILED)
+        {
+            return FAILED;
+        }
+    }
+
+    for(int idx = 0; idx < max_len; idx++){    
+        result = add_c(src1->a[idx], temp_dst->a[idx], &c);
+        (*dst)->a[idx] = result;
+    }
+    if(c == 1){
+        (*dst)->a[max_len] = 1;        //마지막 carry가 1이면 src1 크기를 넘어간다.
+    }
+    else{
+        error_msg = bi_refine(*dst);             //마지막 carry가 0이면 크기 조절 후 마무리
+    }
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
+    return SUCCESS;
+}
 
 /**
  * @brief Adds two bigint values.
@@ -216,6 +277,7 @@ msg bi_add(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2){
     if(temp1 == 0){
         error_msg = bi_assign(dst, temp_src2);
     }
+
     else if(temp2 == 0){
         error_msg = bi_assign(dst, temp_src1);
     }
@@ -247,6 +309,71 @@ msg bi_add(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2){
     return SUCCESS;
 }
 
+//a = a + b
+msg bi_add_replace(INOUT bigint** dst, IN const bigint* src1){
+    msg error_msg = FAILED;
+
+    bigint* temp_src1 = NULL;
+    bigint* temp_dst = NULL;
+
+    word sum_dst = 0;
+    word sum_temp1 = 0;
+
+    error_msg = bi_assign(&temp_src1, src1);
+    if(error_msg == FAILED){
+        return FAILED;
+    }
+    error_msg = bi_assign(&temp_dst, *dst);
+    if(error_msg == FAILED){
+        return FAILED;
+    }
+
+    for(int index = 0; index < temp_src1->word_len; index++)
+    {
+        sum_temp1 |= temp_src1->a[index];
+    }
+    for(int index = 0; index < temp_dst->word_len; index++)
+    {
+        sum_dst |= temp_dst->a[index];
+    }
+
+    if(sum_temp1 == 0){
+        error_msg = bi_assign(dst, temp_src1);
+    }
+
+    else if(sum_dst == 0){
+        error_msg = SUCCESS;
+    }
+    else if((temp_src1->sign == POSITIVE) && (temp_dst->sign == NEGATIVE)){
+        temp_dst->sign = POSITIVE;
+        error_msg = bi_sub(dst, temp_src1, temp_dst);
+    }
+    else if((temp_src1->sign ==  NEGATIVE) && (temp_dst->sign ==  POSITIVE)){
+        temp_src1->sign = POSITIVE;
+        error_msg = bi_sub(dst, temp_dst, temp_src1);
+    }
+    else if ((bi_compare(temp_src1, temp_dst) == 1) || (bi_compare(temp_src1, temp_dst) == 0)){
+        error_msg = add_same_sign_replace(&temp_dst, temp_src1);
+        bi_assign(dst, temp_dst);
+    }
+    else{   
+        error_msg = add_same_sign_replace(&temp_src1, temp_dst);
+        bi_assign(dst, temp_src1);
+    }
+
+    error_msg = bi_delete(&temp_src1);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+    error_msg = bi_delete(&temp_dst);
+    if(error_msg == FAILED)
+    {
+        return FAILED;
+    }
+
+    return SUCCESS;
+}
 
 /**
  * @brief Subtracts two words with borrow handling.

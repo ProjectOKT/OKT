@@ -197,7 +197,7 @@ void bignum_mul_time_test()
     clock_t start, end;
     double cpu_time_used;
 
-    start = clock();
+
 
     bigint *pos_a = NULL;
     bigint *pos_b = NULL;
@@ -230,8 +230,9 @@ void bignum_mul_time_test()
         bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
 #endif
-
+        start = clock();
         bi_mul(&pp_mul, pos_a, pos_b);
+        end = clock();
         bi_mul(&nn_mul, neg_c, neg_d);
         bi_mul(&pn_mul, pos_a, neg_d);
         bi_mul(&np_mul, neg_c, pos_b);
@@ -262,11 +263,9 @@ void bignum_mul_time_test()
     bi_delete(&zp_mul);
     bi_delete(&zz_mul);
 #endif
-    end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("[mul] Execution time: %f seconds\n", cpu_time_used);
 }
-
 
 /**
  * @brief Runs a time test for bigint multiplication using Karatsuba algorithm.
@@ -283,7 +282,7 @@ void bignum_mul_k_time_test()
     clock_t start, end;
     double cpu_time_used;
 
-    start = clock();
+
 
     bigint *pos_a = NULL;
     bigint *pos_b = NULL;
@@ -316,8 +315,9 @@ void bignum_mul_k_time_test()
         bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
 #endif
-
+        start = clock();
         bi_mul_kara(&pp_mul, pos_a, pos_b);
+        end = clock();
         bi_mul_kara(&nn_mul, neg_c, neg_d);
         bi_mul_kara(&pn_mul, pos_a, neg_d);
         bi_mul_kara(&np_mul, neg_c, pos_b);
@@ -348,7 +348,6 @@ void bignum_mul_k_time_test()
     bi_delete(&zp_mul);
     bi_delete(&zz_mul);
 #endif
-    end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("[mul_k] Execution time: %f seconds\n", cpu_time_used);
 }
