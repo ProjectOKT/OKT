@@ -537,6 +537,138 @@ void bignum_squ__vs_mul_time_test()
     printf("[mul] Execution time: %f seconds\n", mul_cpu_time_used);
 }
 
+void bignum_time_all_test(){
+    
+    printf("==============|1-time test time|======================\n");
+    clock_t start, end;
+    double add_time, sub_time, mul_time, div_time, mul_k_time, \
+     squ_time, squ_k_time, l2r_time, r2l_time, bar_reduce_time, mas_time;
+    
+    bigint *src1 = NULL;
+    bigint *src2 = NULL;
+    bigint *result = NULL;
+
+    bi_get_random(&src1, POSITIVE, 7);
+    bi_get_random(&src2, POSITIVE, 7);
+
+    //add
+    start = clock();
+    bi_add(&result, src1, src2);
+    end = clock();
+    add_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[add] Execution time: %f seconds\n", add_time);
+    //sub
+    start = clock();
+    bi_sub(&result, src1, src2);
+    end = clock();
+    sub_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[sub] Execution time: %f seconds\n", sub_time);
+    
+    //mul
+    start = clock();
+    bi_mul(&result, src1, src2);
+    end = clock();
+    mul_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[mul] Execution time: %f seconds\n", mul_time);
+
+    //mul_k
+    start = clock();
+    bi_mul_kara(&result, src1, src2);
+    end = clock();
+    mul_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[mul_k] Execution time: %f seconds\n", mul_k_time);
+
+    //div
+    bigint *quo = NULL;
+    bigint *remainer = NULL;
+    start = clock();
+    bi_division(&quo, &remainer, src1, src2);
+    end = clock();
+    div_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[div] Execution time: %f seconds\n", div_time);
+    bi_delete(&quo);
+    bi_delete(&remainer);
+
+    //squ
+    start = clock();
+    bi_squ(&result, src1);
+    end = clock();
+    squ_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[squ] Execution time: %f seconds\n", squ_time);
+
+    //squ_k
+    start = clock();
+    bi_squ_kara(&result, src1);
+    end = clock();
+    squ_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[squ_k_time] Execution time: %f seconds\n", squ_k_time);
+    
+    bigint *exp = NULL;
+    bi_get_random(&exp, POSITIVE, 5);
+    bigint *modulo = NULL;
+    bi_get_random(&modulo, POSITIVE, 32);
+    
+    //l2r   
+    start = clock();
+    bi_mod_exp_l2r(&result, src1, exp, modulo);
+    end = clock();
+    l2r_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[l2r] Execution time: %f seconds\n", l2r_time);
+    
+    //r2l
+    start = clock();
+    bi_mod_exp_r2l(&result, src1, exp, modulo);
+    end = clock();
+    r2l_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[r2l] Execution time: %f seconds\n", r2l_time);
+
+    //Multiple and Square
+    start = clock();
+    bi_mod_exp_MaS(&result, src1, exp, modulo);
+    end = clock();
+    mas_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[Multiple and Square] Execution time: %f seconds\n", mas_time);
+
+    bi_delete(&exp);
+    bi_delete(&modulo);
+
+    //Barett Reduce
+
+    int n = 32;
+    bigint *A = NULL;
+    bi_get_random(&A, POSITIVE, 2*n);
+    bigint *N = NULL;
+    bi_get_random(&N, POSITIVE, n);
+    bigint *T = NULL;
+    bigint *r_temp = NULL;
+    bigint *W_2n = NULL;
+    
+    bi_new(&W_2n,n*2+1);
+    W_2n->a[n*2] = 1;
+    W_2n->sign = POSITIVE;
+    bi_division(&T, &r_temp, W_2n, N);
+
+    bigint *redu_result = NULL;
+
+    start = clock();
+    bi_bar_redu(&redu_result, A, T, N);
+    end = clock();
+    bar_reduce_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("[Barett Reduce] Execution time: %f seconds\n", bar_reduce_time);
+
+    bi_delete(&A);
+    bi_delete(&N);
+    bi_delete(&T);
+    bi_delete(&r_temp);
+    bi_delete(&W_2n);
+    bi_delete(&redu_result);
+
+    bi_delete(&src1);
+    bi_delete(&src2);
+    bi_delete(&result);
+}
+
+
 /**
  * @brief Runs a specific addition test from a file for validation.
  *
@@ -1385,7 +1517,7 @@ void python_l2r_test(const char* filename, int testnum)
         bigint *exp = NULL;
         bi_get_random(&exp, POSITIVE, rand() % 5 + 1);
         bigint *mod = NULL;
-        bi_get_random(&mod, POSITIVE, rand() % 31 + 1);
+        bi_get_random(&mod, POSITIVE, rand() % 31 + 1); 
 
         bigint *mod_exp_result = NULL;
         bi_mod_exp_l2r(&mod_exp_result, base, exp, mod);

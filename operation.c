@@ -229,7 +229,7 @@ msg add_same_sign_replace(INOUT bigint** dst, IN bigint* src1){
     {
         return FAILED;
     }
-
+    bi_delete(&temp_dst);
     return SUCCESS;
 }
 
@@ -338,11 +338,10 @@ msg bi_add_replace(INOUT bigint** dst, IN const bigint* src1){
     }
 
     if(sum_temp1 == 0){
-        error_msg = bi_assign(dst, temp_src1);
-    }
-
-    else if(sum_dst == 0){
         error_msg = SUCCESS;
+    }
+    else if(sum_dst == 0){
+        error_msg = bi_assign(dst, temp_src1);
     }
     else if((temp_src1->sign == POSITIVE) && (temp_dst->sign == NEGATIVE)){
         temp_dst->sign = POSITIVE;
@@ -1205,8 +1204,6 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 {
     bigint* C1 = NULL;
     bigint* C2 = NULL;
-    bigint* C1_sum = NULL;
-    bigint* C2_sum = NULL;
     bigint* T1 = NULL;
     bigint* T2 = NULL;
     bigint* temp_src1 = NULL;
@@ -1223,38 +1220,26 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 
     bi_assign(&temp_src1, src1);
     bi_new(&C2, 1);
-    
+    bi_new(&C1, 1);
+
     for(int idx1 = 0; idx1 < temp_src1->word_len; idx1++)
     {
         bi_squc(&T1, temp_src1->a[idx1]);
-        if(T1->word_len == 1)
-        {
-            bi_fillzero(T1, 2, TOP);
-        }
-        bi_connect(&C1_sum, T1, C1);
-        bi_assign(&C1, C1_sum);
-
+        bi_bit_lshift(T1, 2 * idx1 * SIZEOFWORD);
+        bi_add_replace(&C1, T1);
         for(int idx2 = idx1 + 1; idx2 < temp_src1->word_len; idx2++)
         {
             bi_smul(&T2, temp_src1->a[idx1], temp_src1->a[idx2]);
 
             bi_bit_lshift(T2, (idx1 + idx2) * SIZEOFWORD);
-
-            bi_add(&C2_sum, C2, T2);
-
-            bi_assign(&C2, C2_sum);
-
-            bi_delete(&C2_sum);
+            bi_add_replace(&C2, T2);
             bi_delete(&T2);
         }
         bi_delete(&T1);
-        bi_delete(&C1_sum);
     }
 
     bi_bit_lshift(C2, 1);
-
     bi_add(dst, C1, C2);
-    bi_refine(*dst); // sungbin: NOV_24 추가
     
     bi_delete(&temp_src1);
     bi_delete(&C1);
