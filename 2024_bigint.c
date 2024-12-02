@@ -835,7 +835,7 @@ int main()
     //bignum_squ__vs_mul_time_test();
     //bignum_kara_squ_test();
     //bignum_squ_test();
-    bi_add_replace_test();
+    //bi_add_replace_test();
 
     //python_add_test("add_test.py", 1000);
     //python_sub_test("sub_test.py", 1000);
@@ -846,7 +846,8 @@ int main()
     //python_squ_k_test("squ_k_test.py", 1000);
     //python_l2r_test("l2r_test.py", 1000);
     //python_r2l_test("r2l_test.py", 100);
-    python_MaS_test("MaS_test.py", 100);
+    //python_MaS_test("MaS_test.py", 100);
+    python_bar_redu_test("bar_redu_test.py", 10000);
     //bignum_squc_test();
     //bi_l2r_debug();
     //bi_squ_debug();

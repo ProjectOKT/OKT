@@ -1516,3 +1516,66 @@ void python_MaS_test(const char* filename, int testnum)
     }   
     fclose(file);
 }
+
+
+/**
+ * @brief Test function for Fast Reduction using Barrett Reduction using Python data.
+ * 
+ * This function tests the Fast Reduction using Barrett Reduction implementation 
+ * using test cases loaded from a Python-generated file.
+ * 
+ * @param[in] filename The name of the file containing test data.
+ * @param[in] testnum The number of test cases to execute.
+ * 
+ * @return void
+ */
+void python_bar_redu_test(const char* filename, int testnum) 
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    for (int i = 0; i < testnum; i++) {
+        //인자
+        int n = rand() % 31 + 1;
+
+        bigint *A = NULL;
+        bi_get_random(&A, POSITIVE, 2*n);
+        bigint *N = NULL;
+        bi_get_random(&N, POSITIVE, n);
+        bigint *T = NULL;
+        bigint *r_temp = NULL;
+        bigint *W_2n = NULL;
+        
+        bi_new(&W_2n,n*2+1);
+        W_2n->a[n*2] = 1;
+        W_2n->sign = POSITIVE;
+        bi_division(&T, &r_temp, W_2n, N);
+
+        bigint *redu_result = NULL;
+        bi_bar_redu(&redu_result, A, T, N);
+        
+        fprintf(file, "A = ");
+        bi_fprint(file,A);
+        fprintf(file, "T = ");
+        bi_fprint(file,T);
+
+        fprintf(file, "N = ");
+        bi_fprint(file,N);
+        fprintf(file, "redu_result = ");
+        bi_fprint(file,redu_result);
+
+        fprintf(file, "temp = A %% N\n");
+        fprintf(file, "if (redu_result != temp):\n \t print(f\"[bar]: {A:#x} mod {N:#x} != {redu_exp_result:#x}\\n\")\n\n");
+
+        bi_delete(&A);
+        bi_delete(&N);
+        bi_delete(&r_temp);
+        bi_delete(&T);
+        bi_delete(&W_2n);
+        bi_delete(&redu_result);
+    }   
+    fclose(file);
+}

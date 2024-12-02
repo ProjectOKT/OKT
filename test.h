@@ -46,4 +46,6 @@ void python_r2l_test(const char* filename, int testnum);
 
 void python_MaS_test(const char* filename, int testnum);
 
+void python_bar_redu_test(const char* filename, int testnum);
+
 #endif

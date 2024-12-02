@@ -1484,3 +1484,56 @@ msg bi_mod_exp_MaS(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
 
     return SUCCESS;
 }
+
+
+/**
+ * @brief Fast Reduction using Barrett Reduction method.
+ * 
+ * This function computes the Fast Reduction (`base % mod`) 
+ * using the Barrett Reduction method. The result is stored in `dst`.
+ * 
+ * @param[out] dst Pointer to the output big integer result.
+ * @param[in] A The base big integer.
+ * @param[in] T The pre-computed big integer.
+ * @param[in] N The modulus big integer.
+ * 
+ * @return Returns 1 on success, -1 on failure.
+ */
+msg bi_bar_redu(OUT bigint** dst, IN const bigint* A, IN const bigint* T, IN const bigint* N)
+{
+    if((A == NULL)|| (T == NULL) || (N == NULL) || (A->a == NULL) || 
+        (T->a == NULL) || (N->a == NULL) || (A->sign != POSITIVE) || (T->sign != POSITIVE) || (N->sign != POSITIVE))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* quotient_buf = NULL;
+    bigint* R = NULL;
+    bigint* temp = NULL;
+    int n = N->word_len;
+
+    bi_assign(&quotient_buf,A);
+
+    bi_bit_rshift(quotient_buf,(n-1)*SIZEOFWORD);
+    bi_mul(&quotient_buf,quotient_buf,T);
+
+    bi_bit_rshift(quotient_buf,(n+1)*SIZEOFWORD);
+    bi_mul(&R,N,quotient_buf);
+    bi_delete(&quotient_buf);
+
+    bi_assign(&temp,R);
+    bi_sub(&R,A,temp);
+
+    while((bi_compare(R,N) != -1)){
+        bi_sub(&temp,R,N);
+        bi_assign(&R,temp);
+    }
+
+    bi_assign(dst,R);
+
+    bi_delete(&R);
+    bi_delete(&temp);
+
+    return SUCCESS;
+}
