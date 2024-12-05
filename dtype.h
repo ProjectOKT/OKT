@@ -9,8 +9,10 @@
 #define OUT
 #define INOUT
 
-typedef int msg;
+typedef int msg;        //return message
 typedef uint8_t byte;
+
+//define word type 
 #if SIZEOFWORD == 32
     typedef uint16_t half_word;
     typedef uint32_t word;
@@ -18,7 +20,7 @@ typedef uint8_t byte;
     typedef uint32_t half_word;
     typedef uint64_t word;
 #elif SIZEOFWORD == 8
-    typedef uint8_t word;
+    typedef byte word;
 #endif
 
 /**

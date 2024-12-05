@@ -1,6 +1,7 @@
 #ifndef BIGINTFUNC_H
 #define BIGINTFUNC_H
 
+#include <stdio.h>
 #include "dtype.h"
 
 msg bi_set_from_array(OUT bigint** dst, IN int sign, IN int word_len, IN const word* a);
@@ -28,4 +29,7 @@ msg bi_connect(OUT bigint** dst, IN bigint* src1, IN bigint* src2);
 msg bi_bit_rshift(OUT bigint* dst, IN int num_bits);
 
 msg bi_bit_lshift(OUT bigint* dst, IN int num_bits);
+
+int bi_compare(IN const bigint* A, IN const bigint* B);
+
 #endif

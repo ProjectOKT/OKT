@@ -12,7 +12,7 @@ endif
 
 # Compiler and Flags
 CC := gcc
-CFLAGS := -Wall -Wextra -O2 -std=c99  # C99 표준 지정
+CFLAGS := -Wall -Wextra -O2 -std=c99  # C99 Standard
 
 # OS-Specific Flags
 ifeq ($(OS_NAME), Linux)
@@ -24,7 +24,7 @@ else ifeq ($(OS_NAME), Windows)
 endif
 
 # Source Files and Executable
-SRC := 2024_bigint.c arrayfun.c bigintfun.c operation.c test.c verify.c
+SRC := 2024_bigint.c arrayfun.c bigintfun.c operation.c operation_tool.c test.c verify.c
 TARGET := 2024_bigint
 
 # Build Rules

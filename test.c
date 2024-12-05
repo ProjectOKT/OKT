@@ -533,6 +533,45 @@ void bignum_squ__vs_mul_time_test()
     printf("[mul] Execution time: %f seconds\n", mul_cpu_time_used);
 }
 
+void bignum_squ_vs_squ_k_time_test()
+{
+    clock_t start, end;
+    double squ_time, squ_k_time;
+    double squ_sum = 0; double squ_k_sum = 0; 
+    
+    bigint *pos_a = NULL;
+    bigint *p_squ = NULL;
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, 6);
+#endif
+        start = clock();
+        bi_squ(&p_squ, pos_a);
+        end = clock();
+        squ_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        squ_sum += squ_time;
+
+        start = clock();
+        bi_squ_kara(&p_squ, pos_a);
+        end = clock();
+        squ_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        squ_k_sum += squ_k_time;
+    }
+
+    bi_delete(&pos_a);
+    bi_delete(&p_squ);
+
+    printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
+    printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
+}
+
 void bignum_time_all_test(){
     
     printf("==============|time test time|======================\n");

@@ -31,7 +31,6 @@ msg bi_set_from_array(OUT bigint** dst, IN int sign, IN int word_len, IN const w
     return SUCCESS;
 }
 
-
 /**
  * @brief Converts a string to a bigint structure.
  * 
@@ -39,7 +38,7 @@ msg bi_set_from_array(OUT bigint** dst, IN int sign, IN int word_len, IN const w
  * 
  * @param[out] dst Pointer to a double pointer of `bigint`, where the converted bigint will be stored.
  * @param[in] int_str Pointer to the input string representing the integer.
- * @param[in] base The base of the input string (valid values are 2, 10, or 16).
+ * @param[in] base The base of the input string (valid values are 2, 16).
  * 
  * @return Returns 1 on success, -1 on failure.
  */
@@ -49,14 +48,12 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
     unsigned int strlength = 0; 
     if (base == 2){
         if (int_str[0] == '-'){
-            strlength = strlen(int_str) - 1; //string 숫자 길이
-            word_len = strlength % SIZEOFWORD == 0 ? strlength / SIZEOFWORD : strlength / SIZEOFWORD +1;  //word 길이
-            //구한 word len으로 bigint 하나 만들기
+            strlength = strlen(int_str) - 1;
+            word_len = strlength % SIZEOFWORD == 0 ? strlength / SIZEOFWORD : strlength / SIZEOFWORD +1;
             bi_new(dst, word_len);
             (*dst) -> sign = NEGATIVE;
             for (unsigned int i = 0; i < strlength; i++){
                 if (int_str[strlength - i] == '1'){
-                    //1이면 32의 나머지만큼 shift해서 64로 나눈몫에저장
                     (*dst) -> a[i/SIZEOFWORD] |= 1 << (i % SIZEOFWORD);
                 }
                 else if (int_str[strlength - i] != '0'){
@@ -67,14 +64,12 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             }
         }
         else{
-            strlength = strlen(int_str); //string 숫자 길이
-            word_len = strlength % SIZEOFWORD == 0 ? strlength / SIZEOFWORD : strlength / SIZEOFWORD +1;  //word 길이
-            //구한 word len으로 bigint 하나 만들기
+            strlength = strlen(int_str);
+            word_len = strlength % SIZEOFWORD == 0 ? strlength / SIZEOFWORD : strlength / SIZEOFWORD +1;
             bi_new(dst, word_len);
             (*dst) -> sign = POSITIVE;
             for (unsigned int i = 0; i < strlength; i++){
                 if (int_str[strlength - i - 1] == '1'){
-                    //1이면 SIZEOFWORD의 나머지만큼 shift해서 SIZEOFWORD로 나눈몫에저장
                     (*dst) -> a[i/SIZEOFWORD] |= 1 << (i % SIZEOFWORD);
                 }
                 else if (int_str[strlength - i - 1] != '0'){
@@ -86,20 +81,16 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
         }
         
     }
-    else if (base == 10){
-        return 0;
-    }
     else if (base == 16){
         if (int_str[0] == '-'){
-            strlength = strlen(int_str)-1;  // 0x를 제외한 길이
+            strlength = strlen(int_str)-1;
             word_len = strlength * 4 % SIZEOFWORD == 0 ? strlength * 4 / SIZEOFWORD : strlength * 4 / SIZEOFWORD +1;  
             bi_new(dst, word_len);
             (*dst)->sign = NEGATIVE;
             for (unsigned int i = 0; i < strlength; i++) {
                 char c = int_str[strlength - i];
                 int digit = 0;
-
-                // 16진수 문자를 정수로 변환
+            
                 if (c >= '0' && c <= '9') {
                     digit = c - '0';
                 } else if (c >= 'a' && c <= 'f') {
@@ -112,7 +103,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
                     bi_delete(dst);
                     return FAILED;
                 }
-                (*dst)->a[i * 4 / SIZEOFWORD] |= (digit & 0xF) << (i * 4 % SIZEOFWORD);  // 4비트씩 shift하여 저장
+                (*dst)->a[i * 4 / SIZEOFWORD] |= (digit & 0xF) << (i * 4 % SIZEOFWORD);
             }
         }
         else {
@@ -124,7 +115,6 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
                 char c = int_str[strlength - i - 1];
                 int digit = 0;
 
-                // 16진수 문자를 정수로 변환
                 if (c >= '0' && c <= '9') {
                     digit = c - '0';
                 } else if (c >= 'a' && c <= 'f') {
@@ -137,7 +127,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
                     bi_delete(dst);
                     return FAILED;
                 }
-                (*dst)->a[i * 4 / SIZEOFWORD] |= (digit & 0xF) << (i * 4 % SIZEOFWORD);  // 4비트씩 shift하여 저장
+                (*dst)->a[i * 4 / SIZEOFWORD] |= (digit & 0xF) << (i * 4 % SIZEOFWORD);
             }
         }
     }
@@ -173,7 +163,7 @@ msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
 
     (*dst) -> sign = sign;
     
-    while(!((*dst)->a[word_len - 1])) // 마지막 배열 Nonzero 보장
+    while(!((*dst)->a[word_len - 1])) // last word nonzero
     {
         array_rand((*dst)->a, word_len);
     }
@@ -188,7 +178,7 @@ msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
  * This function takes a bigint structure and outputs its value in the specified numerical base.
  * 
  * @param[in] src Pointer to the `bigint` structure to be printed.
- * @param[in] base The base in which to print the bigint (valid values are 2, 10, or 16).
+ * @param[in] base The base in which to print the bigint (valid values are 2, 16).
  * 
  * @return Returns 1 on success, -1 on failure.
  */
@@ -201,15 +191,15 @@ msg bi_print(IN const bigint* src, IN int base)
         fprintf(stderr, ERR_INVALID_INPUT);
         return FAILED;
     }
-    if(src->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
+    if(src->sign == ZERO) // print ZERO
     {
         printf("ZERO\n");
         return SUCCESS;
     }
 
-    if(base == 2) // 2진수
+    if(base == 2)
     {
-        if(src->sign == POSITIVE) // 양수 음수 출력
+        if(src->sign == POSITIVE)
         {
             printf("0b");
         }
@@ -219,7 +209,7 @@ msg bi_print(IN const bigint* src, IN int base)
         }
         else
         {
-            return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
+            return FAILED;
         }
         
         temp = sizeof(word) * 8;
@@ -247,9 +237,9 @@ msg bi_print(IN const bigint* src, IN int base)
 
         return SUCCESS;
     }
-    else if(base == 16) // 16진수
+    else if(base == 16)
     {
-        if(src->sign == POSITIVE) // 양수 음수 출력
+        if(src->sign == POSITIVE)
         {
             printf("0x");
         }
@@ -310,12 +300,12 @@ msg bi_fprint(IN FILE* file, IN bigint* src)
         fprintf(stderr, "Error: NULL pointer dereference in bi_fprint\n");
         return FAILED;
     }
-    if(src->sign == ZERO) // sign ZERO면 ZERO출력 후 반환
+    if(src->sign == ZERO)
     {
         fprintf(file, "0x0\n");
         return SUCCESS;
     }
-    else if(src->sign == POSITIVE) // 양수 음수 출력
+    else if(src->sign == POSITIVE)
     {
         fprintf(file, "0x");
     }
@@ -326,7 +316,7 @@ msg bi_fprint(IN FILE* file, IN bigint* src)
     else
     {
         fprintf(stderr, ERR_INVALID_INPUT);
-        return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
+        return FAILED;
     }
 
     if (src->a == NULL) {
@@ -440,7 +430,7 @@ msg bi_delete(OUT bigint** dst)
  */
 msg bi_refine(OUT bigint* dst)
 {
-    if(dst == NULL){    //x가 비어있으면 반환
+    if(dst == NULL){
         return SUCCESS;
     }
 
@@ -448,18 +438,18 @@ msg bi_refine(OUT bigint* dst)
 
     for(; resize_len > 1; resize_len --){
         if(dst->a[resize_len - 1] != 0){
-            break;                  //기존 배열의 상위 인덱스부터 0이 아닐 때까지 size down
+            break;                  //find zero word
         }
     }
-    if(dst->word_len != resize_len){        //기존 길이에서 resize 됐다면,
+    if(dst->word_len != resize_len){
         dst->word_len = resize_len;
-        dst->a = (word*)realloc(dst->a, sizeof(word)*resize_len);   //변환길이만큼 재할당
+        dst->a = (word*)realloc(dst->a, sizeof(word)*resize_len);   //ReSize
         if(dst->a == NULL){
             fprintf(stderr, ERR_MEMORY_ALLOCATION);
         }
     }
 
-    if((dst->word_len == 1) && (dst->a[0] == 0x00)){    //만약 0이면 sign -> ZERO
+    if((dst->word_len == 1) && (dst->a[0] == 0x00)){
         dst->sign = ZERO;
     }
     return SUCCESS;
@@ -485,8 +475,8 @@ msg bi_assign(OUT bigint** dst, IN const bigint* src)
         bi_delete(dst);
     }
     
-    bi_new(dst, src->word_len);     //src의 길이만큼 생성
-    (*dst)->sign = src->sign;   //부호 복사
+    bi_new(dst, src->word_len);
+    (*dst)->sign = src->sign;
     array_copy(((*dst)->a), src->a, src->word_len);
     
     return SUCCESS;
@@ -761,6 +751,52 @@ msg bi_bit_lshift(OUT bigint* dst, IN int num_bits)
         }
         dst->a[0] <<= num_shift_bits;
     }
-
     return SUCCESS;
+}
+
+/**
+ * @brief Compares two bigint values.
+ * 
+ * This function compares two `bigint` structures, returning a value that indicates
+ * their relative sizes. It takes into account the sign of the bigints and their
+ * lengths to determine the result.
+ * 
+ * @param[in] A Pointer to the first `bigint` structure to be compared.
+ * @param[in] B Pointer to the second `bigint` structure to be compared.
+ * 
+ * @return 
+ *   - 1 if `A` is greater than `B`,
+ *   - 0 if `A` is equal to `B`,
+ *   - -1 if `A` is less than `B`.
+ */
+int bi_compare(IN const bigint* A, IN const bigint* B){
+    
+    int A_sign = A->sign;
+    if (A->sign!=B->sign){
+        if(A->sign == ZERO)
+        {
+            return (-1) * B->sign;
+        }
+        return A_sign;
+    }
+    else {
+        if(A->word_len > B->word_len){
+            return A_sign;
+        }
+        else if (A->word_len < B->word_len){
+            return (-1)*A_sign;
+        }
+        
+        else{   // if same word_len, compare 0 ~ (word_len - 1) single words
+            for (int i = 1; i <= A->word_len; i++){
+                if(A->a[A->word_len-i] > B->a[B->word_len-i]){
+                    return A_sign;
+                }
+                else if(A->a[A->word_len-i] < B->a[B->word_len-i]){
+                    return (-1)*A_sign;
+                }
+            }
+            return 0;
+        }
+    }
 }

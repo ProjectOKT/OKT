@@ -1,12 +1,15 @@
 #ifndef TEST_H
 #define TEST_H
 
-#define TESTNUM                     100
-#define T_TEST_DATA_WORD_SIZE       (1024 / SIZEOFWORD)
+#include "dtype.h"
+
+#define TESTNUM                     100     //number of test case
+#define T_TEST_DATA_WORD_SIZE       (2048 / SIZEOFWORD)     //test bigint word_len
+
+//test flags
 #define T_TEST_WORD_LEN_RANDOM       0
 #define T_USE_RANDOM_WORD_SIZE       0
 #define T_TEST_ALL_CASE              0
-#include "dtype.h"
 
 void bignum_add_time_test();
 
@@ -21,6 +24,8 @@ void bignum_div_time_test();
 void bignum_squ__vs_mul_time_test();
 
 void bignum_time_all_test();
+
+void bignum_squ_vs_squ_k_time_test();
 
 void python_add_test(const char* filename, int testnum);
 
