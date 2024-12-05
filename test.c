@@ -503,24 +503,20 @@ void bignum_squ__vs_mul_time_test()
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
 #elif T_TEST_WORD_LEN_RANDOM == 0
         bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
-        bi_get_random(&neg_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&neg_b, NEGATIVE, T_TEST_DATA_WORD_SIZE);
 #endif
         
 
         start_mul = clock();
         bi_mul(&p_mul, pos_a, pos_a);
-        bi_mul(&n_mul, neg_b, neg_b);
         end_mul = clock();
         mul_cpu_time_used = ((double)(end_mul - start_mul)) / CLOCKS_PER_SEC;
-        mul_cpu_time_used /= 2;
         sum_time_mul += mul_cpu_time_used;
 
         start_squ = clock();
         bi_squ(&p_squ, pos_a);
-        bi_squ(&n_squ, neg_b);
         end_squ = clock();
         squ_cpu_time_used = ((double)(end_squ - start_squ)) / CLOCKS_PER_SEC;
-        squ_cpu_time_used /= 2;
         sum_time_squ += squ_cpu_time_used;
     }
     bi_delete(&pos_a);
@@ -539,133 +535,165 @@ void bignum_squ__vs_mul_time_test()
 
 void bignum_time_all_test(){
     
-    printf("==============|1-time test time|======================\n");
+    printf("==============|time test time|======================\n");
     clock_t start, end;
     double add_time, sub_time, mul_time, div_time, mul_k_time, \
      squ_time, squ_k_time, l2r_time, r2l_time, bar_reduce_time, mas_time;
     
+    double add_sum, sub_sum, mul_sum, div_sum, mul_k_sum, \
+     squ_sum, squ_k_sum, l2r_sum, r2l_sum, bar_reduce_sum, mas_sum;
+
+    add_sum = 0; sub_sum = 0; mul_sum = 0; div_sum = 0; mul_k_sum = 0; squ_sum = 0;
+    squ_k_sum = 0; l2r_sum = 0; r2l_sum = 0; bar_reduce_sum = 0; mas_sum = 0;
+
     bigint *src1 = NULL;
     bigint *src2 = NULL;
     bigint *result = NULL;
+    for(int i = 0; i < TESTNUM; i++){
 
-    bi_get_random(&src1, POSITIVE, 7);
-    bi_get_random(&src2, POSITIVE, 7);
+        bi_get_random(&src1, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&src2, POSITIVE, T_TEST_DATA_WORD_SIZE);
 
-    //add
-    start = clock();
-    bi_add(&result, src1, src2);
-    end = clock();
-    add_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[add] Execution time: %f seconds\n", add_time);
-    //sub
-    start = clock();
-    bi_sub(&result, src1, src2);
-    end = clock();
-    sub_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[sub] Execution time: %f seconds\n", sub_time);
-    
-    //mul
-    start = clock();
-    bi_mul(&result, src1, src2);
-    end = clock();
-    mul_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[mul] Execution time: %f seconds\n", mul_time);
+        //add
+        start = clock();
+        bi_add(&result, src1, src2);
+        end = clock();
+        add_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        add_sum += add_time;
+        
+        //sub
+        start = clock();
+        bi_sub(&result, src1, src2);
+        end = clock();
+        sub_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        sub_sum += sub_time;
 
-    //mul_k
-    start = clock();
-    bi_mul_kara(&result, src1, src2);
-    end = clock();
-    mul_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[mul_k] Execution time: %f seconds\n", mul_k_time);
+        //mul
+        start = clock();
+        bi_mul(&result, src1, src2);
+        end = clock();
+        mul_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        mul_sum += mul_time;
 
-    //div
-    bigint *quo = NULL;
-    bigint *remainer = NULL;
-    start = clock();
-    bi_division(&quo, &remainer, src1, src2);
-    end = clock();
-    div_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[div] Execution time: %f seconds\n", div_time);
-    bi_delete(&quo);
-    bi_delete(&remainer);
+        //mul_k
+        start = clock();
+        bi_mul_kara(&result, src1, src2);
+        end = clock();
+        mul_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        mul_k_sum += mul_k_time;
 
-    //squ
-    start = clock();
-    bi_squ(&result, src1);
-    end = clock();
-    squ_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[squ] Execution time: %f seconds\n", squ_time);
+        //div
+        bigint *quo = NULL;
+        bigint *remainer = NULL;
+        start = clock();
+        bi_division(&quo, &remainer, src1, src2);
+        end = clock();
+        div_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        bi_delete(&quo);
+        bi_delete(&remainer);
+        div_sum += div_time;
+         
+        //squ
+        start = clock();
+        bi_squ(&result, src1);
+        end = clock();
+        squ_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        squ_sum += squ_time;
 
-    //squ_k
-    start = clock();
-    bi_squ_kara(&result, src1);
-    end = clock();
-    squ_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[squ_k_time] Execution time: %f seconds\n", squ_k_time);
-    
-    bigint *exp = NULL;
-    bi_get_random(&exp, POSITIVE, 5);
-    bigint *modulo = NULL;
-    bi_get_random(&modulo, POSITIVE, 32);
-    
-    //l2r   
-    start = clock();
-    bi_mod_exp_l2r(&result, src1, exp, modulo);
-    end = clock();
-    l2r_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[l2r] Execution time: %f seconds\n", l2r_time);
-    
-    //r2l
-    start = clock();
-    bi_mod_exp_r2l(&result, src1, exp, modulo);
-    end = clock();
-    r2l_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[r2l] Execution time: %f seconds\n", r2l_time);
+        //squ_k
+        start = clock();
+        bi_squ_kara(&result, src1);
+        end = clock();
+        squ_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        squ_k_sum += squ_k_time;
+        
+        bigint *exp = NULL;
+        bi_get_random(&exp, POSITIVE, 5);
+        bigint *modulo = NULL;
+        bi_get_random(&modulo, POSITIVE, 32);
+        
+        //l2r   
+        start = clock();
+        bi_mod_exp_l2r(&result, src1, exp, modulo);
+        end = clock();
+        l2r_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        l2r_sum += l2r_time;
 
-    //Multiple and Square
-    start = clock();
-    bi_mod_exp_MaS(&result, src1, exp, modulo);
-    end = clock();
-    mas_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[Multiple and Square] Execution time: %f seconds\n", mas_time);
+        //r2l
+        start = clock();
+        bi_mod_exp_r2l(&result, src1, exp, modulo);
+        end = clock();
+        r2l_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        r2l_sum += r2l_time;
 
-    bi_delete(&exp);
-    bi_delete(&modulo);
+        //Multiple and Square
+        start = clock();
+        bi_mod_exp_MaS(&result, src1, exp, modulo);
+        end = clock();
+        mas_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        mas_sum += mas_time;
+        
+        bi_delete(&exp);
+        bi_delete(&modulo);
 
-    //Barett Reduce
+        //Barett Reduce
 
-    int n = 32;
-    bigint *A = NULL;
-    bi_get_random(&A, POSITIVE, 2*n);
-    bigint *N = NULL;
-    bi_get_random(&N, POSITIVE, n);
-    bigint *T = NULL;
-    bigint *r_temp = NULL;
-    bigint *W_2n = NULL;
-    
-    bi_new(&W_2n,n*2+1);
-    W_2n->a[n*2] = 1;
-    W_2n->sign = POSITIVE;
-    bi_division(&T, &r_temp, W_2n, N);
+        int n = 32;
+        bigint *A = NULL;
+        bi_get_random(&A, POSITIVE, 2*n);
+        bigint *N = NULL;
+        bi_get_random(&N, POSITIVE, n);
+        bigint *T = NULL;
+        bigint *r_temp = NULL;
+        bigint *W_2n = NULL;
+        
+        bi_new(&W_2n,n*2+1);
+        W_2n->a[n*2] = 1;
+        W_2n->sign = POSITIVE;
+        bi_division(&T, &r_temp, W_2n, N);
 
-    bigint *redu_result = NULL;
+        bigint *redu_result = NULL;
 
-    start = clock();
-    bi_bar_redu(&redu_result, A, T, N);
-    end = clock();
-    bar_reduce_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("[Barett Reduce] Execution time: %f seconds\n", bar_reduce_time);
+        start = clock();
+        bi_bar_redu(&redu_result, A, T, N);
+        end = clock();
+        bar_reduce_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        bar_reduce_sum += bar_reduce_time;
 
-    bi_delete(&A);
-    bi_delete(&N);
-    bi_delete(&T);
-    bi_delete(&r_temp);
-    bi_delete(&W_2n);
-    bi_delete(&redu_result);
+        bi_delete(&A);
+        bi_delete(&N);
+        bi_delete(&T);
+        bi_delete(&r_temp);
+        bi_delete(&W_2n);
+        bi_delete(&redu_result);
 
-    bi_delete(&src1);
-    bi_delete(&src2);
-    bi_delete(&result);
+        bi_delete(&src1);
+        bi_delete(&src2);
+        bi_delete(&result);
+    }
+    // printf("[add] Execution time: %f seconds\n", add_sum / TESTNUM);
+    // printf("[sub] Execution time: %f seconds\n", sub_sum / TESTNUM);
+    // printf("[mul] Execution time: %f seconds\n", mul_sum / TESTNUM);
+    // printf("[mul_k] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
+    // printf("[div] Execution time: %f seconds\n", div_sum / TESTNUM);
+    // printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
+    // printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
+    // printf("[l2r] Execution time: %f seconds\n", l2r_sum / TESTNUM);
+    // printf("[r2l] Execution time: %f seconds\n", r2l_sum / TESTNUM);
+    // printf("[Mas] Execution time: %f seconds\n", mas_sum / TESTNUM);   
+    // printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum / TESTNUM);
+
+    printf("[add] Execution time: %f seconds\n", add_sum );
+    printf("[sub] Execution time: %f seconds\n", sub_sum );
+    printf("[mul] Execution time: %f seconds\n", mul_sum );
+    printf("[mul_k] Execution time: %f seconds\n", mul_k_sum );
+    printf("[div] Execution time: %f seconds\n", div_sum );
+    printf("[squ] Execution time: %f seconds\n", squ_sum );
+    printf("[squ_k] Execution time: %f seconds\n", squ_k_sum );
+    printf("[l2r] Execution time: %f seconds\n", l2r_sum);
+    printf("[r2l] Execution time: %f seconds\n", r2l_sum);
+    printf("[Mas] Execution time: %f seconds\n", mas_sum);   
+    printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum); 
 }
 
 
@@ -689,13 +717,13 @@ void python_add_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *z = NULL;
         bi_new(&z,1);
 
@@ -812,13 +840,13 @@ void python_sub_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *z = NULL;
         bi_new(&z,1);
 
@@ -935,13 +963,13 @@ void python_mul_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *z = NULL;
         bi_new(&z,1);
 
@@ -1058,13 +1086,13 @@ void python_mul_k_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *z = NULL;
         bi_new(&z,1);
 
@@ -1182,13 +1210,13 @@ void python_div_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *z = NULL;
         bi_new(&z,1);
 
@@ -1341,9 +1369,9 @@ void python_squ_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_b = NULL;
-        bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_b,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
 
         bigint *p_squ = NULL;
         bi_squ(&p_squ, pos_a);
@@ -1384,10 +1412,10 @@ void python_rshift_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         // 임의의 bigint 생성
         bigint *num = NULL;
-        bi_get_random(&num, POSITIVE, rand() % 63 + 1);
+        bi_get_random(&num, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         
         // 오른쪽 시프트 수행
-        int shift_bits = rand() % 63 + 1; // 시프트 비트 수
+        int shift_bits = rand() % T_TEST_DATA_WORD_SIZE + 1; // 시프트 비트 수
         bigint *rshift_result = NULL;
         bi_assign(&rshift_result, num); // rshift_result를 num의 복사본으로 초기화
         bi_bit_rshift(rshift_result, shift_bits);
@@ -1423,10 +1451,10 @@ void python_lshift_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         // 임의의 bigint 생성
         bigint *num = NULL;
-        bi_get_random(&num, POSITIVE, rand() % 63 + 1);
+        bi_get_random(&num, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         
-        // 오른쪽 시프트 수행
-        int shift_bits = rand() % 63 + 1; // 시프트 비트 수
+        // 왼쪽 시프트 수행
+        int shift_bits = rand() % T_TEST_DATA_WORD_SIZE + 1; // 시프트 비트 수
         bigint *lshift_result = NULL;
         bi_assign(&lshift_result, num); // rshift_result를 num의 복사본으로 초기화
         bi_bit_lshift(lshift_result, shift_bits);
@@ -1440,7 +1468,7 @@ void python_lshift_test(const char* filename, int testnum) {
         bi_fprint(file, lshift_result);
 
         fprintf(file, "if (num << %d != lshift_result):\n", shift_bits);
-        fprintf(file, "\tprint(f\"[lshift_result]: {num:#x} >> %d != {lshift_result:#x}\\n\")\n", shift_bits);
+        fprintf(file, "\tprint(f\"[lshift_result]: {num:#x} << %d != {lshift_result:#x}\\n\")\n", shift_bits);
 
         // 메모리 해제
         bi_delete(&num);
@@ -1460,9 +1488,9 @@ void python_squ_k_test(const char* filename, int testnum) {
     for (int i = 0; i < testnum; i++) {
         //인자
         bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_b = NULL;
-        bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+        bi_get_random(&neg_b,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
 
         bigint *p_squ = NULL;
         bi_squ_kara(&p_squ, pos_a);

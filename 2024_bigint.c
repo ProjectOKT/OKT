@@ -15,809 +15,808 @@
 #include "operation.h"
 #include "test.h"
 
-/**
- * @brief Tests the bi_new, bi_delete, and bi_print functions.
- *
- * This function demonstrates the creation, deletion, and printing of 
- * big integer (bigint) objects using the bi_new and bi_delete 
- * functions. It also tests the array_copy function for copying 
- * values between two bigint instances.
- *
- * The function initializes two bigint pointers, allocates memory for 
- * them, and sets their values to predefined negative integers. 
- * It then copies the values from one bigint to another and prints 
- * their representations in both binary and hexadecimal formats.
- *
- * If any of the bigint allocations fail, it prints an error message. 
- * Finally, the function attempts to delete the allocated big integer 
- * objects and checks for successful deallocation.
- *
- * @note Ensure that the bigint library is properly initialized before 
- *       calling this function. The function also uses an array_copy 
- *       utility to copy data between big integer arrays.
- *
- * @return void
- */
-void bi_test1()
-{
-    printf("bi_new, bi_delete, bi_print test\n");
-    bigint* test1 = NULL;
-    bigint* test2 = NULL;
-    bigint* test3 = NULL;
-    bigint* test4 = NULL;
-    int error_code = 0;
+// /**
+//  * @brief Tests the bi_new, bi_delete, and bi_print functions.
+//  *
+//  * This function demonstrates the creation, deletion, and printing of 
+//  * big integer (bigint) objects using the bi_new and bi_delete 
+//  * functions. It also tests the array_copy function for copying 
+//  * values between two bigint instances.
+//  *
+//  * The function initializes two bigint pointers, allocates memory for 
+//  * them, and sets their values to predefined negative integers. 
+//  * It then copies the values from one bigint to another and prints 
+//  * their representations in both binary and hexadecimal formats.
+//  *
+//  * If any of the bigint allocations fail, it prints an error message. 
+//  * Finally, the function attempts to delete the allocated big integer 
+//  * objects and checks for successful deallocation.
+//  *
+//  * @note Ensure that the bigint library is properly initialized before 
+//  *       calling this function. The function also uses an array_copy 
+//  *       utility to copy data between big integer arrays.
+//  *
+//  * @return void
+//  */
+// void bi_test1()
+// {
+//     printf("bi_new, bi_delete, bi_print test\n");
+//     bigint* test1 = NULL;
+//     bigint* test2 = NULL;
+//     bigint* test3 = NULL;
+//     bigint* test4 = NULL;
+//     int error_code = 0;
 
-    error_code = bi_new(&test1, 2);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
+//     error_code = bi_new(&test1, 2);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
 
-    error_code = bi_new(&test2, 2);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
+//     error_code = bi_new(&test2, 2);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
 
-    error_code = bi_new(&test3, 2);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
+//     error_code = bi_new(&test3, 2);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
 
-    error_code = bi_new(&test4, 2);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
+//     error_code = bi_new(&test4, 2);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
 
-    printf("[Bigint value]\n");
-    test1->sign = POSITIVE;
-    test1->a[0] = (word)0xffffffffffffffff;
-    test1->a[1] = (word)0xcccccccccccccccc;
+//     printf("[Bigint value]\n");
+//     test1->sign = POSITIVE;
+//     test1->a[0] = (word)0xffffffffffffffff;
+//     test1->a[1] = (word)0xcccccccccccccccc;
 
-    test2->sign = NEGATIVE;
-    test2->a[0] = (word)0xdddddddddddddddd;
-    test2->a[1] = (word)0xeeeeeeeeeeeeeeee;
+//     test2->sign = NEGATIVE;
+//     test2->a[0] = (word)0xdddddddddddddddd;
+//     test2->a[1] = (word)0xeeeeeeeeeeeeeeee;
 
-    printf("[Positive]\n");
-    bi_print(test1, 2);
-    bi_print(test1, 16);
+//     printf("[Positive]\n");
+//     bi_print(test1, 2);
+//     bi_print(test1, 16);
 
-    printf("\n[Negative]\n");
-    bi_print(test2, 2);
-    bi_print(test2, 16);
-    error_code = bi_delete(&test1);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-    error_code = bi_delete(&test2);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-    error_code = bi_delete(&test3);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-    error_code = bi_delete(&test4);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-}
+//     printf("\n[Negative]\n");
+//     bi_print(test2, 2);
+//     bi_print(test2, 16);
+//     error_code = bi_delete(&test1);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+//     error_code = bi_delete(&test2);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+//     error_code = bi_delete(&test3);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+//     error_code = bi_delete(&test4);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+// }
 
-/**
- * @brief Tests the bi_set_from_string and bi_set_from_array functions.
- *
- * This function demonstrates the functionality of converting 
- * strings in different number bases (binary, octal, hexadecimal) 
- * into big integer (bigint) objects using the bi_set_from_string 
- * function. It also tests the bi_set_from_array function to 
- * initialize a bigint from an array of words.
- *
- * The function initializes multiple bigint pointers, generates a 
- * random array of words, and sets the values of the big integer 
- * objects from the provided string representations of numbers in 
- * binary, octal, and hexadecimal formats. It prints the results 
- * to the console to verify successful conversion.
- *
- * @note Ensure that the bigint library is properly initialized 
- *       before calling this function. The array used in 
- *       bi_set_from_array is generated randomly for testing.
- *
- * @return void
- */
-void bi_test2()
-{
-    printf("[bi_set_from_string, bi_set_from_array function test]\n");
+// /**
+//  * @brief Tests the bi_set_from_string and bi_set_from_array functions.
+//  *
+//  * This function demonstrates the functionality of converting 
+//  * strings in different number bases (binary, octal, hexadecimal) 
+//  * into big integer (bigint) objects using the bi_set_from_string 
+//  * function. It also tests the bi_set_from_array function to 
+//  * initialize a bigint from an array of words.
+//  *
+//  * The function initializes multiple bigint pointers, generates a 
+//  * random array of words, and sets the values of the big integer 
+//  * objects from the provided string representations of numbers in 
+//  * binary, octal, and hexadecimal formats. It prints the results 
+//  * to the console to verify successful conversion.
+//  *
+//  * @note Ensure that the bigint library is properly initialized 
+//  *       before calling this function. The array used in 
+//  *       bi_set_from_array is generated randomly for testing.
+//  *
+//  * @return void
+//  */
+// void bi_test2()
+// {
+//     printf("[bi_set_from_string, bi_set_from_array function test]\n");
 
-    bigint* test1 = NULL;
-    bigint* test2 = NULL;
-    bigint* test3 = NULL;
-    bigint* test4 = NULL;
+//     bigint* test1 = NULL;
+//     bigint* test2 = NULL;
+//     bigint* test3 = NULL;
+//     bigint* test4 = NULL;
 
-    int error_code = 0;
+//     int error_code = 0;
 
-    word array[16] = {0, };
-    array_init(array, 16);
-    array_rand(array, 16);
+//     word array[16] = {0, };
+//     array_init(array, 16);
+//     array_rand(array, 16);
 
-    printf("Test: bi_set_from_string\n");
-    char binstr[] = "11111111111010101011110011101101";
-    printf("string(binary): %s\n", binstr);
-    printf("bi_set_from_string(bin)\n=>");
-    bi_set_from_string(&test1, binstr, 2);
-    bi_print(test1, 2);
-    printf("=>");
-    bi_print(test1, 16);
+//     printf("Test: bi_set_from_string\n");
+//     char binstr[] = "11111111111010101011110011101101";
+//     printf("string(binary): %s\n", binstr);
+//     printf("bi_set_from_string(bin)\n=>");
+//     bi_set_from_string(&test1, binstr, 2);
+//     bi_print(test1, 2);
+//     printf("=>");
+//     bi_print(test1, 16);
 
-    char hexstr[] = "ab542548c1123412374109238df";
-    printf("\nstring(hex): %s\n", hexstr);
-    printf("bi_set_from_string(hex) test\n=>");
-    bi_set_from_string(&test2, hexstr, 16);
-    bi_print(test2, 2);
-    printf("=>");
-    bi_print(test2, 16);
+//     char hexstr[] = "ab542548c1123412374109238df";
+//     printf("\nstring(hex): %s\n", hexstr);
+//     printf("bi_set_from_string(hex) test\n=>");
+//     bi_set_from_string(&test2, hexstr, 16);
+//     bi_print(test2, 2);
+//     printf("=>");
+//     bi_print(test2, 16);
 
-    printf("\ntest bi_set_from_arrray(hex)\n");
-    printf("array:\n0x");
-    for(int index=15;index>=0;index--)
-    {
-        for(int byteindex = sizeof(word); byteindex >0; byteindex--)
-        {
-            printf("%02x", (byte)((array[index] >> (byteindex - 1) * 8) & (0xff)));
-        }
-    }
-    printf("\n");
-    bi_set_from_array(&test3, POSITIVE, 16, array);
-    bi_print(test3, 16);
-    printf("\n");
-    error_code = bi_delete(&test1);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-    error_code = bi_delete(&test2);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-    error_code = bi_delete(&test3);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-    error_code = bi_delete(&test4);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-}
+//     printf("\ntest bi_set_from_arrray(hex)\n");
+//     printf("array:\n0x");
+//     for(int index=15;index>=0;index--)
+//     {
+//         for(int byteindex = sizeof(word); byteindex >0; byteindex--)
+//         {
+//             printf("%02x", (byte)((array[index] >> (byteindex - 1) * 8) & (0xff)));
+//         }
+//     }
+//     printf("\n");
+//     bi_set_from_array(&test3, POSITIVE, 16, array);
+//     bi_print(test3, 16);
+//     printf("\n");
+//     error_code = bi_delete(&test1);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+//     error_code = bi_delete(&test2);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+//     error_code = bi_delete(&test3);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+//     error_code = bi_delete(&test4);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+// }
 
-/**
- * @brief Tests the bi_get_random function.
- *
- * This function demonstrates the usage of the bi_get_random function 
- * by generating a random positive bigint and printing it in hexadecimal format.
- *
- * It initializes an array of `word` type with zeros and then calls 
- * `bi_get_random` to populate the `dst` pointer with a random bigint 
- * of specified length. The generated bigint is then printed to the 
- * console in base 16.
- *
- * @note Ensure that the bigint library is properly initialized before 
- *       calling this function.
- *
- * @return void
- */
-void bi_test3()
-{
-    printf("bi_get_random test\n");
+// /**
+//  * @brief Tests the bi_get_random function.
+//  *
+//  * This function demonstrates the usage of the bi_get_random function 
+//  * by generating a random positive bigint and printing it in hexadecimal format.
+//  *
+//  * It initializes an array of `word` type with zeros and then calls 
+//  * `bi_get_random` to populate the `dst` pointer with a random bigint 
+//  * of specified length. The generated bigint is then printed to the 
+//  * console in base 16.
+//  *
+//  * @note Ensure that the bigint library is properly initialized before 
+//  *       calling this function.
+//  *
+//  * @return void
+//  */
+// void bi_test3()
+// {
+//     printf("bi_get_random test\n");
 
-    bigint* dst = NULL;
-    bi_get_random(&dst, POSITIVE, 4);
+//     bigint* dst = NULL;
+//     bi_get_random(&dst, POSITIVE, 4);
 
-    printf("bi(hex): ");
-    bi_print(dst, 16);
+//     printf("bi(hex): ");
+//     bi_print(dst, 16);
 
-    int error_code = bi_delete(&dst);
-    if(error_code == FAILED)
-    {
-        fprintf(stderr, "failed\n");
-    }
-}
+//     int error_code = bi_delete(&dst);
+//     if(error_code == FAILED)
+//     {
+//         fprintf(stderr, "failed\n");
+//     }
+// }
 
 
-/**
- * @brief Main function of the program.
- *
- * This function initializes the program by setting up a leak check
- * function to be called at program exit. It then calls the
- * `bigint_test2` function to perform specific tests related to the
- * bigint library.
- *
- * @return Returns 0 upon successful completion of the program.
- *
- * @note This function will call `check_leaks` to check for memory
- *       leaks when the program exits.
- */
-void compare_test(){
-    bigint *x = NULL;
-    bigint *y = NULL;
-    bigint *z = NULL;
-    bigint *k = NULL;
-    int result;
-    bi_get_random(&x, POSITIVE, 5);
-    bi_get_random(&y, POSITIVE, 5);
-    bi_get_random(&z, NEGATIVE, 5);
-    bi_get_random(&k, NEGATIVE, 5);
-    bi_print(x,16);
-    bi_print(y,16);
-    bi_print(z,16);
-    bi_print(k,16);
-    //1
-    result = bi_compare(x,z);
-    printf("%d\n",result);
-    //-1
-    result = bi_compare(z,x);
-    printf("%d\n",result);
-    result = bi_compare(x,y);
-    printf("%d\n",result);
-    result = bi_compare(y,x);
-    printf("%d\n",result);
-    result = bi_compare(z,k);
-    printf("%d\n",result);
-    result = bi_compare(k,z);
-    printf("%d\n",result);
-    result = bi_compare(x,x);
-    printf("%d\n",result);
+// /**
+//  * @brief Main function of the program.
+//  *
+//  * This function initializes the program by setting up a leak check
+//  * function to be called at program exit. It then calls the
+//  * `bigint_test2` function to perform specific tests related to the
+//  * bigint library.
+//  *
+//  * @return Returns 0 upon successful completion of the program.
+//  *
+//  * @note This function will call `check_leaks` to check for memory
+//  *       leaks when the program exits.
+//  */
+// void compare_test(){
+//     bigint *x = NULL;
+//     bigint *y = NULL;
+//     bigint *z = NULL;
+//     bigint *k = NULL;
+//     int result;
+//     bi_get_random(&x, POSITIVE, 5);
+//     bi_get_random(&y, POSITIVE, 5);
+//     bi_get_random(&z, NEGATIVE, 5);
+//     bi_get_random(&k, NEGATIVE, 5);
+//     bi_print(x,16);
+//     bi_print(y,16);
+//     bi_print(z,16);
+//     bi_print(k,16);
+//     //1
+//     result = bi_compare(x,z);
+//     printf("%d\n",result);
+//     //-1
+//     result = bi_compare(z,x);
+//     printf("%d\n",result);
+//     result = bi_compare(x,y);
+//     printf("%d\n",result);
+//     result = bi_compare(y,x);
+//     printf("%d\n",result);
+//     result = bi_compare(z,k);
+//     printf("%d\n",result);
+//     result = bi_compare(k,z);
+//     printf("%d\n",result);
+//     result = bi_compare(x,x);
+//     printf("%d\n",result);
 
-    bi_delete(&x);
-    bi_delete(&y);
-    bi_delete(&z);
-    bi_delete(&k);
-}
+//     bi_delete(&x);
+//     bi_delete(&y);
+//     bi_delete(&z);
+//     bi_delete(&k);
+// }
 
-void sub_test()
-{
-    bigint* x1 = NULL;
-    bigint* x2 = NULL;
-    bigint* y = NULL;
+// void sub_test()
+// {
+//     bigint* x1 = NULL;
+//     bigint* x2 = NULL;
+//     bigint* y = NULL;
     
-    msg error_msg = 0;
+//     msg error_msg = 0;
 
-    error_msg = bi_get_random(&x1, POSITIVE, 4);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "sub test failed\n");
-    }
-    error_msg = bi_get_random(&x2, POSITIVE, 4);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "sub test failed\n");
-    }
-    bi_print(x1, 16);
-    bi_print(x2, 16);
+//     error_msg = bi_get_random(&x1, POSITIVE, 4);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "sub test failed\n");
+//     }
+//     error_msg = bi_get_random(&x2, POSITIVE, 4);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "sub test failed\n");
+//     }
+//     bi_print(x1, 16);
+//     bi_print(x2, 16);
 
-    error_msg = bi_sub(&y, x1, x2);
-    bi_print(y, 16);
+//     error_msg = bi_sub(&y, x1, x2);
+//     bi_print(y, 16);
 
-    bi_delete(&x1);
-    bi_delete(&x2);
-    bi_delete(&y);
-}
+//     bi_delete(&x1);
+//     bi_delete(&x2);
+//     bi_delete(&y);
+// }
 
-void fillzero_test(){
-    bigint* x1 = NULL;
-    bigint* x2 = NULL;
-    msg error_msg = 0;
+// void fillzero_test(){
+//     bigint* x1 = NULL;
+//     bigint* x2 = NULL;
+//     msg error_msg = 0;
 
-    error_msg = bi_get_random(&x1, POSITIVE, 4);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "test failed\n");
-    }
-    error_msg = bi_get_random(&x2, POSITIVE, 4);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "test failed\n");
-    }
+//     error_msg = bi_get_random(&x1, POSITIVE, 4);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "test failed\n");
+//     }
+//     error_msg = bi_get_random(&x2, POSITIVE, 4);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "test failed\n");
+//     }
 
-    bi_fillzero(x1, 6, 1);
-    bi_print(x1, 16);
-    bi_fillzero(x2, 6, -1);
-    bi_print(x2, 16);
+//     bi_fillzero(x1, 6, 1);
+//     bi_print(x1, 16);
+//     bi_fillzero(x2, 6, -1);
+//     bi_print(x2, 16);
 
-    bi_delete(&x1);
-    bi_delete(&x2);
-}
+//     bi_delete(&x1);
+//     bi_delete(&x2);
+// }
 
-void bi_single_mul_test()
-{
-    int error_msg = 0;
+// void bi_single_mul_test()
+// {
+//     int error_msg = 0;
     
-    word a = 0xac343874;
-    word b = 0x9d8de389;
-    bigint* dst = NULL;
+//     word a = 0xac343874;
+//     word b = 0x9d8de389;
+//     bigint* dst = NULL;
 
-    error_msg = bi_smul(&dst, a, b);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_single_mul_test_error\n");
-    }
+//     error_msg = bi_smul(&dst, a, b);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_single_mul_test_error\n");
+//     }
 
-    bi_print(dst, 16);
-    error_msg = bi_delete(&dst);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_single_mul_test_error\n");
-    }
-}
+//     bi_print(dst, 16);
+//     error_msg = bi_delete(&dst);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_single_mul_test_error\n");
+//     }
+// }
 
-void bi_mulc_test()
-{
-    int error_msg = 0;
-    bigint* src1 = NULL;
-    bigint* src2 = NULL;
-    bigint* dst = NULL;
+// void bi_mulc_test()
+// {
+//     int error_msg = 0;
+//     bigint* src1 = NULL;
+//     bigint* src2 = NULL;
+//     bigint* dst = NULL;
 
-    bi_get_random(&src1, POSITIVE, 8);
-    bi_get_random(&src2, POSITIVE, 8);
+//     bi_get_random(&src1, POSITIVE, 8);
+//     bi_get_random(&src2, POSITIVE, 8);
 
-    error_msg = bi_mulc(&dst, src1, src2);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_mulc_test_error\n");
-    }
+//     error_msg = bi_mulc(&dst, src1, src2);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_mulc_test_error\n");
+//     }
 
-    bi_print(src1, 16);
-    bi_print(src2, 16);
-    bi_print(dst, 16);
+//     bi_print(src1, 16);
+//     bi_print(src2, 16);
+//     bi_print(dst, 16);
 
-    bi_delete(&src1);
-    bi_delete(&src2);
-    bi_delete(&dst);
-}
+//     bi_delete(&src1);
+//     bi_delete(&src2);
+//     bi_delete(&dst);
+// }
 
-void bi_mul_test()
-{
-    int error_msg = 0;
+// void bi_mul_test()
+// {
+//     int error_msg = 0;
     
-    bigint* test_1 = NULL;
-    bigint* test_2 = NULL;
-    bigint* dst = NULL;
+//     bigint* test_1 = NULL;
+//     bigint* test_2 = NULL;
+//     bigint* dst = NULL;
 
-    bi_get_random(&test_1, POSITIVE, 15);
-    bi_get_random(&test_2, POSITIVE, 8);
+//     bi_get_random(&test_1, POSITIVE, 15);
+//     bi_get_random(&test_2, POSITIVE, 8);
 
-    bi_print(test_1, 16);
-    bi_print(test_2, 16);
+//     bi_print(test_1, 16);
+//     bi_print(test_2, 16);
 
-    error_msg = bi_mul(&dst, test_1, test_2);
+//     error_msg = bi_mul(&dst, test_1, test_2);
 
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_mul_test_error\n");
-    }
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_mul_test_error\n");
+//     }
 
-    bi_print(dst, 16);
-    bi_delete(&test_1);
-    bi_delete(&test_2);
-    error_msg = bi_delete(&dst);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_mul_test_error\n");
-    }
-}
+//     bi_print(dst, 16);
+//     bi_delete(&test_1);
+//     bi_delete(&test_2);
+//     error_msg = bi_delete(&dst);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_mul_test_error\n");
+//     }
+// }
 
-void bi_connect_test(){
-    int error_msg = 0;
+// void bi_connect_test(){
+//     int error_msg = 0;
     
-    bigint* test_1 = NULL;
-    bigint* test_2 = NULL;
-    bigint* dst = NULL;
+//     bigint* test_1 = NULL;
+//     bigint* test_2 = NULL;
+//     bigint* dst = NULL;
 
-    bi_get_random(&test_1, POSITIVE, 2);
-    bi_get_random(&test_2, POSITIVE, 2);
+//     bi_get_random(&test_1, POSITIVE, 2);
+//     bi_get_random(&test_2, POSITIVE, 2);
 
-    bi_print(test_1, 16);
-    bi_print(test_2, 16);
+//     bi_print(test_1, 16);
+//     bi_print(test_2, 16);
 
-    error_msg = bi_connect(&dst, test_1, test_2);
-    bi_delete(&test_1);
-    bi_delete(&test_2);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_single_mul_test_error\n");
-    }
+//     error_msg = bi_connect(&dst, test_1, test_2);
+//     bi_delete(&test_1);
+//     bi_delete(&test_2);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_single_mul_test_error\n");
+//     }
 
-    bi_print(dst, 16);
-    error_msg = bi_delete(&dst);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_single_mul_test_error\n");
-    }
-}
+//     bi_print(dst, 16);
+//     error_msg = bi_delete(&dst);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_single_mul_test_error\n");
+//     }
+// }
 
-void bi_bits_shift_test()
-{
-    int error_msg = FAILED;
+// void bi_bits_shift_test()
+// {
+//     int error_msg = FAILED;
 
-    bigint* dst1 = NULL;
-    bigint* dst2 = NULL;
+//     bigint* dst1 = NULL;
+//     bigint* dst2 = NULL;
 
-    bi_get_random(&dst1, POSITIVE, 4);
+//     bi_get_random(&dst1, POSITIVE, 3);
 
-    bi_print(dst1, 2);
+//     bi_print(dst1, 2);
 
-    error_msg = bi_bit_rshift(dst1, 63);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_shift_test\n");
-    }
-    bi_print(dst1, 2);
+//     error_msg = bi_bit_rshift(dst1, 17);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_shift_test\n");
+//     }
+//     bi_print(dst1, 2);
 
-    bi_delete(&dst1);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_shift_test\n");
-    }
+//     bi_delete(&dst1);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_shift_test\n");
+//     }
 
-    bi_get_random(&dst2, POSITIVE, 2);
+//     bi_get_random(&dst2, POSITIVE, 3);
 
-    bi_print(dst2, 2);
+//     bi_print(dst2, 2);
 
-    error_msg = bi_bit_lshift(dst2, 31);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_shift_test\n");
-    }
-    bi_print(dst2, 2);
+//     error_msg = bi_bit_lshift(dst2, 17);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_shift_test\n");
+//     }
+//     bi_print(dst2, 2);
 
-    bi_delete(&dst2);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_shift_test\n");
-    }
-}
+//     bi_delete(&dst2);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_shift_test\n");
+//     }
+// }
 
-void bi_bits_lshift_test1()
-{
-    int error_msg = FAILED;
+// void bi_bits_lshift_test1()
+// {
+//     int error_msg = FAILED;
 
-    bigint* dst = NULL;
-    bi_new(&dst, 2);
+//     bigint* dst = NULL;
+//     bi_new(&dst, 2);
 
-    dst->sign = POSITIVE;
-    dst->a[0] = (word)0x09299d32aee9e8ab;
-    dst->a[1] = (word)0x4fec2260e4ea9909;
+//     dst->sign = POSITIVE;
+//     dst->a[0] = (word)0x09299d32aee9e8ab;
+//     dst->a[1] = (word)0x4fec2260e4ea9909;
 
-    bi_print(dst, 2);
-    error_msg = bi_bit_lshift(dst, 64);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_shift_test\n");
-    }
-    bi_print(dst, 2);
+//     bi_print(dst, 2);
+//     error_msg = bi_bit_lshift(dst, 64);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_shift_test\n");
+//     }
+//     bi_print(dst, 2);
 
-    bi_delete(&dst);
-}
+//     bi_delete(&dst);
+// }
 
-void bi_binary_division_test()
-{
-    int error_msg = FAILED;
+// void bi_binary_division_test()
+// {
+//     int error_msg = FAILED;
 
-    bigint* src_1 = NULL;
-    bigint* src_2 = NULL;
-    bigint* quotient = NULL;
-    bigint* remainder = NULL;
+//     bigint* src_1 = NULL;
+//     bigint* src_2 = NULL;
+//     bigint* quotient = NULL;
+//     bigint* remainder = NULL;
 
-    bi_get_random(&src_1, POSITIVE, 2);
-    bi_get_random(&src_2, POSITIVE, 1);
+//     bi_get_random(&src_1, POSITIVE, 2);
+//     bi_get_random(&src_2, POSITIVE, 1);
 
-    bi_print(src_1, 16);
-    bi_print(src_2, 16);
+//     bi_print(src_1, 16);
+//     bi_print(src_2, 16);
 
-    error_msg = bi_binary_long_division(&quotient, &remainder, src_1, src_2);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_binary_division_test\n");
-    }
+//     error_msg = bi_binary_long_division(&quotient, &remainder, src_1, src_2);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_binary_division_test\n");
+//     }
 
-    bi_print(quotient, 16);
-    bi_print(remainder, 16);
+//     bi_print(quotient, 16);
+//     bi_print(remainder, 16);
     
-    bi_delete(&src_1);
-    bi_delete(&src_2);
-    bi_delete(&quotient);
-    bi_delete(&remainder);
-}
+//     bi_delete(&src_1);
+//     bi_delete(&src_2);
+//     bi_delete(&quotient);
+//     bi_delete(&remainder);
+// }
 
-void bi_compare_test()
-{
-    bigint* src_1 = NULL;
-    bigint* src_2 = NULL;
+// void bi_compare_test()
+// {
+//     bigint* src_1 = NULL;
+//     bigint* src_2 = NULL;
 
-    bi_new(&src_1, 1);
-    bi_get_random(&src_2, POSITIVE, 2);
+//     bi_new(&src_1, 1);
+//     bi_get_random(&src_2, POSITIVE, 2);
 
-    printf("%d\n", bi_compare(src_1, src_2));
+//     printf("%d\n", bi_compare(src_1, src_2));
 
-    bi_delete(&src_1);
-    bi_delete(&src_2);
-}
+//     bi_delete(&src_1);
+//     bi_delete(&src_2);
+// }
 
-void bi_division_test()
-{
-    int error_msg = FAILED;
+// void bi_division_test()
+// {
+//     int error_msg = FAILED;
 
-    bigint* src_1 = NULL;
-    bigint* src_2 = NULL;
-    bigint* quotient = NULL;
-    bigint* remainder = NULL;
+//     bigint* src_1 = NULL;
+//     bigint* src_2 = NULL;
+//     bigint* quotient = NULL;
+//     bigint* remainder = NULL;
 
-    bi_get_random(&src_1, NEGATIVE, rand() % 4 + 1);
-    bi_get_random(&src_2, NEGATIVE, rand() % 4 + 1);
+//     bi_get_random(&src_1, NEGATIVE, rand() % 4 + 1);
+//     bi_get_random(&src_2, NEGATIVE, rand() % 4 + 1);
 
-    printf("a = ");
-    bi_print(src_1, 16);
-    printf("b = ");
-    bi_print(src_2, 16);
+//     printf("a = ");
+//     bi_print(src_1, 16);
+//     printf("b = ");
+//     bi_print(src_2, 16);
 
-    error_msg = bi_division(&quotient, &remainder, src_1, src_2);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_binary_division_test\n");
-    }
+//     error_msg = bi_division(&quotient, &remainder, src_1, src_2);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_binary_division_test\n");
+//     }
 
-    printf("q = ");
-    bi_print(quotient, 16);
-    printf("r = ");
-    bi_print(remainder, 16);
+//     printf("q = ");
+//     bi_print(quotient, 16);
+//     printf("r = ");
+//     bi_print(remainder, 16);
     
-    bi_delete(&src_1);
-    bi_delete(&src_2);
-    bi_delete(&quotient);
-    bi_delete(&remainder);
-}
+//     bi_delete(&src_1);
+//     bi_delete(&src_2);
+//     bi_delete(&quotient);
+//     bi_delete(&remainder);
+// }
 
-void bi_mul_k_test()
-{
-    bigint *a = NULL;
-    bigint *b = NULL;
-    bigint *dst1 = NULL;
-    bigint *dst2 = NULL;
+// void bi_mul_k_test()
+// {
+//     bigint *a = NULL;
+//     bigint *b = NULL;
+//     bigint *dst1 = NULL;
+//     bigint *dst2 = NULL;
     
-    bi_set_from_string(&a, "ea012d8186173f166f0fb16e7588769e3988aeff40c6ee1c573bb4da2ee523e72edc05679c9a02dbf2851b537cc06cd730322111d1d5b83e46427856377c2f79e7fb329b58fb90719b04979d75bc8c183aeba5dee5ce49df769f8a238f63e13e50f42af67151e231a0249e231b94cdb8904bb13d32c899541fe86319f0b2308fa061674fa0b6ef733a7ea7be2560280f68eabd0772dda1f878b7790f108114c3", 16);
-    bi_set_from_string(&b, "93f407b865278d35df328dd8c1112ef7e9b39a416c4d3ba1f6de3571650524e3a20119abc207d1ef5ccb37722b471bfee6d032115e5b4fcbd80ae215abfcb0151c55d3d0788af41f71f0c6d6bc86c431", 16);
+//     bi_set_from_string(&a, "ea012d8186173f166f0fb16e7588769e3988aeff40c6ee1c573bb4da2ee523e72edc05679c9a02dbf2851b537cc06cd730322111d1d5b83e46427856377c2f79e7fb329b58fb90719b04979d75bc8c183aeba5dee5ce49df769f8a238f63e13e50f42af67151e231a0249e231b94cdb8904bb13d32c899541fe86319f0b2308fa061674fa0b6ef733a7ea7be2560280f68eabd0772dda1f878b7790f108114c3", 16);
+//     bi_set_from_string(&b, "93f407b865278d35df328dd8c1112ef7e9b39a416c4d3ba1f6de3571650524e3a20119abc207d1ef5ccb37722b471bfee6d032115e5b4fcbd80ae215abfcb0151c55d3d0788af41f71f0c6d6bc86c431", 16);
     
-    bi_print(a, 16);
-    bi_print(b, 16);
+//     bi_print(a, 16);
+//     bi_print(b, 16);
 
-    bi_mul_k(&dst1, a, b);
-    bi_mul(&dst2, a, b);
+//     bi_mul_k(&dst1, a, b);
+//     bi_mul(&dst2, a, b);
 
-    bi_print(dst1, 16);
-    bi_print(dst2, 16);
+//     bi_print(dst1, 16);
+//     bi_print(dst2, 16);
     
-    if(bi_compare(dst1, dst2) != 0)
-    {
-        printf("\n\nwrong\n\n");
-    }
-}
+//     if(bi_compare(dst1, dst2) != 0)
+//     {
+//         printf("\n\nwrong\n\n");
+//     }
+// }
 
-void bignum_squc_test()
-{
-    int error_msg = 0;
+// void bignum_squc_test()
+// {
+//     int error_msg = 0;
     
-    word a = 0xac343874;
+//     word a = 0xac343874;
 
-    bigint* dst = NULL;
+//     bigint* dst = NULL;
 
-    error_msg = bi_squc(&dst, a);
+//     error_msg = bi_squc(&dst, a);
 
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_squc_test_error\n");
-    }
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_squc_test_error\n");
+//     }
 
-    bi_print(dst, 16);
+//     bi_print(dst, 16);
 
-    error_msg = bi_delete(&dst);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_squc_test_error\n");
-    }
-}
+//     error_msg = bi_delete(&dst);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_squc_test_error\n");
+//     }
+// }
 
-void bignum_squ_test()
-{
-    int error_msg = 0;
+// void bignum_squ_test()
+// {
+//     int error_msg = 0;
     
-    bigint* test_1 = NULL;
-    bigint* dst = NULL;
+//     bigint* test_1 = NULL;
+//     bigint* dst = NULL;
 
-    bi_get_random(&test_1, POSITIVE, 15);
-    //bi_new(&test_1, 15);
-    bi_print(test_1, 16);
+//     bi_get_random(&test_1, POSITIVE, 15);
+//     //bi_new(&test_1, 15);
+//     bi_print(test_1, 16);
 
-    error_msg = bi_squ(&dst, test_1);
+//     error_msg = bi_squ(&dst, test_1);
 
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_squ_test_error\n");
-    }
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_squ_test_error\n");
+//     }
 
-    bi_print(dst, 16);
-    bi_delete(&test_1);
-    error_msg = bi_delete(&dst);
-    if(error_msg == FAILED)
-    {   
-        fprintf(stderr, "bi_squ_test_error\n");
-    }
-}
+//     bi_print(dst, 16);
+//     bi_delete(&test_1);
+//     error_msg = bi_delete(&dst);
+//     if(error_msg == FAILED)
+//     {   
+//         fprintf(stderr, "bi_squ_test_error\n");
+//     }
+// }
 
-void bignum_kara_squ_test()
-{
-    int error_msg = 0;
+// void bignum_kara_squ_test()
+// {
+//     int error_msg = 0;
     
-    bigint* test_1 = NULL;
-    bigint* test_2 = NULL;
-    bigint* dst = NULL;
-    bigint* dst1 = NULL;
+//     bigint* test_1 = NULL;
+//     bigint* test_2 = NULL;
+//     bigint* dst = NULL;
+//     bigint* dst1 = NULL;
 
-    bi_get_random(&test_1, POSITIVE, 15);
-    bi_get_random(&test_2, POSITIVE, 7);
-    //bi_new(&test_1, 15);
-    bi_print(test_1, 16);
-    bi_print(test_2, 16);
+//     bi_get_random(&test_1, POSITIVE, 15);
+//     bi_get_random(&test_2, POSITIVE, 7);
+//     //bi_new(&test_1, 15);
+//     bi_print(test_1, 16);
+//     bi_print(test_2, 16);
 
-    error_msg = bi_squ_kara(&dst, test_1);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_squ_kara_test_error up 10\n");
-    }
+//     error_msg = bi_squ_kara(&dst, test_1);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_squ_kara_test_error up 10\n");
+//     }
 
-    bi_print(dst, 16);
-    bi_delete(&test_1);
+//     bi_print(dst, 16);
+//     bi_delete(&test_1);
 
-    error_msg = bi_delete(&dst);
-    if(error_msg == FAILED)
-    {   
-        fprintf(stderr, "bi_squ_test_error\n");
-    }
+//     error_msg = bi_delete(&dst);
+//     if(error_msg == FAILED)
+//     {   
+//         fprintf(stderr, "bi_squ_test_error\n");
+//     }
 
-    error_msg = bi_squ_kara(&dst1, test_2);
-    if(error_msg == FAILED)
-    {
-        fprintf(stderr, "bi_squ_kara_test_error down 10\n");
-    }
+//     error_msg = bi_squ_kara(&dst1, test_2);
+//     if(error_msg == FAILED)
+//     {
+//         fprintf(stderr, "bi_squ_kara_test_error down 10\n");
+//     }
 
-    bi_print(dst1, 16);
-    bi_delete(&test_2);
+//     bi_print(dst1, 16);
+//     bi_delete(&test_2);
     
-    error_msg = bi_delete(&dst1);
-    if(error_msg == FAILED)
-    {   
-        fprintf(stderr, "bi_squ_test_error\n");
-    }
-}
+//     error_msg = bi_delete(&dst1);
+//     if(error_msg == FAILED)
+//     {   
+//         fprintf(stderr, "bi_squ_test_error\n");
+//     }
+// }
 
 
-void bignum_l2r_test()
-{
-    bigint* base = NULL;
-    bigint* exp = NULL;
-    bigint* mod = NULL;
-    bigint* dst1 = NULL;
-    bigint* dst2 = NULL;
+// void bignum_l2r_test()
+// {
+//     bigint* base = NULL;
+//     bigint* exp = NULL;
+//     bigint* mod = NULL;
+//     bigint* dst1 = NULL;
+//     bigint* dst2 = NULL;
 
-    bi_get_random(&base, POSITIVE, 10);
-    bi_get_random(&exp, POSITIVE, 3);
-    bi_get_random(&mod, POSITIVE, 5);
+//     bi_get_random(&base, POSITIVE, 10);
+//     bi_get_random(&exp, POSITIVE, 3);
+//     bi_get_random(&mod, POSITIVE, 5);
 
-    bi_print(base, 16);
-    bi_print(exp, 16);
-    bi_print(mod, 16);
+//     bi_print(base, 16);
+//     bi_print(exp, 16);
+//     bi_print(mod, 16);
 
-    bi_mod_exp_l2r(&dst1, base, exp, mod);
-    bi_mod_exp_r2l(&dst2, base, exp, mod);
-
-
-    bi_print(dst1, 16);
-    bi_print(dst2, 16);
-}
+//     bi_mod_exp_l2r(&dst1, base, exp, mod);
+//     bi_mod_exp_r2l(&dst2, base, exp, mod);
 
 
-void bi_l2r_debug()
-{
-    bigint* base = NULL;
-    bigint* exp = NULL;
-    bigint* mod = NULL;
-    bigint* dst = NULL;
+//     bi_print(dst1, 16);
+//     bi_print(dst2, 16);
+// }
 
-    bi_set_from_string(&base, "a025ee25eed0c3243aaeafd5aa6058d88fee1626a149cfe154ffd99ff9065319ac6a6579329faf2cde3798fd8a5edc7df442e99cfc4bfea6d77bef651b8ca9d17dda62547a15efd01f017e4fb280f805ace92a7db8cdd58c4512404074d3b91a71e8355776cb6739ec74003ef21a484b91419eb1e7da1b54c1e3aa7e100e824f4003bae777d025768a7fc863ffb7f5584dd9a25f165849454e4a1454c1e858a0fa28cbd222ea8343e32c77c7", 16);
-    bi_set_from_string(&exp, "6897c95ca3a5230e89d93f954fc3f452", 16);
-    bi_set_from_string(&mod, "38e48537d30331eb1904bbca03c06a064114ae01fdc67734", 16);
 
-    bi_print(base, 16);
-    bi_print(exp, 16);
-    bi_print(mod, 16);
-    bi_mod_exp_l2r(&dst, base, exp, mod);
+// void bi_l2r_debug()
+// {
+//     bigint* base = NULL;
+//     bigint* exp = NULL;
+//     bigint* mod = NULL;
+//     bigint* dst = NULL;
 
-    bi_print(dst, 16);
-}
+//     bi_set_from_string(&base, "a025ee25eed0c3243aaeafd5aa6058d88fee1626a149cfe154ffd99ff9065319ac6a6579329faf2cde3798fd8a5edc7df442e99cfc4bfea6d77bef651b8ca9d17dda62547a15efd01f017e4fb280f805ace92a7db8cdd58c4512404074d3b91a71e8355776cb6739ec74003ef21a484b91419eb1e7da1b54c1e3aa7e100e824f4003bae777d025768a7fc863ffb7f5584dd9a25f165849454e4a1454c1e858a0fa28cbd222ea8343e32c77c7", 16);
+//     bi_set_from_string(&exp, "6897c95ca3a5230e89d93f954fc3f452", 16);
+//     bi_set_from_string(&mod, "38e48537d30331eb1904bbca03c06a064114ae01fdc67734", 16);
 
-void bi_squ_debug()
-{
-    bigint *pos_a = NULL;
-    bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
-    // bigint *neg_b = NULL;
-    // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
-    printf("pos a : ");
-    bi_print(pos_a, 16);
-    printf("\n");
-    bigint *p_squ = NULL;
-    bi_squ(&p_squ, pos_a);
+//     bi_print(base, 16);
+//     bi_print(exp, 16);
+//     bi_print(mod, 16);
+//     bi_mod_exp_l2r(&dst, base, exp, mod);
 
-    printf("p_squ : ");
-    bi_print(p_squ, 16);
-    printf("\n");
+//     bi_print(dst, 16);
+// }
 
-    // bi_print(neg_b, 16);
+// void bi_squ_debug()
+// {
+//     bigint *pos_a = NULL;
+//     bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+//     // bigint *neg_b = NULL;
+//     // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+//     printf("pos a : ");
+//     bi_print(pos_a, 16);
+//     printf("\n");
+//     bigint *p_squ = NULL;
+//     bi_squ(&p_squ, pos_a);
 
-    // bigint *n_squ = NULL;
-    // bi_squ(&n_squ, neg_b);
+//     printf("p_squ : ");
+//     bi_print(p_squ, 16);
+//     printf("\n");
 
-    // bi_print(n_squ, 16);    
-}
+//     // bi_print(neg_b, 16);
 
-void bi_squc_debug()
-{
-    bigint *pos_a = NULL;
-    bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
-    // bigint *neg_b = NULL;
-    // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
+//     // bigint *n_squ = NULL;
+//     // bi_squ(&n_squ, neg_b);
 
-    printf("pos a : ");
-    bi_print(pos_a, 16);
-    printf("\n");
-    bigint *p_squ = NULL;
-    bi_squ(&p_squ, pos_a);
+//     // bi_print(n_squ, 16);    
+// }
 
-    printf("p_squ : ");
-    bi_print(p_squ, 16);
-    printf("\n");
+// void bi_squc_debug()
+// {
+//     bigint *pos_a = NULL;
+//     bi_get_random(&pos_a,POSITIVE, rand() % 63 + 1);
+//     // bigint *neg_b = NULL;
+//     // bi_get_random(&neg_b,NEGATIVE, rand() % 63 + 1);
 
-    // bi_print(neg_b, 16);
+//     printf("pos a : ");
+//     bi_print(pos_a, 16);
+//     printf("\n");
+//     bigint *p_squ = NULL;
+//     bi_squ(&p_squ, pos_a);
 
-    // bigint *n_squ = NULL;
-    // bi_squ(&n_squ, neg_b);
+//     printf("p_squ : ");
+//     bi_print(p_squ, 16);
+//     printf("\n");
 
-    // bi_print(n_squ, 16);    
-}
+//     // bi_print(neg_b, 16);
 
-void bi_add_replace_test()
-{
-    bigint *a = NULL;
-    bigint *b = NULL;
+//     // bigint *n_squ = NULL;
+//     // bi_squ(&n_squ, neg_b);
 
-    bi_get_random(&a, POSITIVE, 32);
-    bi_new(&b, 1);
+//     // bi_print(n_squ, 16);    
+// }
 
-    bi_print(a, 16);
-    bi_print(b, 16);
+// void bi_add_replace_test()
+// {
+//     bigint *a = NULL;
+//     bigint *b = NULL;
 
-    bi_add_replace(&a, b);
-    bi_print(b, 16);
+//     bi_get_random(&a, POSITIVE, 32);
+//     bi_new(&b, 1);
 
-    bi_delete(&a);
-    bi_delete(&b);
-}
+//     bi_print(a, 16);
+//     bi_print(b, 16);
 
+//     bi_add_replace(&a, b);
+//     bi_print(b, 16);
+
+//     bi_delete(&a);
+//     bi_delete(&b);
+// }
 
 int main()
 {   
@@ -836,19 +835,22 @@ int main()
     //bignum_kara_squ_test();
     //bignum_squ_test();
     //bi_add_replace_test();
-    bignum_time_all_test();
+    //bignum_time_all_test();
+    //half_test();
 
-    //python_add_test("add_test.py", 1000);
-    //python_sub_test("sub_test.py", 1000);
-    //python_mul_test("mul_test.py", 1000);
-    //python_mul_k_test("mul_k_test.py", 1000);
-    //python_div_test("div_test.py", 1000);
-    //python_squ_test("squ_test.py", 1000);
-    //python_squ_k_test("squ_k_test.py", 1000);
-    //python_l2r_test("l2r_test.py", 1000);
-    //python_r2l_test("r2l_test.py", 100);
-    //python_MaS_test("MaS_test.py", 100);
-    //python_bar_redu_test("bar_redu_test.py", 10000);
+    // python_lshift_test("lshift_test.py", 1000);
+    // python_rshift_test("rshift_test.py", 1000);
+    // python_add_test("add_test.py", 1000);
+    // python_sub_test("sub_test.py", 1000);
+    // python_mul_test("mul_test.py", 1000);
+    python_mul_k_test("mul_k_test.py", 1000);
+    python_div_test("div_test.py", 1000);
+    // python_squ_test("squ_test.py", 1000);
+    // python_squ_k_test("squ_k_test.py", 1000);
+    // python_l2r_test("l2r_test.py", 100);
+    // python_r2l_test("r2l_test.py", 100);
+    // python_MaS_test("MaS_test.py", 100);
+    // python_bar_redu_test("bar_redu_test.py", 1000);
     //bignum_squc_test();
     //bi_l2r_debug();
     //bi_squ_debug();

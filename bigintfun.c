@@ -626,7 +626,7 @@ msg bi_bit_rshift(OUT bigint* dst, IN int num_bits)
     num_shift_words = num_bits / (sizeof(word) * 8);
     num_shift_bits = num_bits % (sizeof(word) * 8);
 
-    if(num_shift_words >= dst_len || ((dst_len - 1 == num_shift_words) && ((dst->a[dst_len - 1]) >> num_bits == 0)))
+    if(num_shift_words >= dst_len || ((dst_len - 1 == num_shift_words) && ((dst->a[dst_len - 1]) >> num_shift_bits == 0)))
     {
 #if ZERORIZE == 1
         array_init(dst->a, dst_len);

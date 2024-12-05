@@ -591,27 +591,52 @@ msg bi_smul(OUT bigint** dst, IN word src1, IN word src2)
     }
     (*dst)->sign = POSITIVE;
 
-    half_word A1 = 0, A0 = 0, B1 = 0, B0 = 0;
-    word temp, temp1 = 0, temp0 = 0;
+    #if SIZEOFWORD == 8
+        word A1 = 0, A0 = 0, B1 = 0, B0 = 0;
+        word temp, temp1 = 0, temp0 = 0;
+        A1 = src1 >> (SIZEOFWORD / 2);
+        A0 = src1 & (((word)1 << (SIZEOFWORD / 2)) - 1);
+        
+        B1 = src2 >> (SIZEOFWORD / 2);
+        B0 = src2 & (((word)1 << (SIZEOFWORD / 2)) - 1);
 
-    A1 = src1 >> (sizeof(half_word) * 8);
-    A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
+        temp1 = (word)A1 * (word)B0;
+        temp0 = (word)A0 * (word)B1;
+        temp0 += temp1;
+        temp1 = (temp0 < temp1);
 
-    B1 = src2 >> (sizeof(half_word) * 8);
-    B0 = src2 & (((word)1 << (sizeof(half_word) * 8)) - 1);
+        (*dst)->a[1] = (word)A1 * (word)B1;
+        temp = (*dst)->a[0] = (word)A0 * (word)B0;
+        
+        (*dst)->a[0] += temp0 << (SIZEOFWORD / 2);
+        (*dst)->a[1] += (temp1 << (SIZEOFWORD / 2)) + (temp0 >> (SIZEOFWORD / 2)) + ((*dst)->a[0] < temp);
+        
+        return SUCCESS;
 
-    temp1 = (word)A1 * (word)B0;
-    temp0 = (word)A0 * (word)B1;
-    temp0 += temp1;
-    temp1 = (temp0 < temp1);
+    #else
+        half_word A1 = 0, A0 = 0, B1 = 0, B0 = 0;
+        word temp, temp1 = 0, temp0 = 0;
 
-    (*dst)->a[1] = (word)A1 * (word)B1;
-    temp = (*dst)->a[0] = (word)A0 * (word)B0;
-    
-    (*dst)->a[0] += temp0 << (sizeof(half_word) * 8);
-    (*dst)->a[1] += (temp1 << (sizeof(half_word) * 8)) + (temp0 >> (sizeof(half_word) * 8)) + ((*dst)->a[0] < temp);
-    
-    return SUCCESS;
+        A1 = src1 >> (sizeof(half_word) * 8);
+        A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
+
+        B1 = src2 >> (sizeof(half_word) * 8);
+        B0 = src2 & (((word)1 << (sizeof(half_word) * 8)) - 1);
+
+        temp1 = (word)A1 * (word)B0;
+        temp0 = (word)A0 * (word)B1;
+        temp0 += temp1;
+        temp1 = (temp0 < temp1);
+
+        (*dst)->a[1] = (word)A1 * (word)B1;
+        temp = (*dst)->a[0] = (word)A0 * (word)B0;
+        
+        (*dst)->a[0] += temp0 << (sizeof(half_word) * 8);
+        (*dst)->a[1] += (temp1 << (sizeof(half_word) * 8)) + (temp0 >> (sizeof(half_word) * 8)) + ((*dst)->a[0] < temp);
+        
+        return SUCCESS;
+    #endif
+
 }
 
 /**
@@ -1167,8 +1192,14 @@ msg bi_squc(OUT bigint** dst, IN const word src1)
 
     T->sign = POSITIVE;
 
-    A1 = src1 >> (sizeof(half_word) * 8);
-    A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
+    #if SIZEOFWORD == 8
+        A1 = src1 >> (SIZEOFWORD/2);
+        A0 = src1 & (((word)1 << (SIZEOFWORD/2)) - 1);
+    #else
+        A1 = src1 >> (sizeof(half_word) * 8);
+        A0 = src1 & (((word)1 << (sizeof(half_word) * 8)) - 1);
+    #endif
+
     C->a[1] = (A1*A1);
     C->a[0] = (A0*A0);
     T->a[0] = A0*A1;

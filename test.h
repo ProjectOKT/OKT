@@ -1,8 +1,8 @@
 #ifndef TEST_H
 #define TEST_H
 
-#define TESTNUM                     1
-#define T_TEST_DATA_WORD_SIZE       (2048 / SIZEOFWORD)
+#define TESTNUM                     100
+#define T_TEST_DATA_WORD_SIZE       (1024 / SIZEOFWORD)
 #define T_TEST_WORD_LEN_RANDOM       0
 #define T_USE_RANDOM_WORD_SIZE       0
 #define T_TEST_ALL_CASE              0

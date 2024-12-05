@@ -17,6 +17,8 @@ typedef uint8_t byte;
 #elif SIZEOFWORD == 64
     typedef uint32_t half_word;
     typedef uint64_t word;
+#elif SIZEOFWORD == 8
+    typedef uint8_t word;
 #endif
 
 /**
