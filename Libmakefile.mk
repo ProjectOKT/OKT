@@ -1,9 +1,20 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -fPIC -O2 -std=c99
+CFLAGS = -Wall -O2 -std=c99
+DLLEXT = dll
 
 # Target directories
-TARGET_DIR = MacOs
+ifeq ($(OS),Windows_NT)
+    TARGET_DIR = WinOs
+    LIB_EXT = .dll
+    APP_EXT = .exe
+else
+    TARGET_DIR = MacOs
+    LIB_EXT = .so
+    APP_EXT = 
+    CFLAGS += -fPIC
+endif
+
 LIB_DIR = $(TARGET_DIR)
 APP_DIR = $(TARGET_DIR)
 
@@ -18,11 +29,11 @@ TOOL_OBJ = $(TOOL_SRC:.c=.o)
 APP_OBJ = $(APP_SRC:.c=.o)
 
 # Shared library names
-LIB_MAIN = liboperation.so
-LIB_TOOL = liboperation_tool.so
+LIB_MAIN = liboperation$(LIB_EXT)
+LIB_TOOL = liboperation_tool$(LIB_EXT)
 
 # Executable name
-APP_EXEC = bigint_app
+APP_EXEC = bigint_app$(APP_EXT)
 
 # Phony targets
 .PHONY: all clean directories
@@ -42,9 +53,15 @@ $(LIB_DIR)/$(LIB_MAIN): $(MAIN_SRC)
 $(LIB_DIR)/$(LIB_TOOL): $(TOOL_SRC)
 	$(CC) $(CFLAGS) -shared -o $@ $^
 
+ifdef WINDOWS
+    DLL_FLAGS = -Wl,--enable-auto-import
+else
+    DLL_FLAGS = -Wl,-rpath,@executable_path
+endif
+
 # Build application
 $(APP_DIR)/$(APP_EXEC): $(APP_SRC)
-	$(CC) $(CFLAGS) -o $@ $^ -L$(LIB_DIR) -loperation -loperation_tool -Wl,-rpath,@executable_path
+	$(CC) $(CFLAGS) -o $@ $^ -L$(LIB_DIR) -loperation -loperation_tool $(DLL_FLAGS)
 
 # Clean build artifacts
 clean:
