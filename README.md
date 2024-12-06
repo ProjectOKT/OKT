@@ -1,10 +1,10 @@
 # Tutorials for OKT
 
-## ✅ Information
+## **✅ Information**
 - OKT is bignumber operation library.
 - Used for Crypto Algorithms.
 
-### [Features of OKT]
+### **[Features of OKT]**
   
   👍 **Word Size 8, 32, 64bits available!**
   
@@ -12,20 +12,21 @@
    
   👍 **Enable RSA-2048 Algorithm!**
 
-## ✅ Environment Details
+## **✅ Environment Details**
 
 | **Attribute**         | **Details**               |
 |------------------------|--------------------------|
 | **Programming Language** |[![Language: C](https://img.shields.io/badge/Language-C-blue)](https://en.wikipedia.org/wiki/C_(programming_language))|
 | **Supported OS**       | [![OS: Mac](https://img.shields.io/badge/OS-MacOS-brightgreen)](https://www.apple.com/macos/), [![OS: Windows](https://img.shields.io/badge/OS-Windows-blue)](https://www.microsoft.com/windows)|
-| **Compiler**           | gcc, clang               |
-| **C versions**         | c99                      |
+| **Compiler**           | GCC, Clang               |
+| **C versions**         | C99                      |
+| **Verify Tools**       | SageMath, Python         |
 
-## ✅ How to Run
+## **✅ How to Run**
 - You can banchmark performance of our bignum algorithm.
 - Using makefile or Libmakefile.mk, you can compile.
   
- ### ➡️ Chose following options to Run
+ ### **➡️ Chose following options to Run**
 
 1. Make Executable File Directly.
 ```bash
@@ -39,8 +40,9 @@ make -f Libmakefile.mk    //make directory and files
 ./(OSDIR)/bigint_app      //Run
 ```
 
-## ✅ Code Structure
-### [Source files]
+
+## **✅ Code Structure**
+### **[Source files]**
 - **bigintfun.c**
    - Basic functions for bigint operation.
    - header : bigintfun.h
@@ -61,15 +63,21 @@ make -f Libmakefile.mk    //make directory and files
    - header : verify.h
 - **2024_bigint.c**
    - Include main() and run test.
-### [Utility header files]
- - dtype.h
+### **[Utility header files]**
+ - ** dtype.h**
    - Define bigint structure and type of word, return value.
-- errormsg.h
+- ** errormsg.h**
    - Define Error messages.
-- params.h
+- **params.h**
    - Define function parameters and SIZEOFWORD, ZERORIZE.
-### [Make files]
+### **[Make files]**
 - makefile
    - Make Run File 2024_bigint
 - Libmakefile.mk
    - Make Library file(.so or .dll) and Application file.
+
+## **✅ GitHub**
+- You can git clone OKT
+```bash
+git clone https://github.com/ProjectOKT/OKT.git
+```
