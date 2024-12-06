@@ -35,6 +35,8 @@ make              //basic complie
 ```
 
 2. Make Dynamic Library and Executable File.
+   
+   ❗OSDIR is automatically generated with your OS
 ```bash
 make -f Libmakefile.mk    //make directory and files
 ./(OSDIR)/bigint_app      //Run
@@ -64,9 +66,9 @@ make -f Libmakefile.mk    //make directory and files
 - **2024_bigint.c**
    - Include main() and run test.
 ### **[Utility header files]**
- - ** dtype.h**
+ - **dtype.h**
    - Define bigint structure and type of word, return value.
-- ** errormsg.h**
+- **errormsg.h**
    - Define Error messages.
 - **params.h**
    - Define function parameters and SIZEOFWORD, ZERORIZE.
