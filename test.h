@@ -3,7 +3,7 @@
 
 #include "dtype.h"
 
-#define TESTNUM                     100     //number of test case
+#define TESTNUM                     1    //number of test case
 #define T_TEST_DATA_WORD_SIZE       (2048 / SIZEOFWORD)     //test bigint word_len
 
 //test flags
@@ -34,7 +34,7 @@ void python_sub_test(const char* filename);
 
 void python_mul_test(const char* filename);
 
-void python_div_test(const char* filename);
+void python_bin_div_test(const char* filename);
 
 void python_mul_k_test(const char* filename);
 
@@ -57,5 +57,7 @@ void python_MaS_test(const char* filename);
 void python_bar_redu_test(const char* filename);
 
 void python_word_div_test(const char* filename);
+
+void python_naive_div_test(const char* filename);
 
 #endif

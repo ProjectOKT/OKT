@@ -23,4 +23,6 @@ msg bi_divc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN c
 msg bi_divcc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B);
 msg bi_2_word_div(OUT word* quotient,  IN const bigint* A, IN const word B);
 
+msg bi_naive_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B);
+
 #endif

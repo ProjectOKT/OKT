@@ -29,13 +29,14 @@ int main()
     // python_sub_test("sub_test.py");
     // python_mul_test("mul_test.py");
     // python_mul_k_test("mul_k_test.py");
-    // python_div_test("div_test.py");
-    // python_squ_test("squ_test.py");
-    // python_squ_k_test("squ_k_test.py");
-    // python_l2r_test("l2r_test.py");
-    // python_r2l_test("r2l_test.py");
-    // python_MaS_test("MaS_test.py");
-    // python_bar_redu_test("bar_redu_test.py");
-    python_word_div_test("word_div_test.py");
+    //python_bin_div_test("bin_div_test.py");
+    //python_squ_test("squ_test.py");
+    //python_squ_k_test("squ_k_test.py");
+    //python_l2r_test("l2r_test.py");
+    //python_r2l_test("r2l_test.py");
+    //python_MaS_test("MaS_test.py");
+    //python_bar_redu_test("bar_redu_test.py");
+    //python_word_div_test("word_div_test.py");
+    python_naive_div_test("naive_div_test.py");
     return 0;
 }
