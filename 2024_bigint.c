@@ -9,16 +9,16 @@
 
 int main()
 {   
-    atexit(check_leaks);
+    //atexit(check_leaks);
     
     srand(time(NULL));
-    printf("============================================================\n");
-    printf("                   OKT Bignumber Library\n");
-    printf("============================================================\n");
-    printf("              All operations Time Measuring...\n");
-    bignum_time_all_test();
-    printf("============================================================\n");
-    printf("                     RSA Encryption...\n");
+    // printf("============================================================\n");
+    // printf("                   OKT Bignumber Library\n");
+    // printf("============================================================\n");
+    // printf("              All operations Time Measuring...\n");
+    // bignum_time_all_test();
+    // printf("============================================================\n");
+    // printf("                     RSA Encryption...\n");
 
     /*********************************************
      * Accuracy Test : generate python file and run test
@@ -36,5 +36,6 @@ int main()
     // python_r2l_test("r2l_test.py");
     // python_MaS_test("MaS_test.py");
     // python_bar_redu_test("bar_redu_test.py");
+    python_word_div_test("word_div_test.py");
     return 0;
 }

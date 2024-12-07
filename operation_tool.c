@@ -746,3 +746,150 @@ msg bi_squc(OUT bigint** dst, IN const word src1)
 }
 
 
+msg bi_word_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B)
+{
+    if (bi_compare(A,B) == -1){
+        bi_new(quotient,1);
+        bi_assign(remainder,A);
+        return SUCCESS;
+    }
+    int n = A->word_len;
+    bi_new(remainder,1);
+    
+    bi_new(quotient,n);
+    (*quotient)->sign = POSITIVE;
+
+    bigint* temp = NULL;
+    
+    for (int i = n - 1; i >= 0; i--){
+        //R(i+1)W+Ai
+        bi_assign((&temp),(*remainder));
+        bi_bit_lshift(temp,SIZEOFWORD);
+        temp->a[0] = A->a[i]; 
+        temp->sign = POSITIVE;
+        bi_refine(temp);
+        bi_divc((&(*quotient)->a[i]), remainder, temp, B);
+    }
+    bi_refine(*quotient);
+
+    bi_delete(&temp);
+    return SUCCESS;
+}
+
+
+msg bi_divc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B)
+{
+    if (bi_compare(A,B) == -1){
+        (*quotient) = 0;
+        bi_assign(remainder,A);
+        return SUCCESS;
+    }
+    int m = B->word_len;
+    word Bm_1 = B->a[m-1];
+    word two_exp_w_1 = ((word)1) << (SIZEOFWORD - 1);
+    int k = 0;
+    while (Bm_1 < two_exp_w_1){
+        Bm_1 = Bm_1 << 1;
+        k++;
+    }
+    bigint* temp_A = NULL;
+    bigint* temp_B = NULL;
+    bi_assign(&temp_A,A);
+    bi_assign(&temp_B,B);
+    bi_bit_lshift(temp_A,k);
+    bi_bit_lshift(temp_B,k);
+    
+    bi_divcc(quotient,remainder,temp_A,temp_B);
+
+    bi_bit_rshift((*remainder),k);
+
+    bi_delete(&temp_A);
+    bi_delete(&temp_B);
+    return SUCCESS;
+}
+
+
+msg bi_divcc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B)
+{
+    int n = A->word_len;
+    int m = B->word_len;
+
+    bigint* BQ = NULL;
+    bigint* Q = NULL;
+    bigint* temp = NULL;
+    
+    word Am = A->a[m];
+    word Am_1 = A->a[m-1];
+    word Bm_1 = B->a[m-1];
+    word W_1 = max_word;
+
+    if (n == m){
+        (*quotient) = Am_1 / Bm_1; 
+    }
+
+    if (n == (m + 1)){
+        if(Am == Bm_1){
+            (*quotient) = W_1; 
+        }
+        else{
+            bigint* smallA = NULL;
+            bi_new(&smallA,2);
+            smallA->sign = POSITIVE;
+            smallA->a[0] = Am_1;
+            smallA->a[1] = Am;
+            bi_2_word_div(quotient, smallA, Bm_1);
+            bi_delete(&smallA);
+        }
+    }
+
+    bi_new(&Q,1);
+    Q->a[0] = (*quotient);
+    Q->sign = POSITIVE;
+    
+    bi_mul_k(&BQ,B,Q);
+    bi_sub(remainder,A,BQ);
+    
+    while((*remainder)->sign == NEGATIVE){
+        (*quotient)--;
+        //bi_assign(&temp,(*remainder));
+        bi_add_replace(remainder,B);
+    }
+
+    bi_delete(&temp);
+    bi_delete(&BQ);
+    bi_delete(&Q);
+    return SUCCESS;
+}
+
+
+msg bi_2_word_div(OUT word* quotient,  IN const bigint* A, IN const word B)
+{
+    (*quotient) = 0;
+
+    word remainder = A->a[1];
+    word two_exp_w_1 = ((word)1) << (SIZEOFWORD - 1);
+    word A0 = A->a[0];
+
+    for (int j  = SIZEOFWORD-1; j >=0; j--){
+        int aj = ((A0 >> j) & 1);
+        word two_j = (((word)1) << j);
+        if (remainder >= two_exp_w_1){
+            (*quotient) += two_j;
+            //(B-R)
+            word temp = B - remainder;
+            //R+aj
+            remainder += aj;
+            // R+aj - (B-R)
+            remainder -= temp;
+        }
+        else{
+            remainder = (remainder << 1) + aj;
+            if (remainder >= B){
+                (*quotient) += two_j;
+                remainder -= B;
+            }
+        }
+    }
+    return SUCCESS;
+}
+

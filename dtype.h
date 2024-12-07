@@ -16,11 +16,14 @@ typedef uint8_t byte;
 #if SIZEOFWORD == 32
     typedef uint16_t half_word;
     typedef uint32_t word;
+    #define max_word (word)0xFFFFFFFF;
 #elif SIZEOFWORD == 64
     typedef uint32_t half_word;
     typedef uint64_t word;
+    #define max_word (word)0xFFFFFFFFFFFFFFFF;
 #elif SIZEOFWORD == 8
     typedef byte word;
+    #define max_word (word)0xff;
 #endif
 
 /**

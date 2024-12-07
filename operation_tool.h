@@ -18,4 +18,9 @@ msg bi_binary_long_division(OUT bigint** quotient, OUT bigint** remainder, IN co
 
 msg bi_squc(OUT bigint** dst, IN const word src1);
 
+msg bi_word_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B);
+msg bi_divc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B);
+msg bi_divcc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B);
+msg bi_2_word_div(OUT word* quotient,  IN const bigint* A, IN const word B);
+
 #endif

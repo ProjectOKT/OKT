@@ -56,4 +56,6 @@ void python_MaS_test(const char* filename);
 
 void python_bar_redu_test(const char* filename);
 
+void python_word_div_test(const char* filename);
+
 #endif

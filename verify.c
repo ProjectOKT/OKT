@@ -4,11 +4,7 @@
 
 void check_leaks(){
 
-    #if defined(_WIN32) || defined(_WIN64)
-        fprintf(stderr, ERR_NOT_SUPPORT_OS);
-    #elif defined(__APPLE__) || defined(__MACH__)
+    #if defined(__APPLE__) || defined(__MACH__)
         system("leaks 2024_bigint");
-    #else
-        fprintf(stderr, ERR_NOT_SUPPORT_OS);
     #endif
 }
