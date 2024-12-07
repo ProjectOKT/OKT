@@ -651,9 +651,9 @@ void bignum_time_all_test(){
         squ_k_sum += squ_k_time;
         
         bigint *exp = NULL;
-        bi_get_random(&exp, POSITIVE, 5);
+        bi_get_random(&exp, POSITIVE, T_TEST_DATA_WORD_SIZE);
         bigint *modulo = NULL;
-        bi_get_random(&modulo, POSITIVE, 32);
+        bi_get_random(&modulo, POSITIVE, T_TEST_DATA_WORD_SIZE);
         
         //l2r   
         start = clock();
@@ -1524,7 +1524,7 @@ void python_l2r_test(const char* filename)
         return;
     }
 
-    for (int i = 0; i < TESTNUM; i++) {
+    for (int i = 0; i < TESTNUM_modexp; i++) {
         bigint *base = NULL;
         bi_get_random(&base, POSITIVE, rand() % 63 + 1);
         bigint *exp = NULL;
@@ -1577,7 +1577,7 @@ void python_r2l_test(const char* filename)
         return;
     }
 
-    for (int i = 0; i < TESTNUM; i++) {
+    for (int i = 0; i < TESTNUM_modexp; i++) {
         bigint *base = NULL;
         bi_get_random(&base, POSITIVE, rand() % 63 + 1);
         bigint *exp = NULL;
@@ -1629,7 +1629,7 @@ void python_MaS_test(const char* filename)
         return;
     }
 
-    for (int i = 0; i < TESTNUM; i++) {
+    for (int i = 0; i < TESTNUM_modexp; i++) {
         bigint *base = NULL;
         bi_get_random(&base, POSITIVE, rand() % 63 + 1);
         bigint *exp = NULL;

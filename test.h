@@ -3,14 +3,15 @@
 
 #include "dtype.h"
 
-#define TESTNUM                     100     //number of test case
+#define TESTNUM                     10000     //number of test case
+#define TESTNUM_modexp              1000      //number of test case to modexp
 #define T_TEST_DATA_WORD_SIZE       (2048 / SIZEOFWORD)     //test bigint word_len
 
 //test flags
 #define T_TEST_WORD_LEN_RANDOM       0
 #define T_USE_RANDOM_WORD_SIZE       0
 #define T_TEST_ALL_CASE              0          //Run All case of operator bigint(ex. pp, nn, np, ..., zz)
-#define T_TEST_AVERAGE               0          //Measure time with testnum average or sum
+#define T_TEST_AVERAGE               0        //Measure time with testnum average or sum
 
 void bignum_add_time_test();
 
