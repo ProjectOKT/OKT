@@ -9,7 +9,7 @@
 
 int main()
 {   
-    //atexit(check_leaks);
+    atexit(check_leaks);
     
     srand(time(NULL));
     // printf("============================================================\n");
@@ -20,7 +20,7 @@ int main()
     // printf("============================================================\n");
     // printf("                     RSA Encryption...\n");
 
-    miller_rabin_test();
+    //miller_rabin_test();
     compare_rsa_time_test();
     bignum_time_all_test();
     /*********************************************

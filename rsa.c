@@ -6,6 +6,29 @@
 #include "params.h"
 #include "errormsg.h"
 
+
+/***********************************************
+ * Composite Check using Modular Exponentiation
+ ***********************************************/
+/**
+ * @brief Checks if a number is composite using modular exponentiation and the Miller-Rabin test logic.
+ * 
+ * This function performs a composite check on the number `n` using the divisor `q`, witness `a`, 
+ * and a parameter `l` that determines the number of iterations. It computes modular exponentiation
+ * and verifies conditions to determine compositeness:
+ * 
+ * - If `a^q % n == 1`, the test concludes "NOT Composite".
+ * - For each iteration, if `a^(2^j * q) % n == n-1`, the test concludes "NOT Composite".
+ * - If neither condition is met after all iterations, the test concludes "Composite".
+ * 
+ * @param[in] n The bigint number to be tested for compositeness.
+ * @param[in] q A bigint representing the divisor used in the composite test.
+ * @param[in] l The maximum iteration count for the test.
+ * @param[in] a The witness bigint used to test compositeness.
+ * 
+ * @return Returns "Composite" if the number is composite, "NOT Composite" otherwise.
+ *         Error handling is not explicitly described in the implementation.
+ */
 msg bi_is_composite(IN const bigint* n, IN const bigint* q, IN const bigint* a, IN int l)
 {
     if((n == NULL) || (q == NULL) || (a == NULL) || (n->a == NULL) || (q->a == NULL) || (a->a == NULL) ||
@@ -65,6 +88,22 @@ msg bi_is_composite(IN const bigint* n, IN const bigint* q, IN const bigint* a, 
     return COMPOSITE;
 }
 
+
+/***********************************************
+ * Primality Test: Miller-Rabin
+ ***********************************************/
+/**
+ * @brief Performs a Miller-Rabin primality test on the given number.
+ * 
+ * This function tests whether the input bigint `src` is a prime number by conducting `testnum` rounds
+ * of the Miller-Rabin probabilistic primality test. If the function returns 0, the number is composite.
+ * If it returns 1, the number is probably prime.
+ * 
+ * @param[in] src The bigint number to be tested for primality.
+ * @param[in] testnum The number of test rounds to perform for greater accuracy.
+ * 
+ * @return Returns 1 if the number is probably prime, 0 if it is composite.
+ */
 msg bi_MillerRabinTest(IN const bigint* src, IN int testnum)
 {
     if((src == NULL) || (src->a == NULL) || (src->sign != POSITIVE) || (src->word_len <= 0))
@@ -120,6 +159,26 @@ msg bi_MillerRabinTest(IN const bigint* src, IN int testnum)
     return PROBABLY_PRIME;
 }
 
+
+/***********************************************
+ * RSA Key Generation
+ ***********************************************/
+/**
+ * @brief Generates RSA key pairs (N, e, d) and the prime factors (p, q).
+ * 
+ * This function generates a pair of RSA keys, including the modulus `N`, public exponent `e`, 
+ * private exponent `d`, and the prime factors `p` and `q`. The bit length of the modulus is specified
+ * by the `bitlen` parameter.
+ * 
+ * @param[out] N Pointer to the bigint that will hold the modulus (N = p * q).
+ * @param[out] e Pointer to the bigint that will hold the public exponent.
+ * @param[out] p Pointer to the bigint that will hold the first prime factor.
+ * @param[out] q Pointer to the bigint that will hold the second prime factor.
+ * @param[out] d Pointer to the bigint that will hold the private exponent.
+ * @param[in] bitlen The desired bit length of the modulus `N`.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid bit length or memory allocation error).
+ */
 msg rsa_key_generation(OUT bigint** N, OUT bigint** e, OUT bigint** p, OUT bigint** q, OUT bigint** d, IN int bitlen)
 {
     if((bitlen < 2) || (bitlen % 2 != 0))
@@ -145,7 +204,7 @@ msg rsa_key_generation(OUT bigint** N, OUT bigint** e, OUT bigint** p, OUT bigin
     bi_assign(&lower_bound, buf1);
     bi_bit_lshift(buf1, 1);
     bi_assign(&upper_bound, buf1);
-    //Choose two random distinct n/2-bit primes p and q 필요
+    //Choose two random distinct n/2-bit primes p and q
     do {
         printf("searching for prime p...\n");
         do{
@@ -158,17 +217,21 @@ msg rsa_key_generation(OUT bigint** N, OUT bigint** e, OUT bigint** p, OUT bigin
         }while(bi_MillerRabinTest(*q, MILLER_NUM) != PROBABLY_PRIME);
     }while(bi_compare(*p, *q) == 0);
 
-    bi_mul_kara(N, *p, *q); // Calculate N = p x q
+    // Calculate N = p x q
+    bi_mul_kara(N, *p, *q); 
 
+    // Calculate Pi_n = (p-1)(q-1)
     bi_sub(&buf1, *p, one);
     bi_sub(&buf2, *q, one);
-    bi_mul_kara(&phi_n, buf1, buf2); // Calculate Pi_n = (p-1)(q-1)
+    bi_mul_kara(&phi_n, buf1, buf2);
 
+    // Choose e such that gcd(e, (p-1)(q-1)) = 1
     do{
         bi_get_random_within_range(e, one, phi_n);
         bi_gcd(&buf1, *e, phi_n);
-    }while(bi_compare(buf1, one) != 0); // Choose e such that gcd(e, (p-1)(q-1)) = 1
+    }while(bi_compare(buf1, one) != 0); 
 
+    // Calculate d such that ed = 1 mod (phi_n)
     bi_EEA(&buf1, d, &buf2, *e, phi_n);
     if(((*d)->sign) == NEGATIVE)
     {
@@ -186,6 +249,22 @@ msg rsa_key_generation(OUT bigint** N, OUT bigint** e, OUT bigint** p, OUT bigin
 }
 
 
+/***********************************************
+ * RSA Encryption
+ ***********************************************/
+/**
+ * @brief Encrypts a message using the RSA public key.
+ * 
+ * This function encrypts the input message `msg` using the RSA algorithm. It uses the public key 
+ * (e, N) to compute the ciphertext as `ciphertext = msg^e mod N`.
+ * 
+ * @param[out] ciphertext Pointer to the bigint that will hold the encrypted message.
+ * @param[in] msg The input bigint message to be encrypted.
+ * @param[in] e The public exponent bigint.
+ * @param[in] n The modulus bigint.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid inputs or memory allocation error).
+ */
 msg rsa_encryption(OUT bigint** ciphertext, IN const bigint* msg, IN const bigint* e, IN const bigint* n)
 {
     if((msg == NULL) || (e == NULL) || (n == NULL) || (msg->a == NULL) || (e->a == NULL) || (n->a == NULL) 
@@ -194,12 +273,29 @@ msg rsa_encryption(OUT bigint** ciphertext, IN const bigint* msg, IN const bigin
         fprintf(stderr, ERR_INVALID_INPUT);
         return FAILED;
     }
+    // C = M^e mod N
     bi_mod_exp_l2r(ciphertext, msg, e, n);
 
     return SUCCESS;
 }
 
 
+/***********************************************
+ * RSA Decryption
+ ***********************************************/
+/**
+ * @brief Decrypts a ciphertext using the RSA private key.
+ * 
+ * This function decrypts the input ciphertext `ciphertext` using the RSA algorithm. It uses the private key 
+ * (d, N) to compute the original message as `msg = ciphertext^d mod N`.
+ * 
+ * @param[out] msg Pointer to the bigint that will hold the decrypted message.
+ * @param[in] ciphertext The input bigint ciphertext to be decrypted.
+ * @param[in] d The private exponent bigint.
+ * @param[in] n The modulus bigint.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid inputs or memory allocation error).
+ */
 msg rsa_decryption(OUT bigint** msg, IN const bigint* ciphertext, IN const bigint* d, IN const bigint* n)
 {
     if((ciphertext == NULL) || (d == NULL) || (n == NULL) || (ciphertext->a == NULL) || (d->a == NULL) || (n->a == NULL) 
@@ -208,6 +304,7 @@ msg rsa_decryption(OUT bigint** msg, IN const bigint* ciphertext, IN const bigin
         fprintf(stderr, ERR_INVALID_INPUT);
         return FAILED;
     }
+    // M = C^d mod N
     bi_mod_exp_l2r(msg, ciphertext, d, n);
 
     return SUCCESS;

@@ -173,7 +173,22 @@ msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
 }
 
 
-// bigintfun.c
+/***********************************************
+ * Random Number within Range
+ ***********************************************/
+/**
+ * @brief Generates a random bigint within a specified range.
+ * 
+ * This function generates a random bigint that lies within the range defined by the 
+ * `lower_bound` and `upper_bound` (inclusive). It ensures the generated number is uniformly
+ * distributed within the given range.
+ * 
+ * @param[out] dst Pointer to the bigint that will hold the generated random number.
+ * @param[in] lower_bound The lower bound of the range (inclusive).
+ * @param[in] upper_bound The upper bound of the range (inclusive).
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid range, invalid input, or memory allocation error).
+ */
 msg bi_get_random_within_range(OUT bigint** dst, IN bigint* lower_bound, IN bigint* upper_bound)
 {
     if((lower_bound == NULL) || (upper_bound == NULL) || (lower_bound->a == NULL) || (upper_bound->a == NULL) || (lower_bound->word_len <= 0) 
@@ -578,6 +593,7 @@ msg bi_fillzero(OUT bigint* dst, IN int src_len, IN int toward){
     return SUCCESS;
 }
 
+
 /**
  * @brief Connects two big integers like src1||src2.
  * 
@@ -851,6 +867,22 @@ int bi_compare(IN const bigint* A, IN const bigint* B){
 }
 
 
+/***********************************************
+ * Greatest Common Divisor (GCD)
+ ***********************************************/
+/**
+ * @brief Computes the greatest common divisor (GCD) of two big integers using the Euclidean algorithm.
+ * 
+ * This function calculates the GCD of the input integers `src1` and `src2`. It uses the classical 
+ * Euclidean algorithm, which iteratively computes the remainder until the remainder becomes zero.
+ * The last non-zero remainder is the GCD.
+ * 
+ * @param[out] gcd Pointer to the bigint that will hold the greatest common divisor of `src1` and `src2`.
+ * @param[in] src1 The first bigint for the GCD computation.
+ * @param[in] src2 The second bigint for the GCD computation.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or memory allocation error).
+ */
 msg bi_gcd(OUT bigint** gcd, IN const bigint* src1, IN const bigint* src2)
 {
     if((src1 == NULL) || (src2 == NULL) || (src1->a == NULL) || (src2->a == NULL) || (src1->word_len <= 0) 
@@ -887,6 +919,26 @@ msg bi_gcd(OUT bigint** gcd, IN const bigint* src1, IN const bigint* src2)
 }
 
 
+/***********************************************
+ * Extended Euclidean Algorithm (EEA)
+ ***********************************************/
+/**
+ * @brief Computes the greatest common divisor (GCD) of two big integers and finds their Bézout coefficients.
+ * 
+ * This function performs the Extended Euclidean Algorithm on the input integers `src1` and `src2` to calculate:
+ * - The greatest common divisor (`gcd`)
+ * - Bézout coefficients (`x` and `y`) such that `src1 * x + src2 * y = gcd(src1, src2)`
+ * 
+ * It is useful for applications such as modular inverses in cryptographic algorithms.
+ * 
+ * @param[out] gcd Pointer to the bigint that will hold the greatest common divisor of `src1` and `src2`.
+ * @param[out] x Pointer to the bigint that will hold the Bézout coefficient for `src1`.
+ * @param[out] y Pointer to the bigint that will hold the Bézout coefficient for `src2`.
+ * @param[in] src1 The first bigint for the GCD computation.
+ * @param[in] src2 The second bigint for the GCD computation.
+ * 
+ * @return Returns 1 on success, -1 on failure (e.g., invalid input or memory allocation error).
+ */
 msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN const bigint* src1, IN const bigint* src2)
 {
     if((src1 == NULL) || (src2 == NULL) || (src1->a == NULL) || (src2->a == NULL) || (src1->word_len <= 0) 

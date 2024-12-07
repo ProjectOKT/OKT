@@ -444,6 +444,15 @@ void bignum_div_time_test()
     printf("[div] Execution time: %f seconds\n", cpu_time_used);
 }
 
+
+/**
+ * @brief Runs a time test for the bigint square operation.
+ * 
+ * This function measures the execution time of the bigint square operation. 
+ * It is used to benchmark the performance of the square function and validate its efficiency.
+ * 
+ * @return void
+ */
 void bignum_squ_time_test()
 {
     clock_t start, end;
@@ -484,6 +493,14 @@ void bignum_squ_time_test()
 }
 
 
+/**
+ * @brief Compares execution time of bigint square vs multiplication.
+ * 
+ * This function benchmarks and compares the execution times of bigint square 
+ * and multiplication operations to analyze performance differences.
+ * 
+ * @return void
+ */
 void bignum_squ__vs_mul_time_test()
 {
     clock_t start_squ, end_squ, start_mul, end_mul;
@@ -539,6 +556,14 @@ void bignum_squ__vs_mul_time_test()
 }
 
 
+/**
+ * @brief Compares execution time of bigint square vs k-fold squaring.
+ * 
+ * This function benchmarks and compares the performance of a single bigint square 
+ * operation against multiple (k-fold) consecutive square operations.
+ * 
+ * @return void
+ */
 void bignum_squ_vs_squ_k_time_test()
 {
     clock_t start, end;
@@ -578,6 +603,16 @@ void bignum_squ_vs_squ_k_time_test()
     printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
 }
 
+
+/**
+ * @brief Executes the Miller-Rabin primality test.
+ * 
+ * This function runs the Miller-Rabin primality test to verify whether a given 
+ * bigint number is prime or composite. It is a probabilistic test often used in 
+ * cryptographic applications.
+ * 
+ * @return void
+ */
 void miller_rabin_test()
 {
     bigint* n = NULL; bigint* e = NULL; bigint* p = NULL;
@@ -646,9 +681,23 @@ void miller_rabin_test()
         bi_fprint(file, d);
     }
     fclose(file);
+    bi_delete(&n);
+    bi_delete(&e);
+    bi_delete(&p);
+    bi_delete(&q);
+    bi_delete(&d);
 }
 
 
+/**
+ * @brief Compares execution time of RSA operations.
+ * 
+ * This function measures and compares the performance of different RSA-related 
+ * operations, such as encryption, decryption, and key generation, to evaluate 
+ * their relative efficiencies.
+ * 
+ * @return void
+ */
 void compare_rsa_time_test()
 {
     clock_t start, end;
@@ -787,6 +836,15 @@ void compare_rsa_time_test()
         rsa_15360_dec_time_sum += rsa_15360_dec_time;
     }
     fclose(file);
+    bi_delete(&n);
+    bi_delete(&e);
+    bi_delete(&p);
+    bi_delete(&q);
+    bi_delete(&d);
+    bi_delete(&msg);
+    bi_delete(&c);
+    bi_delete(&msg_buf);
+    bi_delete(&zero);
 
     if(T_TEST_AVERAGE == 1)
     {
@@ -808,6 +866,40 @@ void compare_rsa_time_test()
 }
 
 
+/**
+ * @brief Runs a comprehensive performance test for various bigint operations.
+ * 
+ * This function benchmarks the execution time of various bigint operations, including:
+ * - Addition
+ * - Subtraction
+ * - Multiplication
+ * - Karatsuba Multiplication
+ * - Binary Division
+ * - Word Division
+ * - Squaring
+ * - Karatsuba Squaring
+ * - Modular Exponentiation (Left-to-Right, Right-to-Left, and Multiply-and-Square methods)
+ * - Barrett Reduction
+ * 
+ * For each operation, random bigint values are generated and the execution time is measured.
+ * The results are aggregated over multiple iterations and displayed as averages or totals
+ * based on the configuration (`T_TEST_AVERAGE`).
+ * 
+ * @details
+ * This function is designed to evaluate the performance of bigint operations 
+ * implemented in the library. It performs the following steps:
+ * 1. Generate random bigints as inputs for each operation.
+ * 2. Perform the operation and measure the execution time.
+ * 3. Aggregate the execution times for benchmarking purposes.
+ * 4. Display the results for each operation.
+ * 
+ * Intermediate results and allocated resources are cleaned up to avoid memory leaks.
+ * 
+ * @note The number of test iterations is defined by the `TESTNUM` macro, and the word size
+ * of test data is defined by the `T_TEST_DATA_WORD_SIZE` macro.
+ * 
+ * @return void
+ */
 void bignum_time_all_test(){
 
     printf("======================|Time Measuring|======================\n");
@@ -1619,7 +1711,6 @@ void python_bin_div_test(const char* filename) {
  * 
  * @return void. Prints an error message if the file cannot be opened.
  */
-
 void python_word_div_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
@@ -1743,6 +1834,7 @@ void python_word_div_test(const char* filename)
     fclose(file);
 }
 
+
 /**
  * @brief Test function for naive big integer division using Python-compatible data.
  * 
@@ -1768,7 +1860,6 @@ void python_word_div_test(const char* filename)
  * 
  * @return void. Prints an error message if the file cannot be opened.
  */
-
 void python_naive_div_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
@@ -1893,6 +1984,17 @@ void python_naive_div_test(const char* filename)
 }
 
 
+/**
+ * @brief Test function for modular squaring using Python-generated test data.
+ * 
+ * This function tests the modular squaring implementation by executing test cases 
+ * loaded from a Python-generated file. The test cases include input and expected 
+ * output values for validating the squaring operation.
+ * 
+ * @param[in] filename The name of the file containing Python-generated test data.
+ * 
+ * @return void
+ */
 void python_squ_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -1933,6 +2035,17 @@ void python_squ_test(const char* filename) {
 }
 
 
+/**
+ * @brief Test function for right shift operation using Python-generated test data.
+ * 
+ * This function tests the right shift implementation by executing test cases 
+ * loaded from a Python-generated file. It verifies the correctness of the 
+ * right shift operation for the given inputs.
+ * 
+ * @param[in] filename The name of the file containing Python-generated test data.
+ * 
+ * @return void
+ */
 void python_rshift_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -1967,6 +2080,18 @@ void python_rshift_test(const char* filename) {
     fclose(file);
 }
 
+
+/**
+ * @brief Test function for left shift operation using Python-generated test data.
+ * 
+ * This function tests the left shift implementation by executing test cases 
+ * loaded from a Python-generated file. It validates the correctness of the 
+ * left shift operation for the provided inputs.
+ * 
+ * @param[in] filename The name of the file containing Python-generated test data.
+ * 
+ * @return void
+ */
 void python_lshift_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2002,6 +2127,18 @@ void python_lshift_test(const char* filename) {
     fclose(file);
 }
 
+
+/**
+ * @brief Test function for Karatsuba squaring using Python-generated test data.
+ * 
+ * This function tests the Karatsuba squaring implementation using test cases 
+ * loaded from a Python-generated file. It verifies the accuracy of the 
+ * squaring operation for large numbers.
+ * 
+ * @param[in] filename The name of the file containing Python-generated test data.
+ * 
+ * @return void
+ */
 void python_squ_k_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2092,7 +2229,6 @@ void python_l2r_test(const char* filename)
     }   
     fclose(file);
 }
-
 
 
 /**
@@ -2192,6 +2328,7 @@ void python_MaS_test(const char* filename)
 
         bi_delete(&base);
         bi_delete(&exp);
+        bi_delete(&mod);
         bi_delete(&mod_exp_result);
     }   
     fclose(file);
@@ -2260,7 +2397,17 @@ void python_bar_redu_test(const char* filename)
 }
 
 
-
+/**
+ * @brief Test function for RSA operation using Python-generated test data.
+ * 
+ * This function tests the RSA encryption or decryption implementation using 
+ * test cases loaded from a Python-generated file. It ensures the correctness 
+ * of RSA operations for the provided input parameters.
+ * 
+ * @param[in] filename The name of the file containing Python-generated test data.
+ * 
+ * @return void
+ */
 void python_rsa_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
@@ -2281,6 +2428,7 @@ void python_rsa_test(const char* filename)
         bigint* c = NULL;
         bigint* msg_buf = NULL;
         bigint* zero = NULL;
+
         int bit_len = T_TEST_DATA_WORD_SIZE * SIZEOFWORD / 2;
         bi_new(&zero, 1);
 
@@ -2318,7 +2466,7 @@ void python_rsa_test(const char* filename)
         fprintf(file, "if (((e * d) %% phi_n) != 1):\n \t print(f\"[e] : ({e:#x} x {d:#x} mod {phi_n:#x}) != 1)\")\n");
         fprintf(file, "if (msg != msg_buf):\n \t print(f\"[rsa] : (msg != msg_buf)\")\n");
 
-        bi_delete(&p);
+        bi_delete(&n);
         bi_delete(&e);
         bi_delete(&p);
         bi_delete(&q);
