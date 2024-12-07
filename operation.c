@@ -859,7 +859,7 @@ msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const big
 
     bigint* temp_src1 = NULL;
     bigint* temp_src2 = NULL;
-    
+
     if((src1 == NULL) || (src2 == NULL))
     {
         fprintf(stderr, ERR_INVALID_INPUT);

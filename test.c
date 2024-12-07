@@ -577,17 +577,17 @@ void bignum_squ_vs_squ_k_time_test()
 }
 
 void bignum_time_all_test(){
-    
-    printf("======================|time test time|======================\n");
+
+    printf("======================|Time Measuring|======================\n");
     clock_t start, end;
     double add_time, sub_time, mul_time, div_time, mul_k_time, \
-     squ_time, squ_k_time, l2r_time, r2l_time, bar_reduce_time, mas_time;
+     squ_time, squ_k_time, l2r_time, r2l_time, bar_reduce_time, mas_time, word_div_time;
     
     double add_sum, sub_sum, mul_sum, div_sum, mul_k_sum, \
-     squ_sum, squ_k_sum, l2r_sum, r2l_sum, bar_reduce_sum, mas_sum;
+     squ_sum, squ_k_sum, l2r_sum, r2l_sum, bar_reduce_sum, mas_sum, word_div_sum;
 
     add_sum = 0; sub_sum = 0; mul_sum = 0; div_sum = 0; mul_k_sum = 0; squ_sum = 0;
-    squ_k_sum = 0; l2r_sum = 0; r2l_sum = 0; bar_reduce_sum = 0; mas_sum = 0;
+    squ_k_sum = 0; l2r_sum = 0; r2l_sum = 0; bar_reduce_sum = 0; mas_sum = 0, word_div_sum = 0;
 
     bigint *src1 = NULL;
     bigint *src2 = NULL;
@@ -629,11 +629,9 @@ void bignum_time_all_test(){
         bigint *quo = NULL;
         bigint *remainer = NULL;
         start = clock();
-        bi_word_division(&quo, &remainer, src1, src2);
+        bi_binary_division(&quo, &remainer, src1, src2);
         end = clock();
         div_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-        bi_delete(&quo);
-        bi_delete(&remainer);
         div_sum += div_time;
          
         //squ
@@ -680,7 +678,6 @@ void bignum_time_all_test(){
         bi_delete(&modulo);
 
         //Barett Reduce
-
         int n = 32;
         bigint *A = NULL;
         bi_get_random(&A, POSITIVE, 2*n);
@@ -703,6 +700,15 @@ void bignum_time_all_test(){
         bar_reduce_time = ((double)(end - start)) / CLOCKS_PER_SEC;
         bar_reduce_sum += bar_reduce_time;
 
+        //Word Division
+        start = clock();
+        bi_word_division(&quo, &remainer, src1, src2);
+        end = clock();
+        word_div_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        word_div_sum += word_div_time;
+        bi_delete(&quo);
+        bi_delete(&remainer);
+
         bi_delete(&A);
         bi_delete(&N);
         bi_delete(&T);
@@ -720,7 +726,8 @@ void bignum_time_all_test(){
         printf("[sub] Execution time: %f seconds\n", sub_sum / TESTNUM);
         printf("[mul] Execution time: %f seconds\n", mul_sum / TESTNUM);
         printf("[mul_k] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
-        printf("[div] Execution time: %f seconds\n", div_sum / TESTNUM);
+        printf("[div_bin] Execution time: %f seconds\n", div_sum / TESTNUM);
+        printf("[div_word] Execution time: %f seconds\n", word_div_sum / TESTNUM);   
         printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
         printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
         printf("[l2r] Execution time: %f seconds\n", l2r_sum / TESTNUM);
@@ -733,7 +740,8 @@ void bignum_time_all_test(){
         printf("[sub] Execution time: %f seconds\n", sub_sum );
         printf("[mul] Execution time: %f seconds\n", mul_sum );
         printf("[mul_k] Execution time: %f seconds\n", mul_k_sum );
-        printf("[div] Execution time: %f seconds\n", div_sum );
+        printf("[div_bin] Execution time: %f seconds\n", div_sum );
+        printf("[div_word] Execution time: %f seconds\n", word_div_sum);
         printf("[squ] Execution time: %f seconds\n", squ_sum );
         printf("[squ_k] Execution time: %f seconds\n", squ_k_sum );
         printf("[l2r] Execution time: %f seconds\n", l2r_sum);
