@@ -12,8 +12,6 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
 msg bi_mul(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
-int get_sign(bigint* src);
-
 msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
 
 msg bi_mul_kara(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);

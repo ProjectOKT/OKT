@@ -6,7 +6,6 @@
 #include "errormsg.h"
 #include "operation_tool.h"
 #include "operation.h"
-
 //(min) return smaller a and b
 //(max) return bigger  a and b
 #define min(a,b)  ((a) <= (b) ? (a) : (b))
@@ -498,7 +497,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     int m = src2->word_len;
 
     //flag
-    if (10 >= min(n,m)) {
+    if (KARA_FLAG_MUL >= min(n,m)) {
         bi_mul(dst,temp_src1,temp_src2);
         bi_delete(&temp_src1);
         bi_delete(&temp_src2);

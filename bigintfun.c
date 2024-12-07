@@ -250,7 +250,7 @@ msg bi_print(IN const bigint* src, IN int base)
         else
         {
             fprintf(stderr, ERR_INVALID_INPUT);
-            return FAILED; // sign 값이 -1, 0, 1이 아니라면 에러코드
+            return FAILED;
         }
 
         temp = sizeof(word) * 2;
@@ -278,7 +278,7 @@ msg bi_print(IN const bigint* src, IN int base)
         return SUCCESS;
     }
 
-    return FAILED; // 2, 16이외의 base값은 에러코드
+    return FAILED;
 }
 
 

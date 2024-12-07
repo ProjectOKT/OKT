@@ -12,25 +12,29 @@ int main()
     atexit(check_leaks);
     
     srand(time(NULL));
-
+    printf("============================================================\n");
+    printf("                   OKT Bignumber Library\n");
+    printf("============================================================\n");
+    printf("              All operations Time Measuring...\n");
     bignum_time_all_test();
+    printf("============================================================\n");
+    printf("                     RSA Encryption...\n");
 
     /*********************************************
-     * generate python file and run test
+     * Accuracy Test : generate python file and run test
     **********************************************/
-
-    // python_lshift_test("lshift_test.py", 1000);
-    // python_rshift_test("rshift_test.py", 1000);
-    // python_add_test("add_test.py", 1000);
-    // python_sub_test("sub_test.py", 1000);
-    // python_mul_test("mul_test.py", 1000);
-    // python_mul_k_test("mul_k_test.py", 1000);
-    // python_div_test("div_test.py", 1000);
-    // python_squ_test("squ_test.py", 1000);
-    // python_squ_k_test("squ_k_test.py", 1000);
-    // python_l2r_test("l2r_test.py", 100);
-    // python_r2l_test("r2l_test.py", 100);
-    // python_MaS_test("MaS_test.py", 100);
-    // python_bar_redu_test("bar_redu_test.py", 1000);
+    // python_lshift_test("lshift_test.py");
+    // python_rshift_test("rshift_test.py");
+    // python_add_test("add_test.py");
+    // python_sub_test("sub_test.py");
+    // python_mul_test("mul_test.py");
+    // python_mul_k_test("mul_k_test.py");
+    // python_div_test("div_test.py");
+    // python_squ_test("squ_test.py");
+    // python_squ_k_test("squ_k_test.py");
+    // python_l2r_test("l2r_test.py");
+    // python_r2l_test("r2l_test.py");
+    // python_MaS_test("MaS_test.py");
+    // python_bar_redu_test("bar_redu_test.py");
     return 0;
 }

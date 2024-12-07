@@ -27,7 +27,7 @@ void bignum_add_time_test()
     clock_t start, end;
     double cpu_time_used;
 
-    start = clock();
+
 
     bigint *pos_a = NULL;
     bigint *pos_b = NULL;
@@ -60,8 +60,9 @@ void bignum_add_time_test()
         bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
 #endif
-
+        start = clock();
         bi_add(&pp_add, pos_a, pos_b);
+        end = clock();
         bi_add(&nn_add, neg_c, neg_d);
         bi_add(&pn_add, pos_a, neg_d);
         bi_add(&np_add, neg_c, pos_b);
@@ -92,7 +93,6 @@ void bignum_add_time_test()
     bi_delete(&zp_add);
     bi_delete(&zz_add);
 #endif
-    end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("[add] Execution time: %f seconds\n", cpu_time_used);
 }
@@ -112,7 +112,7 @@ void bignum_sub_time_test()
     clock_t start, end;
     double cpu_time_used;
 
-    start = clock();
+
 
     bigint *pos_a = NULL;
     bigint *pos_b = NULL;
@@ -145,8 +145,9 @@ void bignum_sub_time_test()
         bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
 #endif
-
+        start = clock();
         bi_sub(&pp_sub, pos_a, pos_b);
+        end = clock();
         bi_sub(&nn_sub, neg_c, neg_d);
         bi_sub(&pn_sub, pos_a, neg_d);
         bi_sub(&np_sub, neg_c, pos_b);
@@ -177,7 +178,7 @@ void bignum_sub_time_test()
     bi_delete(&zp_sub);
     bi_delete(&zz_sub);
 #endif
-    end = clock();
+
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("[sub] Execution time: %f seconds\n", cpu_time_used);
 }
@@ -367,7 +368,7 @@ void bignum_div_time_test()
     clock_t start, end;
     double cpu_time_used;
 
-    start = clock();
+
 
     bigint *pos_a = NULL;
     bigint *pos_b = NULL;
@@ -403,8 +404,9 @@ void bignum_div_time_test()
         bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE);
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE);
 #endif
-
+        start = clock();
         bi_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
+        end = clock();
         bi_division(&nn_quotient, &nn_remainder, neg_c, neg_d);
         bi_division(&pn_quotient, &pn_remainder, pos_a, neg_d);
         bi_division(&np_quotient, &np_remainder, neg_c, pos_b);
@@ -436,7 +438,7 @@ void bignum_div_time_test()
     bi_delete(&zn_quotient);
     bi_delete(&zn_remainder);
 #endif
-    end = clock();
+
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("[div] Execution time: %f seconds\n", cpu_time_used);
 }
@@ -446,7 +448,7 @@ void bignum_squ_time_test()
     clock_t start, end;
     double cpu_time_used;
 
-    start = clock();
+
 
     bigint *pos_a = NULL;
     bigint *neg_b = NULL;
@@ -464,8 +466,10 @@ void bignum_squ_time_test()
         bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
         bi_get_random(&neg_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
 #endif
+        start = clock();
         bi_squ(&p_squ, pos_a);
         bi_squ(&n_squ, neg_b);
+        end = clock();
     }
 
     bi_delete(&pos_a);
@@ -473,7 +477,7 @@ void bignum_squ_time_test()
     bi_delete(&p_squ);
     bi_delete(&n_squ);
 
-    end = clock();
+
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("[squ] Execution time: %f seconds\n", cpu_time_used);
 }
@@ -574,7 +578,7 @@ void bignum_squ_vs_squ_k_time_test()
 
 void bignum_time_all_test(){
     
-    printf("==============|time test time|======================\n");
+    printf("======================|time test time|======================\n");
     clock_t start, end;
     double add_time, sub_time, mul_time, div_time, mul_k_time, \
      squ_time, squ_k_time, l2r_time, r2l_time, bar_reduce_time, mas_time;
@@ -710,29 +714,34 @@ void bignum_time_all_test(){
         bi_delete(&src2);
         bi_delete(&result);
     }
-    // printf("[add] Execution time: %f seconds\n", add_sum / TESTNUM);
-    // printf("[sub] Execution time: %f seconds\n", sub_sum / TESTNUM);
-    // printf("[mul] Execution time: %f seconds\n", mul_sum / TESTNUM);
-    // printf("[mul_k] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
-    // printf("[div] Execution time: %f seconds\n", div_sum / TESTNUM);
-    // printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
-    // printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
-    // printf("[l2r] Execution time: %f seconds\n", l2r_sum / TESTNUM);
-    // printf("[r2l] Execution time: %f seconds\n", r2l_sum / TESTNUM);
-    // printf("[Mas] Execution time: %f seconds\n", mas_sum / TESTNUM);   
-    // printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum / TESTNUM);
+    if(T_TEST_AVERAGE == 1)
+    {
+        printf("[add] Execution time: %f seconds\n", add_sum / TESTNUM);
+        printf("[sub] Execution time: %f seconds\n", sub_sum / TESTNUM);
+        printf("[mul] Execution time: %f seconds\n", mul_sum / TESTNUM);
+        printf("[mul_k] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
+        printf("[div] Execution time: %f seconds\n", div_sum / TESTNUM);
+        printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
+        printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
+        printf("[l2r] Execution time: %f seconds\n", l2r_sum / TESTNUM);
+        printf("[r2l] Execution time: %f seconds\n", r2l_sum / TESTNUM);
+        printf("[Mas] Execution time: %f seconds\n", mas_sum / TESTNUM);   
+        printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum / TESTNUM);
+    }
+    else{
+        printf("[add] Execution time: %f seconds\n", add_sum );
+        printf("[sub] Execution time: %f seconds\n", sub_sum );
+        printf("[mul] Execution time: %f seconds\n", mul_sum );
+        printf("[mul_k] Execution time: %f seconds\n", mul_k_sum );
+        printf("[div] Execution time: %f seconds\n", div_sum );
+        printf("[squ] Execution time: %f seconds\n", squ_sum );
+        printf("[squ_k] Execution time: %f seconds\n", squ_k_sum );
+        printf("[l2r] Execution time: %f seconds\n", l2r_sum);
+        printf("[r2l] Execution time: %f seconds\n", r2l_sum);
+        printf("[Mas] Execution time: %f seconds\n", mas_sum);   
+        printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum); 
+    }
 
-    printf("[add] Execution time: %f seconds\n", add_sum );
-    printf("[sub] Execution time: %f seconds\n", sub_sum );
-    printf("[mul] Execution time: %f seconds\n", mul_sum );
-    printf("[mul_k] Execution time: %f seconds\n", mul_k_sum );
-    printf("[div] Execution time: %f seconds\n", div_sum );
-    printf("[squ] Execution time: %f seconds\n", squ_sum );
-    printf("[squ_k] Execution time: %f seconds\n", squ_k_sum );
-    printf("[l2r] Execution time: %f seconds\n", l2r_sum);
-    printf("[r2l] Execution time: %f seconds\n", r2l_sum);
-    printf("[Mas] Execution time: %f seconds\n", mas_sum);   
-    printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum); 
 }
 
 
@@ -746,15 +755,15 @@ void bignum_time_all_test(){
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_add_test(const char* filename, int testnum) {
+void python_add_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
+        
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
@@ -766,7 +775,7 @@ void python_add_test(const char* filename, int testnum) {
         bigint *z = NULL;
         bi_new(&z,1);
 
-        //0이 아닌 결과
+        
         bigint *pp_add = NULL;
         bi_add(&pp_add, pos_a, pos_b);
 
@@ -779,7 +788,7 @@ void python_add_test(const char* filename, int testnum) {
         bigint *np_add = NULL;
         bi_add(&np_add, neg_c, pos_b);
         
-        //0일때
+        
         bigint *pz_add = NULL;
         bi_add(&pz_add, pos_b, z);
 
@@ -795,7 +804,6 @@ void python_add_test(const char* filename, int testnum) {
         bigint *zz_add = NULL;
         bi_add(&zz_add, z, z);
 
-        //
         fprintf(file, "pos_a = ");
         bi_fprint(file,pos_a);
         fprintf(file, "pos_b = ");
@@ -869,15 +877,14 @@ void python_add_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_sub_test(const char* filename, int testnum) {
+void python_sub_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
@@ -889,7 +896,6 @@ void python_sub_test(const char* filename, int testnum) {
         bigint *z = NULL;
         bi_new(&z,1);
 
-        //0이 아닌 결과
         bigint *pp_sub = NULL;
         bi_sub(&pp_sub, pos_a, pos_b);
 
@@ -902,7 +908,6 @@ void python_sub_test(const char* filename, int testnum) {
         bigint *np_sub = NULL;
         bi_sub(&np_sub, neg_c, pos_b);
         
-        //0일때
         bigint *pz_sub = NULL;
         bi_sub(&pz_sub, pos_b, z);
 
@@ -992,15 +997,14 @@ void python_sub_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_mul_test(const char* filename, int testnum) {
+void python_mul_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
@@ -1012,7 +1016,6 @@ void python_mul_test(const char* filename, int testnum) {
         bigint *z = NULL;
         bi_new(&z,1);
 
-        //0이 아닌 결과
         bigint *pp_mul = NULL;
         bi_mul(&pp_mul, pos_a, pos_b);
 
@@ -1025,7 +1028,6 @@ void python_mul_test(const char* filename, int testnum) {
         bigint *np_mul = NULL;
         bi_mul(&np_mul, neg_c, pos_b);
         
-        //0일때
         bigint *pz_mul = NULL;
         bi_mul(&pz_mul, pos_b, z);
 
@@ -1041,7 +1043,6 @@ void python_mul_test(const char* filename, int testnum) {
         bigint *zz_mul = NULL;
         bi_mul(&zz_mul, z, z);
 
-        //
         fprintf(file, "pos_a = ");
         bi_fprint(file,pos_a);
         fprintf(file, "pos_b = ");
@@ -1115,15 +1116,14 @@ void python_mul_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_mul_k_test(const char* filename, int testnum) {
+void python_mul_k_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
@@ -1135,7 +1135,6 @@ void python_mul_k_test(const char* filename, int testnum) {
         bigint *z = NULL;
         bi_new(&z,1);
 
-        //0이 아닌 결과
         bigint *pp_mul = NULL;
         bi_mul_kara(&pp_mul, pos_a, pos_b);
 
@@ -1148,7 +1147,6 @@ void python_mul_k_test(const char* filename, int testnum) {
         bigint *np_mul = NULL;
         bi_mul_kara(&np_mul, neg_c, pos_b);
         
-        //0일때
         bigint *pz_mul = NULL;
         bi_mul_kara(&pz_mul, pos_b, z);
 
@@ -1239,15 +1237,14 @@ void python_mul_k_test(const char* filename, int testnum) {
  * @param testnum The specific test case number to execute from the file.
  * @return void
  */
-void python_div_test(const char* filename, int testnum) {
+void python_div_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *pos_b = NULL;
@@ -1259,7 +1256,6 @@ void python_div_test(const char* filename, int testnum) {
         bigint *z = NULL;
         bi_new(&z,1);
 
-        //0이 아닌 결과
         bigint *pp_quotient = NULL;
         bigint *pp_remainder = NULL;
         bi_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
@@ -1275,15 +1271,6 @@ void python_div_test(const char* filename, int testnum) {
         bigint *np_quotient = NULL;
         bigint *np_remainder = NULL;
         bi_division(&np_quotient, &np_remainder, neg_c, pos_b);
-        
-        //0일때
-        // bigint *pz_quotient = NULL;
-        // bigint *pz_remainder = NULL;
-        // bi_div(&pz_quotient, &pz_remainder, pos_b, z);
-
-        // bigint *nz_quotient = NULL;
-        // bigint *nz_remainder = NULL;
-        // bi_div(&nz_quotient, &nz_remainder, neg_c, z);
 
         bigint *zp_quotient = NULL;
         bigint *zp_remainder = NULL;
@@ -1293,11 +1280,6 @@ void python_div_test(const char* filename, int testnum) {
         bigint *zn_remainder = NULL;
         bi_division(&zn_quotient, &zn_remainder, z, neg_c);
 
-        // bigint *zz_quotient = NULL;
-        // bigint *zz_remainder = NULL;
-        // bi_div(&zz_quotient, &zz_remainder, z, z);
-
-        //
         fprintf(file, "pos_a = ");
         bi_fprint(file,pos_a);
         fprintf(file, "pos_b = ");
@@ -1334,18 +1316,6 @@ void python_div_test(const char* filename, int testnum) {
         bi_fprint(file, zn_quotient);
         fprintf(file, "zn_remainder = ");
         bi_fprint(file, zn_remainder);
-        // fprintf(file, "nz_quotient = ");
-        // bi_fprint(file, nz_quotient);
-        // fprintf(file, "nz_remainder = ");
-        // bi_fprint(file, nz_remainder);
-        // fprintf(file, "pz_quotient = ");
-        // bi_fprint(file, pz_quotient);
-        // fprintf(file, "pz_remainder = ");
-        // bi_fprint(file, pz_remainder);
-        // fprintf(file, "zz_quotient = ");
-        // bi_fprint(file, zz_quotient);
-        // fprintf(file, "zz_remainder = ");
-        // bi_fprint(file, zz_remainder);
 
 
         fprintf(file, "if (pos_a // pos_b != pp_quotient):\n \t print(f\"[pp_quotient]: {pos_a:#x} // {pos_b:#x} != {pp_quotient:#x}\\n\")\n");
@@ -1358,16 +1328,10 @@ void python_div_test(const char* filename, int testnum) {
         fprintf(file, "if (pos_a %% neg_d != pn_remainder):\n \t print(f\"[pn_remainder]: {pos_a:#x} %% {neg_d:#x} != {pn_remainder:#x}\\n\")\n");
 
 
-        // fprintf(file, "if (pos_b // z != pz_quotient):\n \t print(f\"[pz_quotient]: {pos_b:#x} + {z:#x} != {pz_quotient:#x}\\n\")\n");
-        // fprintf(file, "if (pos_b %% z != pz_remainder):\n \t print(f\"[pz_remainder]: {pos_b:#x} + {z:#x} != {pz_remainder:#x}\\n\")\n");
-        // fprintf(file, "if (neg_c // z != nz_quotient):\n \t print(f\"[nz_quotient]: {neg_c:#x} + {z:#x} != {nz_quotient:#x}\\n\")\n");
-        // fprintf(file, "if (neg_c %% z != nz_remainder):\n \t print(f\"[nz_remainder]: {neg_c:#x} + {z:#x} != {nz_remainder:#x}\\n\")\n");
         fprintf(file, "if (z // pos_b != zp_quotient):\n \t print(f\"[zp_quotient]: {z:#x} // {pos_b:#x} != {zp_quotient:#x}\\n\")\n");
         fprintf(file, "if (z %% pos_b != zp_remainder):\n \t print(f\"[zp_remainder]: {z:#x} %% {pos_b:#x} != {zp_remainder:#x}\\n\")\n");
         fprintf(file, "if (z // neg_c != zn_quotient):\n \t print(f\"[zn_quotient]: {z:#x} // {neg_c:#x} != {zn_quotient:#x}\\n\")\n");
         fprintf(file, "if (z %% neg_c != zn_remainder):\n \t print(f\"[zn_remainder]: {z:#x} %% {neg_c:#x} != {zn_remainder:#x}\\n\")\n");
-        // fprintf(file, "if (z // z != zz_quotient):\n \t print(f\"[zz_quotient]: {z:#x} + {z:#x} != {zz_quotient:#x}\\n\")\n");
-        // fprintf(file, "if (z %% z != zz_remainder):\n \t print(f\"[zz_remainder]: {z:#x} + {z:#x} != {zz_remainder:#x}\\n\")\n");
 
         bi_delete(&pos_a);
         bi_delete(&pos_b);
@@ -1384,29 +1348,22 @@ void python_div_test(const char* filename, int testnum) {
         bi_delete(&pn_quotient);
         bi_delete(&pn_remainder);
 
-        // bi_delete(&pz_quotient);
-        // bi_delete(&pz_remainder);
-        // bi_delete(&nz_quotient);
-        // bi_delete(&nz_remainder);
         bi_delete(&zp_quotient);
         bi_delete(&zp_remainder);
         bi_delete(&zn_quotient);
         bi_delete(&zn_remainder);
-        // bi_delete(&zz_quotient);
-        // bi_delete(&zz_remainder);
     }   
     fclose(file);
 }
 
-void python_squ_test(const char* filename, int testnum) {
+void python_squ_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_b = NULL;
@@ -1439,28 +1396,24 @@ void python_squ_test(const char* filename, int testnum) {
 }
 
 
-void python_rshift_test(const char* filename, int testnum) {
+void python_rshift_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    srand(time(NULL)); // 랜덤 시드 설정
-
-    for (int i = 0; i < testnum; i++) {
-        // 임의의 bigint 생성
+    srand(time(NULL));
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *num = NULL;
         bi_get_random(&num, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         
-        // 오른쪽 시프트 수행
-        int shift_bits = rand() % T_TEST_DATA_WORD_SIZE + 1; // 시프트 비트 수
+        int shift_bits = rand() % T_TEST_DATA_WORD_SIZE + 1;
         bigint *rshift_result = NULL;
-        bi_assign(&rshift_result, num); // rshift_result를 num의 복사본으로 초기화
+        bi_assign(&rshift_result, num);
         bi_bit_rshift(rshift_result, shift_bits);
         
-        // 파일에 기록
-        fprintf(file, "# 테스트 %d\n", i + 1);
+        fprintf(file, "# TEST %d\n", i + 1);
         fprintf(file, "num = ");
         bi_fprint(file, num);
         fprintf(file, "shift_bits = %d\n", shift_bits);
@@ -1470,7 +1423,6 @@ void python_rshift_test(const char* filename, int testnum) {
         fprintf(file, "if (num >> %d != rshift_result):\n", shift_bits);
         fprintf(file, "\tprint(f\"[rshift_result]: {num:#x} >> %d != {rshift_result:#x}\\n\")\n", shift_bits);
 
-        // 메모리 해제
         bi_delete(&num);
         bi_delete(&rshift_result);
     }
@@ -1478,28 +1430,25 @@ void python_rshift_test(const char* filename, int testnum) {
     fclose(file);
 }
 
-void python_lshift_test(const char* filename, int testnum) {
+void python_lshift_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    srand(time(NULL)); // 랜덤 시드 설정
+    srand(time(NULL)); 
 
-    for (int i = 0; i < testnum; i++) {
-        // 임의의 bigint 생성
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *num = NULL;
         bi_get_random(&num, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         
-        // 왼쪽 시프트 수행
-        int shift_bits = rand() % T_TEST_DATA_WORD_SIZE + 1; // 시프트 비트 수
+        int shift_bits = rand() % T_TEST_DATA_WORD_SIZE + 1;
         bigint *lshift_result = NULL;
-        bi_assign(&lshift_result, num); // rshift_result를 num의 복사본으로 초기화
+        bi_assign(&lshift_result, num);
         bi_bit_lshift(lshift_result, shift_bits);
         
-        // 파일에 기록
-        fprintf(file, "# 테스트 %d\n", i + 1);
+        fprintf(file, "# TEST %d\n", i + 1);
         fprintf(file, "num = ");
         bi_fprint(file, num);
         fprintf(file, "shift_bits = %d\n", shift_bits);
@@ -1509,7 +1458,6 @@ void python_lshift_test(const char* filename, int testnum) {
         fprintf(file, "if (num << %d != lshift_result):\n", shift_bits);
         fprintf(file, "\tprint(f\"[lshift_result]: {num:#x} << %d != {lshift_result:#x}\\n\")\n", shift_bits);
 
-        // 메모리 해제
         bi_delete(&num);
         bi_delete(&lshift_result);
     }
@@ -1517,15 +1465,14 @@ void python_lshift_test(const char* filename, int testnum) {
     fclose(file);
 }
 
-void python_squ_k_test(const char* filename, int testnum) {
+void python_squ_k_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *pos_a = NULL;
         bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *neg_b = NULL;
@@ -1569,16 +1516,15 @@ void python_squ_k_test(const char* filename, int testnum) {
  * 
  * @return void
  */
-void python_l2r_test(const char* filename, int testnum) 
+void python_l2r_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *base = NULL;
         bi_get_random(&base, POSITIVE, rand() % 63 + 1);
         bigint *exp = NULL;
@@ -1623,16 +1569,15 @@ void python_l2r_test(const char* filename, int testnum)
  * 
  * @return void
  */
-void python_r2l_test(const char* filename, int testnum) 
+void python_r2l_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *base = NULL;
         bi_get_random(&base, POSITIVE, rand() % 63 + 1);
         bigint *exp = NULL;
@@ -1676,16 +1621,15 @@ void python_r2l_test(const char* filename, int testnum)
  * 
  * @return void
  */
-void python_MaS_test(const char* filename, int testnum) 
+void python_MaS_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         bigint *base = NULL;
         bi_get_random(&base, POSITIVE, rand() % 63 + 1);
         bigint *exp = NULL;
@@ -1728,16 +1672,15 @@ void python_MaS_test(const char* filename, int testnum)
  * 
  * @return void
  */
-void python_bar_redu_test(const char* filename, int testnum) 
+void python_bar_redu_test(const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 
-    for (int i = 0; i < testnum; i++) {
-        //인자
+    for (int i = 0; i < TESTNUM; i++) {
         int n = rand() % 31 + 1;
 
         bigint *A = NULL;

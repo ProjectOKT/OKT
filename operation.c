@@ -566,8 +566,7 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
     }
     int n = src->word_len;
 
-    //flag
-    if (10 >= n) {
+    if (KARA_FLAG_SQU >= n) {
         bi_squ(dst,src);
         return SUCCESS;
     }
