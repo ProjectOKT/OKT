@@ -605,7 +605,7 @@ msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
     bi_delete(&t1);
     bi_delete(&t0);
     
-    bi_mul_kara(&s,a1,a0);
+    bi_mul_k(&s,a1,a0);
     bi_delete(&a1);
     bi_delete(&a0);
 
@@ -653,11 +653,11 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
     {
         for(int bit_index = sizeof(word) * 8 - 1; bit_index >= 0; bit_index--)
         {
-            bi_squ(dst, *dst);
+            bi_squ_kara(dst, *dst);
             bi_word_division(&quotient_buf, dst, *dst, mod);
             if((exp->a[word_index] >> bit_index) & 0x01)
             {
-                bi_mul(dst, *dst, base);
+                bi_mul_k(dst, *dst, base);
                 bi_word_division(&quotient_buf, dst, *dst, mod);
             }
         }
@@ -706,10 +706,10 @@ msg bi_mod_exp_r2l(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
         {
             if((exp->a[word_index] >> bit_index) & 0x01)
             {
-                bi_mul(dst, *dst, t1);
+                bi_mul_k(dst, *dst, t1);
                 bi_word_division(&quotient_buf, dst, *dst, mod);
             }
-            bi_squ(&t1, t1);
+            bi_squ_kara(&t1, t1);
             bi_word_division(&quotient_buf, &t1, t1, mod);
         }
     }
@@ -758,8 +758,8 @@ msg bi_mod_exp_MaS(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
         {
             int n = (exp->a[word_index] >> bit_index) & 0x01;
 
-            bi_mul(&t[1-n], t[0], t[1]);
-            bi_squ(&t[n],t[n]);
+            bi_mul_k(&t[1-n], t[0], t[1]);
+            bi_squ_kara(&t[n],t[n]);
             bi_word_division(&quotient_buf, &t[0], t[0], mod);
             bi_word_division(&quotient_buf, &t[1], t[1], mod);
         }
@@ -805,10 +805,10 @@ msg bi_bar_redu(OUT bigint** dst, IN const bigint* A, IN const bigint* T, IN con
     bi_assign(&quotient_buf,A);
 
     bi_bit_rshift(quotient_buf,(n-1)*SIZEOFWORD);
-    bi_mul(&quotient_buf,quotient_buf,T);
+    bi_mul_k(&quotient_buf,quotient_buf,T);
 
     bi_bit_rshift(quotient_buf,(n+1)*SIZEOFWORD);
-    bi_mul(&R,N,quotient_buf);
+    bi_mul_k(&R,N,quotient_buf);
     bi_delete(&quotient_buf);
 
     bi_assign(&temp,R);
@@ -989,6 +989,8 @@ msg bi_naive_division(OUT bigint** quotient, OUT bigint** remainder, IN const bi
         {
             error_msg = bi_naive_long_division(quotient, remainder, temp_src1, temp_src2);
         }
+
+
         else
         {
             error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;

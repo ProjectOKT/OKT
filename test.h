@@ -3,7 +3,7 @@
 
 #include "dtype.h"
 
-#define TESTNUM                     1    //number of test case
+#define TESTNUM                     100   //number of test case
 #define T_TEST_DATA_WORD_SIZE       (2048 / SIZEOFWORD)     //test bigint word_len
 
 //test flags

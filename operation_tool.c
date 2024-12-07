@@ -550,8 +550,8 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_refine(a1);
     bi_refine(b1);
     // t1, t0
-    bi_mul_kara(&t1, a1, b1);
-    bi_mul_kara(&t0, a0, b0);
+    bi_mul_k(&t1, a1, b1);
+    bi_mul_k(&t0, a0, b0);
     
     // r = (t1 << 2*lw) + t0
     bi_assign(&temp, t1);
@@ -576,7 +576,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     }
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;
-    bi_mul_kara(&s,s1,s0);
+    bi_mul_k(&s,s1,s0);
     bi_delete(&s0);
     bi_delete(&s1);
     s->sign = s_sign;

@@ -1710,7 +1710,7 @@ void python_bar_redu_test(const char* filename)
         bi_fprint(file,redu_result);
 
         fprintf(file, "temp = A %% N\n");
-        fprintf(file, "if (redu_result != temp):\n \t print(f\"[bar]: {A:#x} mod {N:#x} != {redu_exp_result:#x}\\n\")\n\n");
+        fprintf(file, "if (redu_result != temp):\n \t print(f\"[bar]: {A:#x} mod {N:#x} != {redu_result:#x}\\n\")\n\n");
 
         bi_delete(&A);
         bi_delete(&N);
