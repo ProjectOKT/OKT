@@ -538,6 +538,7 @@ void bignum_squ__vs_mul_time_test()
     printf("[mul] Execution time: %f seconds\n", mul_cpu_time_used);
 }
 
+
 void bignum_squ_vs_squ_k_time_test()
 {
     clock_t start, end;
@@ -576,6 +577,236 @@ void bignum_squ_vs_squ_k_time_test()
     printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
     printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
 }
+
+void miller_rabin_test()
+{
+    bigint* n = NULL; bigint* e = NULL; bigint* p = NULL;
+    bigint* q = NULL; bigint* d = NULL;
+    FILE* file = NULL;
+
+    file = fopen("rsa_1024_params.txt", "w");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        rsa_key_generation(&n, &e, &p, &q, &d, 1024);
+        fprintf(file, "n = ");
+        bi_fprint(file, n);
+        fprintf(file, "e = ");
+        bi_fprint(file, e);
+        fprintf(file, "p = ");
+        bi_fprint(file, p);
+        fprintf(file, "q = ");
+        bi_fprint(file, q);
+        fprintf(file, "d = ");
+        bi_fprint(file, d);
+    }
+    fclose(file);
+
+    file = fopen("rsa_2048_params.txt", "w");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        rsa_key_generation(&n, &e, &p, &q, &d, 2048);
+        fprintf(file, "n = ");
+        bi_fprint(file, n);
+        fprintf(file, "e = ");
+        bi_fprint(file, e);
+        fprintf(file, "p = ");
+        bi_fprint(file, p);
+        fprintf(file, "q = ");
+        bi_fprint(file, q);
+        fprintf(file, "d = ");
+        bi_fprint(file, d);
+    }
+    fclose(file);
+
+    file = fopen("rsa_15360_params.txt", "w");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        rsa_key_generation(&n, &e, &p, &q, &d, 15360);
+        fprintf(file, "n = ");
+        bi_fprint(file, n);
+        fprintf(file, "e = ");
+        bi_fprint(file, e);
+        fprintf(file, "p = ");
+        bi_fprint(file, p);
+        fprintf(file, "q = ");
+        bi_fprint(file, q);
+        fprintf(file, "d = ");
+        bi_fprint(file, d);
+    }
+    fclose(file);
+}
+
+
+void compare_rsa_time_test()
+{
+    clock_t start, end;
+    double rsa_1024_enc_time, rsa_2048_enc_time, rsa_15360_enc_time;
+    double rsa_1024_dec_time, rsa_2048_dec_time, rsa_15360_dec_time;
+    double rsa_1024_enc_time_sum = 0; double rsa_2048_enc_time_sum = 0; double rsa_15360_enc_time_sum = 0;
+    double rsa_1024_dec_time_sum = 0; double rsa_2048_dec_time_sum = 0; double rsa_15360_dec_time_sum = 0;
+
+    bigint* n = NULL; bigint* e = NULL; bigint* p = NULL;
+    bigint* q = NULL; bigint* d = NULL; bigint* msg = NULL;
+    bigint* c = NULL; bigint* msg_buf = NULL; bigint* zero = NULL;
+
+    bi_new(&zero, 1);
+    char buffer[1024];
+    char n_string[1024];
+    char e_string[1024];
+    char p_string[1024];
+    char q_string[1024];
+    char d_string[1024];
+
+    FILE* file = NULL;
+
+    file = fopen("rsa_1024_params.txt", "r");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "n = 0x%s", n_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "e = 0x%s", e_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "p = 0x%s", p_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "q = 0x%s", q_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "d = 0x%s", d_string);
+
+        bi_set_from_string(&n, n_string, 16);
+        bi_set_from_string(&e, e_string, 16);
+        bi_set_from_string(&p, p_string, 16);
+        bi_set_from_string(&q, q_string, 16);
+        bi_set_from_string(&d, d_string, 16);
+
+        bi_get_random_within_range(&msg, zero, n);
+        start = clock();
+        rsa_encryption(&c, msg, e, n);
+        end = clock();
+        rsa_1024_enc_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        rsa_1024_enc_time_sum += rsa_1024_enc_time;
+
+        start = clock();
+        rsa_decryption(&msg_buf, c, d, n);
+        end = clock();
+        rsa_1024_dec_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        rsa_1024_dec_time_sum += rsa_1024_dec_time;
+    }
+    fclose(file);
+
+    file = fopen("rsa_2048_params.txt", "r");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "n = 0x%s", n_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "e = 0x%s", e_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "p = 0x%s", p_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "q = 0x%s", q_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "d = 0x%s", d_string);
+
+        bi_set_from_string(&n, n_string, 16);
+        bi_set_from_string(&e, e_string, 16);
+        bi_set_from_string(&p, p_string, 16);
+        bi_set_from_string(&q, q_string, 16);
+        bi_set_from_string(&d, d_string, 16);
+
+        bi_get_random_within_range(&msg, zero, n);
+        start = clock();
+        rsa_encryption(&c, msg, e, n);
+        end = clock();
+        rsa_2048_enc_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        rsa_2048_enc_time_sum += rsa_2048_enc_time;
+
+        start = clock();
+        rsa_decryption(&msg_buf, c, d, n);
+        end = clock();
+        rsa_2048_dec_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        rsa_2048_dec_time_sum += rsa_2048_dec_time;
+    }
+    fclose(file);
+
+    file = fopen("rsa_15360_params.txt", "r");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "n = 0x%s", n_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "e = 0x%s", e_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "p = 0x%s", p_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "q = 0x%s", q_string);
+        fgets(buffer, sizeof(buffer), file);
+        sscanf(buffer, "d = 0x%s", d_string);
+
+        bi_set_from_string(&n, n_string, 16);
+        bi_set_from_string(&e, e_string, 16);
+        bi_set_from_string(&p, p_string, 16);
+        bi_set_from_string(&q, q_string, 16);
+        bi_set_from_string(&d, d_string, 16);
+
+        bi_get_random_within_range(&msg, zero, n);
+        start = clock();
+        rsa_encryption(&c, msg, e, n);
+        end = clock();
+        rsa_15360_enc_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        rsa_15360_enc_time_sum += rsa_15360_enc_time;
+
+        start = clock();
+        rsa_decryption(&msg_buf, c, d, n);
+        end = clock();
+        rsa_15360_dec_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        rsa_15360_dec_time_sum += rsa_15360_dec_time;
+    }
+    fclose(file);
+
+    if(T_TEST_AVERAGE == 1)
+    {
+        printf("[rsa_1024_encryption] Execution time: %f seconds\n", rsa_1024_enc_time_sum / TESTNUM);
+        printf("[rsa_1024_decryption] Execution time: %f seconds\n", rsa_1024_dec_time_sum / TESTNUM);
+        printf("[rsa_2048_encryption] Execution time: %f seconds\n", rsa_2048_enc_time_sum / TESTNUM);
+        printf("[rsa_2048_decryption] Execution time: %f seconds\n", rsa_2048_dec_time_sum / TESTNUM);
+        printf("[rsa_15360_encryption] Execution time: %f seconds\n", rsa_15360_enc_time_sum / TESTNUM);
+        printf("[rsa_15360_decryption] Execution time: %f seconds\n", rsa_15360_dec_time_sum / TESTNUM);
+    }
+    else{
+        printf("[rsa_1024_encryption] Execution time: %f seconds\n", rsa_1024_enc_time_sum);
+        printf("[rsa_1024_decryption] Execution time: %f seconds\n", rsa_1024_dec_time_sum);
+        printf("[rsa_2048_encryption] Execution time: %f seconds\n", rsa_2048_enc_time_sum);
+        printf("[rsa_2048_decryption] Execution time: %f seconds\n", rsa_2048_dec_time_sum);
+        printf("[rsa_15360_encryption] Execution time: %f seconds\n", rsa_15360_enc_time_sum);
+        printf("[rsa_15360_decryption] Execution time: %f seconds\n", rsa_15360_dec_time_sum);
+    }
+}
+
 
 void bignum_time_all_test(){
 

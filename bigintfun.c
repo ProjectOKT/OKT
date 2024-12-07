@@ -55,7 +55,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             (*dst) -> sign = NEGATIVE;
             for (unsigned int i = 0; i < strlength; i++){
                 if (int_str[strlength - i] == '1'){
-                    (*dst) -> a[i/SIZEOFWORD] |= 1 << (i % SIZEOFWORD);
+                    (*dst) -> a[i/SIZEOFWORD] |= (word)1 << (i % SIZEOFWORD);
                 }
                 else if (int_str[strlength - i] != '0'){
                     fprintf(stderr, ERR_INVALID_INPUT);
@@ -71,7 +71,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
             (*dst) -> sign = POSITIVE;
             for (unsigned int i = 0; i < strlength; i++){
                 if (int_str[strlength - i - 1] == '1'){
-                    (*dst) -> a[i/SIZEOFWORD] |= 1 << (i % SIZEOFWORD);
+                    (*dst) -> a[i/SIZEOFWORD] |= (word)1 << (i % SIZEOFWORD);
                 }
                 else if (int_str[strlength - i - 1] != '0'){
                     fprintf(stderr, ERR_INVALID_INPUT);
@@ -104,7 +104,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
                     bi_delete(dst);
                     return FAILED;
                 }
-                (*dst)->a[i * 4 / SIZEOFWORD] |= (digit & 0xF) << (i * 4 % SIZEOFWORD);
+                (*dst)->a[i * 4 / SIZEOFWORD] |= (word)(digit & 0xF) << (i * 4 % SIZEOFWORD);
             }
         }
         else {
@@ -128,7 +128,7 @@ msg bi_set_from_string(OUT bigint** dst, IN const char* int_str, IN int base)
                     bi_delete(dst);
                     return FAILED;
                 }
-                (*dst)->a[i * 4 / SIZEOFWORD] |= (digit & 0xF) << (i * 4 % SIZEOFWORD);
+                (*dst)->a[i * 4 / SIZEOFWORD] |= (word)(digit & 0xF) << (i * 4 % SIZEOFWORD);
             }
         }
     }

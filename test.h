@@ -25,9 +25,13 @@ void bignum_div_time_test();
 
 void bignum_squ__vs_mul_time_test();
 
-void bignum_time_all_test();
-
 void bignum_squ_vs_squ_k_time_test();
+
+void miller_rabin_test();
+
+void compare_rsa_time_test();
+
+void bignum_time_all_test();
 
 void python_add_test(const char* filename);
 

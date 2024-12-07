@@ -20,6 +20,8 @@ int main()
     // printf("============================================================\n");
     // printf("                     RSA Encryption...\n");
 
+    miller_rabin_test();
+    compare_rsa_time_test();
     bignum_time_all_test();
     /*********************************************
      * Accuracy Test : generate python file and run test
