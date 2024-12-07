@@ -625,7 +625,7 @@ void bignum_time_all_test(){
         mul_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
         mul_k_sum += mul_k_time;
 
-        //div
+        //binary div
         bigint *quo = NULL;
         bigint *remainer = NULL;
         start = clock();

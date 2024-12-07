@@ -20,7 +20,6 @@ int main()
     // printf("============================================================\n");
     // printf("                     RSA Encryption...\n");
 
-    //bignum_time_all_test();
     bignum_time_all_test();
     /*********************************************
      * Accuracy Test : generate python file and run test
@@ -37,7 +36,7 @@ int main()
     python_mul_k_test("mul_k_test.py");
     printf("mul_k_test.py completed\n");
 
-    python_div_test("div_test.py");
+    python_bin_div_test("div_test.py");
     printf("div_test.py completed\n");
 
     python_squ_test("squ_test.py");
