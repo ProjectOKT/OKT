@@ -16,4 +16,9 @@
 #define TOP             1    //zero padding to msb
 #define BOTTOM         -1    //zero padding to lsb
 
+#define PROBABLY_PRIME  2
+#define COMPOSITE      -2
+
+#define MILLER_NUM      5
+
 #endif

@@ -7,6 +7,7 @@
 #include "errormsg.h"
 #include "dtype.h"
 #include "arrayfun.h"
+#include "operation.h"
 
 /**
  * @brief Initializes a bigint structure from an array of words.
@@ -167,6 +168,54 @@ msg bi_get_random(OUT bigint** dst, IN int sign, IN int word_len)
     {
         array_rand((*dst)->a, word_len);
     }
+
+    return SUCCESS;
+}
+
+
+// bigintfun.c
+msg bi_get_random_within_range(OUT bigint** dst, IN bigint* lower_bound, IN bigint* upper_bound)
+{
+    if((lower_bound == NULL) || (upper_bound == NULL) || (lower_bound->a == NULL) || (upper_bound->a == NULL) || (lower_bound->word_len <= 0) 
+    || (upper_bound->word_len <= 0))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* range = NULL;
+    bigint* random_range = NULL;
+    int word_len = 0;
+    int byte_len = 0;
+    byte rand_byte = 0;
+
+    bi_sub(&range, upper_bound, lower_bound);
+    word_len = range->word_len;
+    bi_new(&random_range, word_len);
+    random_range->sign = POSITIVE;
+    for (byte_len = (int)sizeof(word) - 1; byte_len > 0; byte_len--)
+    {
+        if(((range->a[word_len - 1] >> (8 * byte_len)) & (byte)0xff) != 0)
+        {
+            break;
+        }
+    }
+    if(word_len > 0)
+    {
+        array_rand(random_range->a, word_len - 1);
+    }
+    
+    for(int byte_index = 0; byte_index < byte_len; byte_index++)
+    {
+        random_range->a[word_len - 1] ^= (((word)(rand() & 0xff)) << (8 * byte_index));
+    }
+    rand_byte = (rand() & 0xff) % ((range->a[word_len - 1] >> (8 * byte_len)) & 0xff);
+    random_range->a[word_len - 1] ^= ((word)(rand_byte) << (8 * byte_len));
+    bi_refine(random_range);
+
+    bi_add(dst, lower_bound, random_range);
+    bi_delete(&range);
+    bi_delete(&random_range);
 
     return SUCCESS;
 }
@@ -799,4 +848,123 @@ int bi_compare(IN const bigint* A, IN const bigint* B){
             return 0;
         }
     }
+}
+
+
+msg bi_gcd(OUT bigint** gcd, IN const bigint* src1, IN const bigint* src2)
+{
+    if((src1 == NULL) || (src2 == NULL) || (src1->a == NULL) || (src2->a == NULL) || (src1->word_len <= 0) 
+    || (src2->word_len <= 0) || (src1->sign != POSITIVE) || (src2->sign != POSITIVE))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* t0 = NULL;
+    bigint* t1 = NULL;
+    bigint* t2 = NULL;
+    bigint* quotient = NULL;
+    bigint* buf = NULL;
+
+    bi_assign(&t0, src1);
+    bi_assign(&t1, src2);
+    while (t1->sign != ZERO)
+    {
+        bi_assign(&t2, t0);
+        bi_assign(&t0, t1);
+        bi_word_division(&quotient, &buf, t2, t1);
+        bi_assign(&t1, buf);
+    }
+
+    bi_assign(gcd, t0);
+    bi_delete(&t0);
+    bi_delete(&t1);
+    bi_delete(&t2);
+    bi_delete(&quotient);
+    bi_delete(&buf);
+
+    return SUCCESS;
+}
+
+
+msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN const bigint* src1, IN const bigint* src2)
+{
+    if((src1 == NULL) || (src2 == NULL) || (src1->a == NULL) || (src2->a == NULL) || (src1->word_len <= 0) 
+    || (src2->word_len <= 0) || (src1->sign != POSITIVE) || (src2->sign != POSITIVE))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    bigint* t0 = NULL;
+    bigint* t1 = NULL;
+    bigint* u0 = NULL;
+    bigint* v0 = NULL;
+    bigint* u1 = NULL;
+    bigint* v1 = NULL;
+    bigint* u2 = NULL;
+    bigint* v2 = NULL;
+    bigint* quotient = NULL;
+    bigint* remainder = NULL;
+    bigint* buf = NULL;
+
+    bi_new(&buf, 1);
+    buf->sign = POSITIVE;
+    buf->a[0] = 1;
+
+    // (t0, t1) <- (a, b)
+    bi_assign(&t0, src1);
+    bi_assign(&t1, src2);
+
+    // (u0, v0) <- (1, 0)
+    bi_assign(&u0, buf);
+    bi_new(&v0, 1);
+
+    // (u1, v1) <- (0, 1)
+    bi_new(&u1, 1);
+    bi_assign(&v1, buf);
+
+    while(t1->sign != ZERO)
+    {
+        // (q, r) <- div(t0, t1)
+        bi_word_division(&quotient, &remainder, t0, t1);
+
+        // (t0, t1) <- (t1, r)
+        bi_assign(&t0, t1);
+        bi_assign(&t1, remainder);
+
+        // (u2, v2) <- (u0 - qu1, v0 -qv1)
+        bi_mul_kara(&buf, quotient, u1);
+        bi_sub(&u2, u0, buf);
+        bi_mul_kara(&buf, quotient, v1);
+        bi_sub(&v2, v0, buf);
+
+        // (u0, v0) <- (u1, v1)
+        bi_assign(&u0, u1);
+        bi_assign(&v0, v1);
+
+        // (u1, v1) <- (u2, v2)
+        bi_assign(&u1, u2);
+        bi_assign(&v1, v2);
+        
+    }
+
+    //return
+    bi_assign(gcd, t0);
+    bi_assign(x, u0);
+    bi_assign(y, v0);
+
+    bi_delete(&t0);
+    bi_delete(&t1);
+    bi_delete(&u0);
+    bi_delete(&v0);
+    bi_delete(&u1);
+    bi_delete(&v1);
+    bi_delete(&u2);
+    bi_delete(&v2);
+    bi_delete(&quotient);
+    bi_delete(&remainder);
+    bi_delete(&buf);
+
+    return SUCCESS;
 }

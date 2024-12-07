@@ -59,6 +59,9 @@ int main()
 
     python_word_div_test("word_div_test.py");
     printf("word_div_test.py completed\n");
+
+    python_rsa_test("rsa_test.py");
+    printf("rsa_test.py completed\n");
     py_file_check();
     return 0;
 }

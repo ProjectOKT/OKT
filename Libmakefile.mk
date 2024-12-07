@@ -19,9 +19,9 @@ LIB_DIR = $(TARGET_DIR)
 APP_DIR = $(TARGET_DIR)
 
 # Source files
-MAIN_SRC = arrayfun.c bigintfun.c operation_tool.c operation.c
-TOOL_SRC = arrayfun.c bigintfun.c operation.c operation_tool.c 
-APP_SRC = arrayfun.c bigintfun.c operation_tool.c operation.c test.c verify.c 2024_bigint.c
+MAIN_SRC = arrayfun.c bigintfun.c operation_tool.c operation.c rsa.c
+TOOL_SRC = arrayfun.c bigintfun.c operation.c operation_tool.c rsa.c
+APP_SRC = arrayfun.c bigintfun.c operation_tool.c operation.c test.c verify.c rsa.c 2024_bigint.c
 
 # Object files
 MAIN_OBJ = $(MAIN_SRC:.c=.o)

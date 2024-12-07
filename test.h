@@ -61,4 +61,6 @@ void python_word_div_test(const char* filename);
 
 void python_naive_div_test(const char* filename);
 
+void python_rsa_test(const char* filename);
+
 #endif

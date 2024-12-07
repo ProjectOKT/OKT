@@ -22,5 +22,6 @@ void py_file_check(){
     system("python MaS_test.py");
     system("python bar_redu_test.py");
     system("python word_div_test.py");
+    system("python rsa_test.py");
 
 }

@@ -11,6 +11,7 @@
 #include "verify.h"
 #include "operation.h"
 #include "test.h"
+#include "rsa.h"
 
 
 /**
@@ -1974,6 +1975,77 @@ void python_naive_div_test(const char* filename)
         bi_delete(&zp_remainder);
         bi_delete(&zn_quotient);
         bi_delete(&zn_remainder);
+    }   
+    fclose(file);
+}
+
+
+void python_rsa_test(const char* filename) 
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return;
+    }
+
+    fprintf(file, "from sympy import isprime\n");
+    fprintf(file, "from sympy import gcd\n\n");
+    for (int i = 0; i < TESTNUM; i++) {
+        bigint* n = NULL;
+        bigint* e = NULL;
+        bigint* p = NULL;
+        bigint* q = NULL;
+        bigint* d = NULL;
+        bigint* msg = NULL;
+        bigint* c = NULL;
+        bigint* msg_buf = NULL;
+        bigint* zero = NULL;
+        int bit_len = T_TEST_DATA_WORD_SIZE * SIZEOFWORD;
+        bi_new(&zero, 1);
+
+        rsa_key_generation(&n, &e, &p, &q, &d, 256);
+        bi_get_random_within_range(&msg, zero, n);
+        rsa_encryption(&c, msg, e, n);
+        rsa_decryption(&msg_buf, c, d, n);
+        
+        fprintf(file, "p = ");
+        bi_fprint(file,p);
+        fprintf(file, "q= ");
+        bi_fprint(file,q);
+        fprintf(file, "n = ");
+        bi_fprint(file,n);
+        fprintf(file, "e = ");
+        bi_fprint(file,e);
+        fprintf(file, "d = ");
+        bi_fprint(file,d);
+        fprintf(file, "msg = ");
+        bi_fprint(file,msg);
+        fprintf(file, "c = ");
+        bi_fprint(file,c);
+        fprintf(file, "msg_buf = ");
+        bi_fprint(file,msg_buf);
+        fprintf(file, "bit_len = %d\n", bit_len);
+        fprintf(file, "p_bit_length = p.bit_length()\n");
+        fprintf(file, "q_bit_length = q.bit_length()\n");   
+        fprintf(file, "phi_n = (p - 1) * (q - 1)\n");
+
+        fprintf(file, "if (p_bit_length != bit_len / 2):\n\t print(\"p bit_length wrong\")\n");
+        fprintf(file, "if (q_bit_length != bit_len / 2):\n\t print(\"q bit_length wrong\")\n");
+        fprintf(file, "if (not isprime(p)):\n \t print(f\"[p]: {p:#x} is not prime\")\n");
+        fprintf(file, "if (not isprime(q)):\n \t print(f\"[q]: {q:#x} is not prime\")\n");
+        fprintf(file, "if (gcd(e, phi_n) != 1):\n \t print(f\"[gcd(e, phi_n)] : gcd({e:#x}, {phi_n:#x})) != 1)\")\n");
+        fprintf(file, "if (((e * d) %% phi_n) != 1):\n \t print(f\"[e] : ({e:#x} x {d:#x} mod {phi_n:#x}) != 1)\")\n");
+        fprintf(file, "if (msg != msg_buf):\n \t print(f\"[rsa] : (msg != msg_buf)\")\n");
+
+        bi_delete(&p);
+        bi_delete(&e);
+        bi_delete(&p);
+        bi_delete(&q);
+        bi_delete(&d);
+        bi_delete(&msg);
+        bi_delete(&c);
+        bi_delete(&msg_buf);
+        bi_delete(&zero);
     }   
     fclose(file);
 }

@@ -24,7 +24,7 @@ else ifeq ($(OS_NAME), Windows)
 endif
 
 # Source Files and Executable
-SRC := 2024_bigint.c arrayfun.c bigintfun.c operation.c operation_tool.c test.c verify.c
+SRC := 2024_bigint.c arrayfun.c bigintfun.c operation.c operation_tool.c test.c verify.c rsa.c
 TARGET := 2024_bigint
 
 # Build Rules
