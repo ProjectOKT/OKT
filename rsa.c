@@ -127,7 +127,6 @@ msg rsa_key_generation(OUT bigint** N, OUT bigint** e, OUT bigint** p, OUT bigin
         fprintf(stderr, ERR_INVALID_INPUT);
         return FAILED;
     }
-    int cnt_i = 0;
     bigint* lower_bound = NULL;
     bigint* upper_bound = NULL;
     bigint* one = NULL;
@@ -148,17 +147,13 @@ msg rsa_key_generation(OUT bigint** N, OUT bigint** e, OUT bigint** p, OUT bigin
     bi_assign(&upper_bound, buf1);
     //Choose two random distinct n/2-bit primes p and q 필요
     do {
-        cnt_i = 0;
+        printf("searching for prime p...\n");
         do{
-            cnt_i++;
-            printf("%d*\n", cnt_i);
             bi_get_random_within_range(p, lower_bound, upper_bound);
         }while(bi_MillerRabinTest(*p, MILLER_NUM) != PROBABLY_PRIME);
         
-        cnt_i = 0;
+        printf("searching for prime q...\n");
         do{
-            cnt_i++;
-            printf("%d-\n", cnt_i);
             bi_get_random_within_range(q, lower_bound, upper_bound);
         }while(bi_MillerRabinTest(*q, MILLER_NUM) != PROBABLY_PRIME);
     }while(bi_compare(*p, *q) == 0);

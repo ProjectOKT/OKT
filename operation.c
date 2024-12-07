@@ -438,7 +438,7 @@ msg bi_binary_division(OUT bigint** quotient, OUT bigint** remainder, IN const b
         {
             error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
         }
-        (*remainder)->sign = src2->sign;
+        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
     }
     else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
     {
@@ -887,7 +887,7 @@ msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const big
         {
             error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
         }
-        (*remainder)->sign = src2->sign;
+        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
     }
     else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
     {
@@ -995,7 +995,7 @@ msg bi_naive_division(OUT bigint** quotient, OUT bigint** remainder, IN const bi
         {
             error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
         }
-        (*remainder)->sign = src2->sign;
+        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
     }
     else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
     {

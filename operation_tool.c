@@ -813,7 +813,6 @@ msg bi_divcc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN 
     bigint* Q = NULL;
     bigint* temp = NULL;
     
-    word Am = A->a[m];
     word Am_1 = A->a[m-1];
     word Bm_1 = B->a[m-1];
     word W_1 = max_word;
@@ -823,6 +822,7 @@ msg bi_divcc(OUT word* quotient, OUT bigint** remainder, IN const bigint* A, IN 
     }
 
     if (n == (m + 1)){
+        word Am = A->a[m];
         if(Am == Bm_1){
             (*quotient) = W_1; 
         }

@@ -2000,10 +2000,10 @@ void python_rsa_test(const char* filename)
         bigint* c = NULL;
         bigint* msg_buf = NULL;
         bigint* zero = NULL;
-        int bit_len = T_TEST_DATA_WORD_SIZE * SIZEOFWORD;
+        int bit_len = T_TEST_DATA_WORD_SIZE * SIZEOFWORD / 2;
         bi_new(&zero, 1);
 
-        rsa_key_generation(&n, &e, &p, &q, &d, 256);
+        rsa_key_generation(&n, &e, &p, &q, &d, bit_len);
         bi_get_random_within_range(&msg, zero, n);
         rsa_encryption(&c, msg, e, n);
         rsa_decryption(&msg_buf, c, d, n);
