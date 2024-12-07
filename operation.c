@@ -485,6 +485,224 @@ msg bi_binary_division(OUT bigint** quotient, OUT bigint** remainder, IN const b
     return error_msg;
 }
 
+
+/**
+ * @brief Performs division of two big integers using word-level division.
+ *
+ * This function computes the quotient and remainder when dividing a big integer `src1` by `src2`.
+ * It leverages a word-level division approach for improved precision and efficiency. The function
+ * ensures proper handling of signs, edge cases, and memory cleanup.
+ *
+ * @param[out] quotient Pointer to a bigint that will store the quotient of the division.
+ * @param[out] remainder Pointer to a bigint that will store the remainder of the division.
+ * @param[in] src1 The dividend big integer.
+ * @param[in] src2 The divisor big integer.
+ *
+ * @details
+ * - Validates the inputs to ensure `src1` and `src2` are not null.
+ * - Allocates temporary big integers to store the absolute values of `src1` and `src2`.
+ * - Handles sign adjustments:
+ *   - If both `src1` and `src2` have the same sign, performs the division and assigns a positive quotient.
+ *   - If `src1` and `src2` have different signs, adjusts the remainder and quotient to match the expected behavior of division with negative results.
+ * - Uses the helper function `bi_word_long_division` for the core division logic when the absolute value of `src1` is greater than or equal to `src2`.
+ * - Handles cases where `src1` is zero or smaller than `src2` by directly setting the quotient and remainder.
+ * - Ensures memory cleanup for all dynamically allocated big integers after the operation.
+ *
+ * @return Returns SUCCESS (1) on successful computation, or FAILED (-1) for invalid inputs
+ * or memory allocation errors.
+ */
+msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
+{
+    int error_msg = SUCCESS;
+
+    bigint* temp_src1 = NULL;
+    bigint* temp_src2 = NULL;
+
+    if((src1 == NULL) || (src2 == NULL))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    error_msg = bi_assign(&temp_src1, src1);
+    if (error_msg == FAILED) return FAILED;
+    error_msg = bi_assign(&temp_src2, src2);
+    if (error_msg == FAILED)
+    {   
+        bi_delete(&temp_src1);
+        return FAILED;
+    }
+
+    if (((src1->sign == POSITIVE) && (src2->sign == POSITIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == NEGATIVE)))
+    {
+        temp_src1->sign = POSITIVE;
+        temp_src2->sign = POSITIVE;
+        if (bi_compare(temp_src1, temp_src2) >= 0)
+        {
+            error_msg = bi_word_long_division(quotient, remainder, temp_src1, temp_src2);
+        }
+        else
+        {
+            error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
+        }
+        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
+    }
+    else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
+    {
+        temp_src1->sign = temp_src2->sign = POSITIVE;
+        if (bi_compare(temp_src1, temp_src2) >= 0)
+        {
+            error_msg = bi_word_long_division(quotient, remainder, temp_src1, temp_src2);
+            if((*remainder)->sign == ZERO)
+            {
+                (*quotient)->sign = NEGATIVE;
+            }
+            else
+            {
+                bi_sub(remainder, temp_src2, *remainder);
+                (*remainder)->sign = src2->sign;
+                bi_new(&temp_src1, 1);
+                temp_src1->sign = POSITIVE;
+                temp_src1->a[0] = 1;
+                bi_add(quotient, *quotient, temp_src1);
+                (*quotient)->sign = NEGATIVE;
+            }
+        }
+        else
+        {
+            bi_new(quotient, 1);
+            (*quotient)->a[0] = 1;
+            (*quotient)->sign = NEGATIVE;
+            bi_add(remainder, src1, src2);
+        }
+    }
+    else if ((src1->sign == ZERO) && (src2->sign != ZERO))
+    {
+        error_msg = bi_new(quotient, 1) == FAILED || bi_new(remainder, 1) == FAILED ? FAILED : SUCCESS;
+    }
+    else
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        
+        error_msg = FAILED;
+    }
+    
+    error_msg = error_msg == FAILED || bi_delete(&temp_src1) == FAILED || bi_delete(&temp_src2) == FAILED ? FAILED : SUCCESS;
+    
+    return error_msg;
+}
+
+/**
+ * @brief Performs naive division of two big integers with proper handling of signs and edge cases.
+ *
+ * This function calculates the quotient and remainder when dividing a big integer `src1` by `src2`.
+ * It accounts for sign adjustments, ensuring the quotient and remainder signs are consistent with
+ * standard division rules. The implementation handles special cases such as zero inputs and uses 
+ * a helper function for the core long division logic.
+ *
+ * @param[out] quotient Pointer to a bigint that will store the quotient of the division.
+ * @param[out] remainder Pointer to a bigint that will store the remainder of the division.
+ * @param[in] src1 The dividend big integer.
+ * @param[in] src2 The divisor big integer.
+ *
+ * @details
+ * - Validates input pointers and initializes temporary variables for computations.
+ * - If both `src1` and `src2` are positive or negative, performs division directly and assigns
+ *   the result with a positive remainder or zero.
+ * - If `src1` and `src2` have opposite signs, ensures the remainder and quotient are adjusted
+ *   to match division rules with negative results.
+ * - Handles special cases, such as when the dividend (`src1`) is zero, or invalid inputs where
+ *   the divisor (`src2`) is zero.
+ * - Ensures proper memory cleanup for all dynamically allocated big integers.
+ * - Uses the `bi_naive_long_division` function for the core division logic when applicable.
+ *
+ * @return Returns SUCCESS (1) on successful computation, or FAILED (-1) for invalid inputs
+ * or memory allocation errors.
+ */
+msg bi_naive_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
+{
+    int error_msg = SUCCESS;
+
+    bigint* temp_src1 = NULL;
+    bigint* temp_src2 = NULL;
+    
+    if((src1 == NULL) || (src2 == NULL))
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        return FAILED;
+    }
+
+    error_msg = bi_assign(&temp_src1, src1);
+    if (error_msg == FAILED) return FAILED;
+    error_msg = bi_assign(&temp_src2, src2);
+    if (error_msg == FAILED)
+    {   
+        bi_delete(&temp_src1);
+        return FAILED;
+    }
+
+    if (((src1->sign == POSITIVE) && (src2->sign == POSITIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == NEGATIVE)))
+    {
+        temp_src1->sign = POSITIVE;
+        temp_src2->sign = POSITIVE;
+        if (bi_compare(temp_src1, temp_src2) >= 0)
+        {
+            error_msg = bi_naive_long_division(quotient, remainder, temp_src1, temp_src2);
+        }
+
+
+        else
+        {
+            error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
+        }
+        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
+    }
+    else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
+    {
+        temp_src1->sign = temp_src2->sign = POSITIVE;
+        if (bi_compare(temp_src1, temp_src2) >= 0)
+        {
+            error_msg = bi_naive_long_division(quotient, remainder, temp_src1, temp_src2);
+            if((*remainder)->sign == ZERO)
+            {
+                (*quotient)->sign = NEGATIVE;
+            }
+            else
+            {
+                bi_sub(remainder, temp_src2, *remainder);
+                (*remainder)->sign = src2->sign;
+                bi_new(&temp_src1, 1);
+                temp_src1->sign = POSITIVE;
+                temp_src1->a[0] = 1;
+                bi_add(quotient, *quotient, temp_src1);
+                (*quotient)->sign = NEGATIVE;
+            }
+        }
+        else
+        {
+            bi_new(quotient, 1);
+            (*quotient)->a[0] = 1;
+            (*quotient)->sign = NEGATIVE;
+            bi_add(remainder, src1, src2);
+        }
+    }
+    else if ((src1->sign == ZERO) && (src2->sign != ZERO))
+    {
+        error_msg = bi_new(quotient, 1) == FAILED || bi_new(remainder, 1) == FAILED ? FAILED : SUCCESS;
+    }
+    else
+    {
+        fprintf(stderr, ERR_INVALID_INPUT);
+        
+        error_msg = FAILED;
+    }
+    
+    error_msg = error_msg == FAILED || bi_delete(&temp_src1) == FAILED || bi_delete(&temp_src2) == FAILED ? FAILED : SUCCESS;
+    
+    return error_msg;
+}
+
+
 /***********************************************
  * Square
  ***********************************************/
@@ -825,219 +1043,4 @@ msg bi_bar_redu(OUT bigint** dst, IN const bigint* A, IN const bigint* T, IN con
     bi_delete(&temp);
 
     return SUCCESS;
-}
-
-
-
-
-/***********************************************
- * Division
- ***********************************************/
-/**
- * @brief Division of two big integers.
- * 
- * This function performs the division of two big integers (`src1` and `src2`), computing both the quotient and remainder. 
- * The function handles positive and negative values for the input integers. The signs of the `quotient` and `remainder` 
- * are determined based on the signs of the input integers:
- * 
- * - Division between two integers with the same sign produces a positive `quotient`.
- * - Division between two integers with different signs produces a negative `quotient`.
- * - The `remainder` always takes the same sign as the divisor (`src2`).
- * 
- * If the division is not possible (e.g., `src2` is zero), the function returns an error.
- * 
- * @param[out] quotient Pointer to the result bigint that will hold the quotient of the division.
- * @param[out] remainder Pointer to the result bigint that will hold the remainder of the division.
- * @param[in] src1 The dividend big integer for the division.
- * @param[in] src2 The divisor big integer for the division.
- * 
- * @return Returns 1 on success, -1 on failure (e.g., invalid input or division by zero).
- */
-msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
-{
-    int error_msg = SUCCESS;
-
-    bigint* temp_src1 = NULL;
-    bigint* temp_src2 = NULL;
-
-    if((src1 == NULL) || (src2 == NULL))
-    {
-        fprintf(stderr, ERR_INVALID_INPUT);
-        return FAILED;
-    }
-
-    error_msg = bi_assign(&temp_src1, src1);
-    if (error_msg == FAILED) return FAILED;
-    error_msg = bi_assign(&temp_src2, src2);
-    if (error_msg == FAILED)
-    {   
-        bi_delete(&temp_src1);
-        return FAILED;
-    }
-
-    if (((src1->sign == POSITIVE) && (src2->sign == POSITIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == NEGATIVE)))
-    {
-        temp_src1->sign = POSITIVE;
-        temp_src2->sign = POSITIVE;
-        if (bi_compare(temp_src1, temp_src2) >= 0)
-        {
-            error_msg = bi_word_long_division(quotient, remainder, temp_src1, temp_src2);
-        }
-        else
-        {
-            error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
-        }
-        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
-    }
-    else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
-    {
-        temp_src1->sign = temp_src2->sign = POSITIVE;
-        if (bi_compare(temp_src1, temp_src2) >= 0)
-        {
-            error_msg = bi_word_long_division(quotient, remainder, temp_src1, temp_src2);
-            if((*remainder)->sign == ZERO)
-            {
-                (*quotient)->sign = NEGATIVE;
-            }
-            else
-            {
-                bi_sub(remainder, temp_src2, *remainder);
-                (*remainder)->sign = src2->sign;
-                bi_new(&temp_src1, 1);
-                temp_src1->sign = POSITIVE;
-                temp_src1->a[0] = 1;
-                bi_add(quotient, *quotient, temp_src1);
-                (*quotient)->sign = NEGATIVE;
-            }
-        }
-        else
-        {
-            bi_new(quotient, 1);
-            (*quotient)->a[0] = 1;
-            (*quotient)->sign = NEGATIVE;
-            bi_add(remainder, src1, src2);
-        }
-    }
-    else if ((src1->sign == ZERO) && (src2->sign != ZERO))
-    {
-        error_msg = bi_new(quotient, 1) == FAILED || bi_new(remainder, 1) == FAILED ? FAILED : SUCCESS;
-    }
-    else
-    {
-        fprintf(stderr, ERR_INVALID_INPUT);
-        
-        error_msg = FAILED;
-    }
-    
-    error_msg = error_msg == FAILED || bi_delete(&temp_src1) == FAILED || bi_delete(&temp_src2) == FAILED ? FAILED : SUCCESS;
-    
-    return error_msg;
-}
-
-
-
-/***********************************************
- * Division
- ***********************************************/
-/**
- * @brief Division of two big integers.
- * 
- * This function performs the division of two big integers (`src1` and `src2`), computing both the quotient and remainder. 
- * The function handles positive and negative values for the input integers. The signs of the `quotient` and `remainder` 
- * are determined based on the signs of the input integers:
- * 
- * - Division between two integers with the same sign produces a positive `quotient`.
- * - Division between two integers with different signs produces a negative `quotient`.
- * - The `remainder` always takes the same sign as the divisor (`src2`).
- * 
- * If the division is not possible (e.g., `src2` is zero), the function returns an error.
- * 
- * @param[out] quotient Pointer to the result bigint that will hold the quotient of the division.
- * @param[out] remainder Pointer to the result bigint that will hold the remainder of the division.
- * @param[in] src1 The dividend big integer for the division.
- * @param[in] src2 The divisor big integer for the division.
- * 
- * @return Returns 1 on success, -1 on failure (e.g., invalid input or division by zero).
- */
-msg bi_naive_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2)
-{
-    int error_msg = SUCCESS;
-
-    bigint* temp_src1 = NULL;
-    bigint* temp_src2 = NULL;
-    
-    if((src1 == NULL) || (src2 == NULL))
-    {
-        fprintf(stderr, ERR_INVALID_INPUT);
-        return FAILED;
-    }
-
-    error_msg = bi_assign(&temp_src1, src1);
-    if (error_msg == FAILED) return FAILED;
-    error_msg = bi_assign(&temp_src2, src2);
-    if (error_msg == FAILED)
-    {   
-        bi_delete(&temp_src1);
-        return FAILED;
-    }
-
-    if (((src1->sign == POSITIVE) && (src2->sign == POSITIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == NEGATIVE)))
-    {
-        temp_src1->sign = POSITIVE;
-        temp_src2->sign = POSITIVE;
-        if (bi_compare(temp_src1, temp_src2) >= 0)
-        {
-            error_msg = bi_naive_long_division(quotient, remainder, temp_src1, temp_src2);
-        }
-
-
-        else
-        {
-            error_msg = (bi_new(quotient, 1) == FAILED || bi_assign(remainder, temp_src1) == FAILED) ? FAILED : SUCCESS;
-        }
-        (*remainder)->sign = (((*remainder)->sign)!= ZERO) ? src2->sign : ZERO;
-    }
-    else if (((src1->sign == POSITIVE) && (src2->sign == NEGATIVE)) || ((src1->sign == NEGATIVE) && (src2->sign == POSITIVE)))
-    {
-        temp_src1->sign = temp_src2->sign = POSITIVE;
-        if (bi_compare(temp_src1, temp_src2) >= 0)
-        {
-            error_msg = bi_naive_long_division(quotient, remainder, temp_src1, temp_src2);
-            if((*remainder)->sign == ZERO)
-            {
-                (*quotient)->sign = NEGATIVE;
-            }
-            else
-            {
-                bi_sub(remainder, temp_src2, *remainder);
-                (*remainder)->sign = src2->sign;
-                bi_new(&temp_src1, 1);
-                temp_src1->sign = POSITIVE;
-                temp_src1->a[0] = 1;
-                bi_add(quotient, *quotient, temp_src1);
-                (*quotient)->sign = NEGATIVE;
-            }
-        }
-        else
-        {
-            bi_new(quotient, 1);
-            (*quotient)->a[0] = 1;
-            (*quotient)->sign = NEGATIVE;
-            bi_add(remainder, src1, src2);
-        }
-    }
-    else if ((src1->sign == ZERO) && (src2->sign != ZERO))
-    {
-        error_msg = bi_new(quotient, 1) == FAILED || bi_new(remainder, 1) == FAILED ? FAILED : SUCCESS;
-    }
-    else
-    {
-        fprintf(stderr, ERR_INVALID_INPUT);
-        
-        error_msg = FAILED;
-    }
-    
-    error_msg = error_msg == FAILED || bi_delete(&temp_src1) == FAILED || bi_delete(&temp_src2) == FAILED ? FAILED : SUCCESS;
-    
-    return error_msg;
 }

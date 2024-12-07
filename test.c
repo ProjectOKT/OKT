@@ -1365,6 +1365,303 @@ void python_bin_div_test(const char* filename) {
     fclose(file);
 }
 
+/**
+ * @brief Test function for word-level big integer division using Python-compatible data.
+ * 
+ * This function tests the word-level big integer division implementation by generating 
+ * multiple random test cases and writing the results to a file. The output includes 
+ * the test data and Python-compatible verification code for cross-checking results.
+ * 
+ * @param[in] filename The name of the file where the test data and Python verification code will be written.
+ * @param[in] testnum The number of test cases to generate and execute.
+ * 
+ * @details
+ * - Generates test cases for various combinations of big integers:
+ *   - Positive/Positive, Negative/Negative, Positive/Negative, Negative/Positive, Zero/Positive, Zero/Negative.
+ * - Performs the division using the `bi_word_division` function.
+ * - Outputs:
+ *   - Test data (`pos_a`, `pos_b`, `neg_c`, `neg_d`, `z`).
+ *   - Results of division (quotient and remainder for each combination).
+ *   - Python code snippets to verify the results using integer division and modulo operations.
+ * - Handles dynamic memory allocation for all big integers used in the test cases.
+ * - Ensures all allocated resources are cleaned up after each test case.
+ * 
+ * @return void. Prints an error message if the file cannot be opened.
+ */
+
+void python_word_div_test(const char* filename) 
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+
+    for (int i = 0; i < TESTNUM; i++) {
+        
+        bigint *pos_a = NULL;
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *pos_b = NULL;
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *neg_c = NULL;
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *neg_d = NULL;
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *z = NULL;
+        bi_new(&z,1);
+
+        bigint *pp_quotient = NULL;
+        bigint *pp_remainder = NULL;
+        bi_word_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
+
+        bigint *nn_quotient = NULL;
+        bigint *nn_remainder = NULL;
+        bi_word_division(&nn_quotient, &nn_remainder, neg_c, neg_d);
+
+        bigint *pn_quotient = NULL;
+        bigint *pn_remainder = NULL;
+        bi_word_division(&pn_quotient, &pn_remainder, pos_a, neg_d);
+
+        bigint *np_quotient = NULL;
+        bigint *np_remainder = NULL;
+        bi_word_division(&np_quotient, &np_remainder, neg_c, pos_b);
+
+        bigint *zp_quotient = NULL;
+        bigint *zp_remainder = NULL;
+        bi_word_division(&zp_quotient, &zp_remainder, z, pos_b);
+
+        bigint *zn_quotient = NULL;
+        bigint *zn_remainder = NULL;
+        bi_word_division(&zn_quotient, &zn_remainder, z, neg_c);
+
+        
+        fprintf(file, "pos_a = ");
+        bi_fprint(file,pos_a);
+        fprintf(file, "pos_b = ");
+        bi_fprint(file,pos_b);
+        fprintf(file, "neg_c = ");
+        bi_fprint(file,neg_c);
+        fprintf(file, "neg_d = ");
+        bi_fprint(file,neg_d);
+        fprintf(file, "z = ");
+        bi_fprint(file,z);
+
+        fprintf(file, "pp_quotient = ");
+        bi_fprint(file, pp_quotient);
+        fprintf(file, "pp_remainder = ");
+        bi_fprint(file, pp_remainder);
+        fprintf(file, "nn_quotient = ");
+        bi_fprint(file, nn_quotient);
+        fprintf(file, "nn_remainder = ");
+        bi_fprint(file, nn_remainder);
+        fprintf(file, "np_quotient = ");
+        bi_fprint(file, np_quotient);
+        fprintf(file, "np_remainder = ");
+        bi_fprint(file, np_remainder);
+        fprintf(file, "pn_quotient = ");
+        bi_fprint(file, pn_quotient);
+        fprintf(file, "pn_remainder = ");
+        bi_fprint(file, pn_remainder);
+
+        fprintf(file, "zp_quotient = ");
+        bi_fprint(file, zp_quotient);
+        fprintf(file, "zp_remainder = ");
+        bi_fprint(file, zp_remainder);
+        fprintf(file, "zn_quotient = ");
+        bi_fprint(file, zn_quotient);
+        fprintf(file, "zn_remainder = ");
+        bi_fprint(file, zn_remainder);
+
+
+        fprintf(file, "if (pos_a // pos_b != pp_quotient):\n \t print(f\"[pp_quotient]: {pos_a:#x} // {pos_b:#x} != {pp_quotient:#x}\\n\")\n");
+        fprintf(file, "if (pos_a %% pos_b != pp_remainder):\n \t print(f\"[pp_remainder]: {pos_a:#x} %% {pos_b:#x} != {pp_remainder:#x}\\n\")\n");
+        fprintf(file, "if (neg_c // neg_d != nn_quotient):\n \t print(f\"[nn_quotient]: {neg_c:#x} // {neg_d:#x} != {nn_quotient:#x}\\n\")\n");
+        fprintf(file, "if (neg_c %% neg_d != nn_remainder):\n \t print(f\"[nn_remainder]: {neg_c:#x} %% {neg_d:#x} != {nn_remainder:#x}\\n\")\n");
+        fprintf(file, "if (neg_c // pos_b != np_quotient):\n \t print(f\"[np_quotient]: {neg_c:#x} // {pos_b:#x} != {np_quotient:#x}\\n\")\n");
+        fprintf(file, "if (neg_c %% pos_b != np_remainder):\n \t print(f\"[np_remainder]: {neg_c:#x} %% {pos_b:#x} != {np_remainder:#x}\\n\")\n");
+        fprintf(file, "if (pos_a // neg_d != pn_quotient):\n \t print(f\"[pn_quotient]: {pos_a:#x} // {neg_d:#x} != {pn_quotient:#x}\\n\")\n");
+        fprintf(file, "if (pos_a %% neg_d != pn_remainder):\n \t print(f\"[pn_remainder]: {pos_a:#x} %% {neg_d:#x} != {pn_remainder:#x}\\n\")\n");
+
+
+        fprintf(file, "if (z // pos_b != zp_quotient):\n \t print(f\"[zp_quotient]: {z:#x} // {pos_b:#x} != {zp_quotient:#x}\\n\")\n");
+        fprintf(file, "if (z %% pos_b != zp_remainder):\n \t print(f\"[zp_remainder]: {z:#x} %% {pos_b:#x} != {zp_remainder:#x}\\n\")\n");
+        fprintf(file, "if (z // neg_c != zn_quotient):\n \t print(f\"[zn_quotient]: {z:#x} // {neg_c:#x} != {zn_quotient:#x}\\n\")\n");
+        fprintf(file, "if (z %% neg_c != zn_remainder):\n \t print(f\"[zn_remainder]: {z:#x} %% {neg_c:#x} != {zn_remainder:#x}\\n\")\n");
+
+
+        bi_delete(&pos_a);
+        bi_delete(&pos_b);
+        bi_delete(&neg_c);
+        bi_delete(&neg_d);
+        bi_delete(&z);
+
+        bi_delete(&pp_quotient);
+        bi_delete(&pp_remainder);
+        bi_delete(&nn_quotient);
+        bi_delete(&nn_remainder);
+        bi_delete(&np_quotient);
+        bi_delete(&np_remainder);
+        bi_delete(&pn_quotient);
+        bi_delete(&pn_remainder);
+
+        bi_delete(&zp_quotient);
+        bi_delete(&zp_remainder);
+        bi_delete(&zn_quotient);
+        bi_delete(&zn_remainder);
+    }   
+    fclose(file);
+}
+
+/**
+ * @brief Test function for naive big integer division using Python-compatible data.
+ * 
+ * This function generates random test cases for `bi_naive_division` and writes the results,
+ * along with Python-compatible verification code, to a specified file. The test covers
+ * various input combinations to ensure correctness of the division operation.
+ * 
+ * @param[in] filename The name of the file where test data and Python verification code will be written.
+ * 
+ * @details
+ * - Generates random test data for:
+ *   - Two positive big integers (`pos_a`, `pos_b`).
+ *   - Two negative big integers (`neg_c`, `neg_d`).
+ *   - A zero big integer (`z`).
+ * - Performs naive division using `bi_naive_division` for all combinations:
+ *   - Positive/Positive, Negative/Negative, Positive/Negative, Negative/Positive, Zero/Positive, Zero/Negative.
+ * - Outputs:
+ *   - Test data (`pos_a`, `pos_b`, `neg_c`, `neg_d`, `z`).
+ *   - Results of division (quotient and remainder for each combination).
+ *   - Python code snippets for verification using integer division and modulo operations.
+ * - Ensures all dynamically allocated memory for big integers is properly released after each test case.
+ * - Provides an extensive test suite to validate the correctness of the naive division implementation.
+ * 
+ * @return void. Prints an error message if the file cannot be opened.
+ */
+
+void python_naive_div_test(const char* filename) 
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+
+    for (int i = 0; i < TESTNUM; i++) {
+        
+        bigint *pos_a = NULL;
+        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *pos_b = NULL;
+        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *neg_c = NULL;
+        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *neg_d = NULL;
+        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
+        bigint *z = NULL;
+        bi_new(&z,1);
+
+        bigint *pp_quotient = NULL;
+        bigint *pp_remainder = NULL;
+        bi_naive_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
+
+        bigint *nn_quotient = NULL;
+        bigint *nn_remainder = NULL;
+        bi_naive_division(&nn_quotient, &nn_remainder, neg_c, neg_d);
+
+        bigint *pn_quotient = NULL;
+        bigint *pn_remainder = NULL;
+        bi_naive_division(&pn_quotient, &pn_remainder, pos_a, neg_d);
+
+        bigint *np_quotient = NULL;
+        bigint *np_remainder = NULL;
+        bi_naive_division(&np_quotient, &np_remainder, neg_c, pos_b);
+
+        bigint *zp_quotient = NULL;
+        bigint *zp_remainder = NULL;
+        bi_naive_division(&zp_quotient, &zp_remainder, z, pos_b);
+
+        bigint *zn_quotient = NULL;
+        bigint *zn_remainder = NULL;
+        bi_naive_division(&zn_quotient, &zn_remainder, z, neg_c);
+
+        
+        fprintf(file, "pos_a = ");
+        bi_fprint(file,pos_a);
+        fprintf(file, "pos_b = ");
+        bi_fprint(file,pos_b);
+        fprintf(file, "neg_c = ");
+        bi_fprint(file,neg_c);
+        fprintf(file, "neg_d = ");
+        bi_fprint(file,neg_d);
+        fprintf(file, "z = ");
+        bi_fprint(file,z);
+
+        fprintf(file, "pp_quotient = ");
+        bi_fprint(file, pp_quotient);
+        fprintf(file, "pp_remainder = ");
+        bi_fprint(file, pp_remainder);
+        fprintf(file, "nn_quotient = ");
+        bi_fprint(file, nn_quotient);
+        fprintf(file, "nn_remainder = ");
+        bi_fprint(file, nn_remainder);
+        fprintf(file, "np_quotient = ");
+        bi_fprint(file, np_quotient);
+        fprintf(file, "np_remainder = ");
+        bi_fprint(file, np_remainder);
+        fprintf(file, "pn_quotient = ");
+        bi_fprint(file, pn_quotient);
+        fprintf(file, "pn_remainder = ");
+        bi_fprint(file, pn_remainder);
+
+        fprintf(file, "zp_quotient = ");
+        bi_fprint(file, zp_quotient);
+        fprintf(file, "zp_remainder = ");
+        bi_fprint(file, zp_remainder);
+        fprintf(file, "zn_quotient = ");
+        bi_fprint(file, zn_quotient);
+        fprintf(file, "zn_remainder = ");
+        bi_fprint(file, zn_remainder);
+
+
+        fprintf(file, "if (pos_a // pos_b != pp_quotient):\n \t print(f\"[pp_quotient]: {pos_a:#x} // {pos_b:#x} != {pp_quotient:#x}\\n\")\n");
+        fprintf(file, "if (pos_a %% pos_b != pp_remainder):\n \t print(f\"[pp_remainder]: {pos_a:#x} %% {pos_b:#x} != {pp_remainder:#x}\\n\")\n");
+        fprintf(file, "if (neg_c // neg_d != nn_quotient):\n \t print(f\"[nn_quotient]: {neg_c:#x} // {neg_d:#x} != {nn_quotient:#x}\\n\")\n");
+        fprintf(file, "if (neg_c %% neg_d != nn_remainder):\n \t print(f\"[nn_remainder]: {neg_c:#x} %% {neg_d:#x} != {nn_remainder:#x}\\n\")\n");
+        fprintf(file, "if (neg_c // pos_b != np_quotient):\n \t print(f\"[np_quotient]: {neg_c:#x} // {pos_b:#x} != {np_quotient:#x}\\n\")\n");
+        fprintf(file, "if (neg_c %% pos_b != np_remainder):\n \t print(f\"[np_remainder]: {neg_c:#x} %% {pos_b:#x} != {np_remainder:#x}\\n\")\n");
+        fprintf(file, "if (pos_a // neg_d != pn_quotient):\n \t print(f\"[pn_quotient]: {pos_a:#x} // {neg_d:#x} != {pn_quotient:#x}\\n\")\n");
+        fprintf(file, "if (pos_a %% neg_d != pn_remainder):\n \t print(f\"[pn_remainder]: {pos_a:#x} %% {neg_d:#x} != {pn_remainder:#x}\\n\")\n");
+
+
+        fprintf(file, "if (z // pos_b != zp_quotient):\n \t print(f\"[zp_quotient]: {z:#x} // {pos_b:#x} != {zp_quotient:#x}\\n\")\n");
+        fprintf(file, "if (z %% pos_b != zp_remainder):\n \t print(f\"[zp_remainder]: {z:#x} %% {pos_b:#x} != {zp_remainder:#x}\\n\")\n");
+        fprintf(file, "if (z // neg_c != zn_quotient):\n \t print(f\"[zn_quotient]: {z:#x} // {neg_c:#x} != {zn_quotient:#x}\\n\")\n");
+        fprintf(file, "if (z %% neg_c != zn_remainder):\n \t print(f\"[zn_remainder]: {z:#x} %% {neg_c:#x} != {zn_remainder:#x}\\n\")\n");
+
+
+        bi_delete(&pos_a);
+        bi_delete(&pos_b);
+        bi_delete(&neg_c);
+        bi_delete(&neg_d);
+        bi_delete(&z);
+
+        bi_delete(&pp_quotient);
+        bi_delete(&pp_remainder);
+        bi_delete(&nn_quotient);
+        bi_delete(&nn_remainder);
+        bi_delete(&np_quotient);
+        bi_delete(&np_remainder);
+        bi_delete(&pn_quotient);
+        bi_delete(&pn_remainder);
+
+        bi_delete(&zp_quotient);
+        bi_delete(&zp_remainder);
+        bi_delete(&zn_quotient);
+        bi_delete(&zn_remainder);
+    }   
+    fclose(file);
+}
+
+
 void python_squ_test(const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -1731,253 +2028,6 @@ void python_bar_redu_test(const char* filename)
     fclose(file);
 }
 
-
-void python_word_div_test(const char* filename) 
-{
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        perror("FILE OPEN ERROR");
-        return;
-    }
-
-    for (int i = 0; i < TESTNUM; i++) {
-        
-        bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *z = NULL;
-        bi_new(&z,1);
-
-        bigint *pp_quotient = NULL;
-        bigint *pp_remainder = NULL;
-        bi_word_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
-
-        bigint *nn_quotient = NULL;
-        bigint *nn_remainder = NULL;
-        bi_word_division(&nn_quotient, &nn_remainder, neg_c, neg_d);
-
-        bigint *pn_quotient = NULL;
-        bigint *pn_remainder = NULL;
-        bi_word_division(&pn_quotient, &pn_remainder, pos_a, neg_d);
-
-        bigint *np_quotient = NULL;
-        bigint *np_remainder = NULL;
-        bi_word_division(&np_quotient, &np_remainder, neg_c, pos_b);
-
-        bigint *zp_quotient = NULL;
-        bigint *zp_remainder = NULL;
-        bi_word_division(&zp_quotient, &zp_remainder, z, pos_b);
-
-        bigint *zn_quotient = NULL;
-        bigint *zn_remainder = NULL;
-        bi_word_division(&zn_quotient, &zn_remainder, z, neg_c);
-
-        
-        fprintf(file, "pos_a = ");
-        bi_fprint(file,pos_a);
-        fprintf(file, "pos_b = ");
-        bi_fprint(file,pos_b);
-        fprintf(file, "neg_c = ");
-        bi_fprint(file,neg_c);
-        fprintf(file, "neg_d = ");
-        bi_fprint(file,neg_d);
-        fprintf(file, "z = ");
-        bi_fprint(file,z);
-
-        fprintf(file, "pp_quotient = ");
-        bi_fprint(file, pp_quotient);
-        fprintf(file, "pp_remainder = ");
-        bi_fprint(file, pp_remainder);
-        fprintf(file, "nn_quotient = ");
-        bi_fprint(file, nn_quotient);
-        fprintf(file, "nn_remainder = ");
-        bi_fprint(file, nn_remainder);
-        fprintf(file, "np_quotient = ");
-        bi_fprint(file, np_quotient);
-        fprintf(file, "np_remainder = ");
-        bi_fprint(file, np_remainder);
-        fprintf(file, "pn_quotient = ");
-        bi_fprint(file, pn_quotient);
-        fprintf(file, "pn_remainder = ");
-        bi_fprint(file, pn_remainder);
-
-        fprintf(file, "zp_quotient = ");
-        bi_fprint(file, zp_quotient);
-        fprintf(file, "zp_remainder = ");
-        bi_fprint(file, zp_remainder);
-        fprintf(file, "zn_quotient = ");
-        bi_fprint(file, zn_quotient);
-        fprintf(file, "zn_remainder = ");
-        bi_fprint(file, zn_remainder);
-
-
-        fprintf(file, "if (pos_a // pos_b != pp_quotient):\n \t print(f\"[pp_quotient]: {pos_a:#x} // {pos_b:#x} != {pp_quotient:#x}\\n\")\n");
-        fprintf(file, "if (pos_a %% pos_b != pp_remainder):\n \t print(f\"[pp_remainder]: {pos_a:#x} %% {pos_b:#x} != {pp_remainder:#x}\\n\")\n");
-        fprintf(file, "if (neg_c // neg_d != nn_quotient):\n \t print(f\"[nn_quotient]: {neg_c:#x} // {neg_d:#x} != {nn_quotient:#x}\\n\")\n");
-        fprintf(file, "if (neg_c %% neg_d != nn_remainder):\n \t print(f\"[nn_remainder]: {neg_c:#x} %% {neg_d:#x} != {nn_remainder:#x}\\n\")\n");
-        fprintf(file, "if (neg_c // pos_b != np_quotient):\n \t print(f\"[np_quotient]: {neg_c:#x} // {pos_b:#x} != {np_quotient:#x}\\n\")\n");
-        fprintf(file, "if (neg_c %% pos_b != np_remainder):\n \t print(f\"[np_remainder]: {neg_c:#x} %% {pos_b:#x} != {np_remainder:#x}\\n\")\n");
-        fprintf(file, "if (pos_a // neg_d != pn_quotient):\n \t print(f\"[pn_quotient]: {pos_a:#x} // {neg_d:#x} != {pn_quotient:#x}\\n\")\n");
-        fprintf(file, "if (pos_a %% neg_d != pn_remainder):\n \t print(f\"[pn_remainder]: {pos_a:#x} %% {neg_d:#x} != {pn_remainder:#x}\\n\")\n");
-
-
-        fprintf(file, "if (z // pos_b != zp_quotient):\n \t print(f\"[zp_quotient]: {z:#x} // {pos_b:#x} != {zp_quotient:#x}\\n\")\n");
-        fprintf(file, "if (z %% pos_b != zp_remainder):\n \t print(f\"[zp_remainder]: {z:#x} %% {pos_b:#x} != {zp_remainder:#x}\\n\")\n");
-        fprintf(file, "if (z // neg_c != zn_quotient):\n \t print(f\"[zn_quotient]: {z:#x} // {neg_c:#x} != {zn_quotient:#x}\\n\")\n");
-        fprintf(file, "if (z %% neg_c != zn_remainder):\n \t print(f\"[zn_remainder]: {z:#x} %% {neg_c:#x} != {zn_remainder:#x}\\n\")\n");
-
-
-        bi_delete(&pos_a);
-        bi_delete(&pos_b);
-        bi_delete(&neg_c);
-        bi_delete(&neg_d);
-        bi_delete(&z);
-
-        bi_delete(&pp_quotient);
-        bi_delete(&pp_remainder);
-        bi_delete(&nn_quotient);
-        bi_delete(&nn_remainder);
-        bi_delete(&np_quotient);
-        bi_delete(&np_remainder);
-        bi_delete(&pn_quotient);
-        bi_delete(&pn_remainder);
-
-        bi_delete(&zp_quotient);
-        bi_delete(&zp_remainder);
-        bi_delete(&zn_quotient);
-        bi_delete(&zn_remainder);
-    }   
-    fclose(file);
-}
-
-
-void python_naive_div_test(const char* filename) 
-{
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        perror("FILE OPEN ERROR");
-        return;
-    }
-
-    for (int i = 0; i < TESTNUM; i++) {
-        
-        bigint *pos_a = NULL;
-        bi_get_random(&pos_a,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *pos_b = NULL;
-        bi_get_random(&pos_b,POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *neg_c = NULL;
-        bi_get_random(&neg_c,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *neg_d = NULL;
-        bi_get_random(&neg_d,NEGATIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
-        bigint *z = NULL;
-        bi_new(&z,1);
-
-        bigint *pp_quotient = NULL;
-        bigint *pp_remainder = NULL;
-        bi_naive_division(&pp_quotient, &pp_remainder, pos_a, pos_b);
-
-        bigint *nn_quotient = NULL;
-        bigint *nn_remainder = NULL;
-        bi_naive_division(&nn_quotient, &nn_remainder, neg_c, neg_d);
-
-        bigint *pn_quotient = NULL;
-        bigint *pn_remainder = NULL;
-        bi_naive_division(&pn_quotient, &pn_remainder, pos_a, neg_d);
-
-        bigint *np_quotient = NULL;
-        bigint *np_remainder = NULL;
-        bi_naive_division(&np_quotient, &np_remainder, neg_c, pos_b);
-
-        bigint *zp_quotient = NULL;
-        bigint *zp_remainder = NULL;
-        bi_naive_division(&zp_quotient, &zp_remainder, z, pos_b);
-
-        bigint *zn_quotient = NULL;
-        bigint *zn_remainder = NULL;
-        bi_naive_division(&zn_quotient, &zn_remainder, z, neg_c);
-
-        
-        fprintf(file, "pos_a = ");
-        bi_fprint(file,pos_a);
-        fprintf(file, "pos_b = ");
-        bi_fprint(file,pos_b);
-        fprintf(file, "neg_c = ");
-        bi_fprint(file,neg_c);
-        fprintf(file, "neg_d = ");
-        bi_fprint(file,neg_d);
-        fprintf(file, "z = ");
-        bi_fprint(file,z);
-
-        fprintf(file, "pp_quotient = ");
-        bi_fprint(file, pp_quotient);
-        fprintf(file, "pp_remainder = ");
-        bi_fprint(file, pp_remainder);
-        fprintf(file, "nn_quotient = ");
-        bi_fprint(file, nn_quotient);
-        fprintf(file, "nn_remainder = ");
-        bi_fprint(file, nn_remainder);
-        fprintf(file, "np_quotient = ");
-        bi_fprint(file, np_quotient);
-        fprintf(file, "np_remainder = ");
-        bi_fprint(file, np_remainder);
-        fprintf(file, "pn_quotient = ");
-        bi_fprint(file, pn_quotient);
-        fprintf(file, "pn_remainder = ");
-        bi_fprint(file, pn_remainder);
-
-        fprintf(file, "zp_quotient = ");
-        bi_fprint(file, zp_quotient);
-        fprintf(file, "zp_remainder = ");
-        bi_fprint(file, zp_remainder);
-        fprintf(file, "zn_quotient = ");
-        bi_fprint(file, zn_quotient);
-        fprintf(file, "zn_remainder = ");
-        bi_fprint(file, zn_remainder);
-
-
-        fprintf(file, "if (pos_a // pos_b != pp_quotient):\n \t print(f\"[pp_quotient]: {pos_a:#x} // {pos_b:#x} != {pp_quotient:#x}\\n\")\n");
-        fprintf(file, "if (pos_a %% pos_b != pp_remainder):\n \t print(f\"[pp_remainder]: {pos_a:#x} %% {pos_b:#x} != {pp_remainder:#x}\\n\")\n");
-        fprintf(file, "if (neg_c // neg_d != nn_quotient):\n \t print(f\"[nn_quotient]: {neg_c:#x} // {neg_d:#x} != {nn_quotient:#x}\\n\")\n");
-        fprintf(file, "if (neg_c %% neg_d != nn_remainder):\n \t print(f\"[nn_remainder]: {neg_c:#x} %% {neg_d:#x} != {nn_remainder:#x}\\n\")\n");
-        fprintf(file, "if (neg_c // pos_b != np_quotient):\n \t print(f\"[np_quotient]: {neg_c:#x} // {pos_b:#x} != {np_quotient:#x}\\n\")\n");
-        fprintf(file, "if (neg_c %% pos_b != np_remainder):\n \t print(f\"[np_remainder]: {neg_c:#x} %% {pos_b:#x} != {np_remainder:#x}\\n\")\n");
-        fprintf(file, "if (pos_a // neg_d != pn_quotient):\n \t print(f\"[pn_quotient]: {pos_a:#x} // {neg_d:#x} != {pn_quotient:#x}\\n\")\n");
-        fprintf(file, "if (pos_a %% neg_d != pn_remainder):\n \t print(f\"[pn_remainder]: {pos_a:#x} %% {neg_d:#x} != {pn_remainder:#x}\\n\")\n");
-
-
-        fprintf(file, "if (z // pos_b != zp_quotient):\n \t print(f\"[zp_quotient]: {z:#x} // {pos_b:#x} != {zp_quotient:#x}\\n\")\n");
-        fprintf(file, "if (z %% pos_b != zp_remainder):\n \t print(f\"[zp_remainder]: {z:#x} %% {pos_b:#x} != {zp_remainder:#x}\\n\")\n");
-        fprintf(file, "if (z // neg_c != zn_quotient):\n \t print(f\"[zn_quotient]: {z:#x} // {neg_c:#x} != {zn_quotient:#x}\\n\")\n");
-        fprintf(file, "if (z %% neg_c != zn_remainder):\n \t print(f\"[zn_remainder]: {z:#x} %% {neg_c:#x} != {zn_remainder:#x}\\n\")\n");
-
-
-        bi_delete(&pos_a);
-        bi_delete(&pos_b);
-        bi_delete(&neg_c);
-        bi_delete(&neg_d);
-        bi_delete(&z);
-
-        bi_delete(&pp_quotient);
-        bi_delete(&pp_remainder);
-        bi_delete(&nn_quotient);
-        bi_delete(&nn_remainder);
-        bi_delete(&np_quotient);
-        bi_delete(&np_remainder);
-        bi_delete(&pn_quotient);
-        bi_delete(&pn_remainder);
-
-        bi_delete(&zp_quotient);
-        bi_delete(&zp_remainder);
-        bi_delete(&zn_quotient);
-        bi_delete(&zn_remainder);
-    }   
-    fclose(file);
-}
 
 
 void python_rsa_test(const char* filename) 
