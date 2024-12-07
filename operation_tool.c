@@ -550,8 +550,8 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     bi_refine(a1);
     bi_refine(b1);
     // t1, t0
-    bi_mul_kara(&t1, a1, b1);
-    bi_mul_kara(&t0, a0, b0);
+    bi_mul_k(&t1, a1, b1);
+    bi_mul_k(&t0, a0, b0);
     
     // r = (t1 << 2*lw) + t0
     bi_assign(&temp, t1);
@@ -576,7 +576,7 @@ msg bi_mul_k(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2)
     }
     s1->sign = POSITIVE;
     s0->sign = POSITIVE;
-    bi_mul_kara(&s,s1,s0);
+    bi_mul_k(&s,s1,s0);
     bi_delete(&s0);
     bi_delete(&s1);
     s->sign = s_sign;
@@ -748,11 +748,6 @@ msg bi_squc(OUT bigint** dst, IN const word src1)
 
 msg bi_word_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B)
 {
-    if (bi_compare(A,B) == -1){
-        bi_new(quotient,1);
-        bi_assign(remainder,A);
-        return SUCCESS;
-    }
     int n = A->word_len;
     bi_new(remainder,1);
     
@@ -893,3 +888,22 @@ msg bi_2_word_div(OUT word* quotient,  IN const bigint* A, IN const word B)
     return SUCCESS;
 }
 
+
+msg bi_naive_long_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* A, IN const bigint* B)
+{
+    bigint* one = NULL;
+    bi_new(&one,1);
+    one->sign=POSITIVE;
+    one->a[0] = 1;
+
+    bi_new(quotient,1);
+    
+    bi_assign(remainder,A);
+
+    while(bi_compare((*remainder),B) != -1){      
+        bi_add_replace(quotient,one);
+        bi_sub(remainder,(*remainder),B);
+    }
+    bi_delete(&one);
+    return SUCCESS;
+}

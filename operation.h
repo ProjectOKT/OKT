@@ -12,7 +12,7 @@ msg bi_sub(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
 msg bi_mul(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
-msg bi_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
+msg bi_binary_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
 
 msg bi_mul_kara(OUT bigint** dst, IN const bigint* src1, IN const bigint* src2);
 
@@ -29,5 +29,7 @@ msg bi_mod_exp_MaS(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
 msg bi_bar_redu(OUT bigint** dst, IN const bigint* A, IN const bigint* T, IN const bigint* N);
 
 msg bi_word_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
+
+msg bi_naive_division(OUT bigint** quotient, OUT bigint** remainder, IN const bigint* src1, IN const bigint* src2);
 
 #endif
