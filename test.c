@@ -605,91 +605,6 @@ void bignum_squ_vs_squ_k_time_test()
 
 
 /**
- * @brief Executes the Miller-Rabin primality test.
- * 
- * This function runs the Miller-Rabin primality test to verify whether a given 
- * bigint number is prime or composite. It is a probabilistic test often used in 
- * cryptographic applications.
- * 
- * @return void
- */
-void miller_rabin_test()
-{
-    bigint* n = NULL; bigint* e = NULL; bigint* p = NULL;
-    bigint* q = NULL; bigint* d = NULL;
-    FILE* file = NULL;
-
-    file = fopen("rsa_1024_params.txt", "w");
-    if (file == NULL) {
-        perror("FILE OPEN ERROR");
-        return;
-    }
-    for (int testnum = 0; testnum < TESTNUM; testnum++)
-    {
-        rsa_key_generation(&n, &e, &p, &q, &d, 1024);
-        fprintf(file, "n = ");
-        bi_fprint(file, n);
-        fprintf(file, "e = ");
-        bi_fprint(file, e);
-        fprintf(file, "p = ");
-        bi_fprint(file, p);
-        fprintf(file, "q = ");
-        bi_fprint(file, q);
-        fprintf(file, "d = ");
-        bi_fprint(file, d);
-    }
-    fclose(file);
-
-    file = fopen("rsa_2048_params.txt", "w");
-    if (file == NULL) {
-        perror("FILE OPEN ERROR");
-        return;
-    }
-    for (int testnum = 0; testnum < TESTNUM; testnum++)
-    {
-        rsa_key_generation(&n, &e, &p, &q, &d, 2048);
-        fprintf(file, "n = ");
-        bi_fprint(file, n);
-        fprintf(file, "e = ");
-        bi_fprint(file, e);
-        fprintf(file, "p = ");
-        bi_fprint(file, p);
-        fprintf(file, "q = ");
-        bi_fprint(file, q);
-        fprintf(file, "d = ");
-        bi_fprint(file, d);
-    }
-    fclose(file);
-
-    file = fopen("rsa_15360_params.txt", "w");
-    if (file == NULL) {
-        perror("FILE OPEN ERROR");
-        return;
-    }
-    for (int testnum = 0; testnum < TESTNUM; testnum++)
-    {
-        rsa_key_generation(&n, &e, &p, &q, &d, 15360);
-        fprintf(file, "n = ");
-        bi_fprint(file, n);
-        fprintf(file, "e = ");
-        bi_fprint(file, e);
-        fprintf(file, "p = ");
-        bi_fprint(file, p);
-        fprintf(file, "q = ");
-        bi_fprint(file, q);
-        fprintf(file, "d = ");
-        bi_fprint(file, d);
-    }
-    fclose(file);
-    bi_delete(&n);
-    bi_delete(&e);
-    bi_delete(&p);
-    bi_delete(&q);
-    bi_delete(&d);
-}
-
-
-/**
  * @brief Compares execution time of RSA operations.
  * 
  * This function measures and compares the performance of different RSA-related 
@@ -698,7 +613,7 @@ void miller_rabin_test()
  * 
  * @return void
  */
-void compare_rsa_time_test()
+void compare_rsa_time_test(int num)
 {
     clock_t start, end;
     double rsa_1024_enc_time, rsa_2048_enc_time, rsa_15360_enc_time;
@@ -725,7 +640,7 @@ void compare_rsa_time_test()
         perror("FILE OPEN ERROR");
         return;
     }
-    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    for (int testnum = 0; testnum < num; testnum++)
     {
         fgets(buffer, sizeof(buffer), file);
         sscanf(buffer, "n = 0x%s", n_string);
@@ -902,7 +817,7 @@ void compare_rsa_time_test()
  */
 void bignum_time_all_test(){
 
-    printf("======================|Time Measuring|======================\n");
+    printf("==============================|Time Measuring|==============================\n");
     clock_t start, end;
     double add_time, sub_time, mul_time, div_time, mul_k_time, \
      squ_time, squ_k_time, l2r_time, r2l_time, bar_reduce_time, mas_time, word_div_time;
@@ -1046,32 +961,32 @@ void bignum_time_all_test(){
     }
     if(T_TEST_AVERAGE == 1)
     {
-        printf("[add] Execution time: %f seconds\n", add_sum / TESTNUM);
-        printf("[sub] Execution time: %f seconds\n", sub_sum / TESTNUM);
-        printf("[mul] Execution time: %f seconds\n", mul_sum / TESTNUM);
-        printf("[mul_k] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
-        printf("[div_bin] Execution time: %f seconds\n", div_sum / TESTNUM);
-        printf("[div_word] Execution time: %f seconds\n", word_div_sum / TESTNUM);   
-        printf("[squ] Execution time: %f seconds\n", squ_sum / TESTNUM);
-        printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
-        printf("[l2r] Execution time: %f seconds\n", l2r_sum / TESTNUM);
-        printf("[r2l] Execution time: %f seconds\n", r2l_sum / TESTNUM);
-        printf("[Mas] Execution time: %f seconds\n", mas_sum / TESTNUM);   
-        printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum / TESTNUM);
+        printf("[Addition] Execution time: %f seconds\n", add_sum / TESTNUM);
+        printf("[Subtraction] Execution time: %f seconds\n", sub_sum / TESTNUM);
+        printf("[Multiplication] Execution time: %f seconds\n", mul_sum / TESTNUM);
+        printf("[Multiplication_Karatsuba] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
+        printf("[Divisioin_binary] Execution time: %f seconds\n", div_sum / TESTNUM);
+        printf("[Division_word] Execution time: %f seconds\n", word_div_sum / TESTNUM);   
+        printf("[Squaring] Execution time: %f seconds\n", squ_sum / TESTNUM);
+        printf("[Squaring_Karatsuba] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
+        printf("[Letf-to-Right Binary Mod Exponentiation] Execution time: %f seconds\n", l2r_sum / TESTNUM);
+        printf("[Right-to-Left Binary Mod Exponentiation] Execution time: %f seconds\n", r2l_sum / TESTNUM);
+        printf("[Montgomery Ladder Mod Exponentiation] Execution time: %f seconds\n", mas_sum / TESTNUM);   
+        printf("[Barret Reduction] Execution time: %f seconds\n", bar_reduce_sum / TESTNUM);
     }
     else{
-        printf("[add] Execution time: %f seconds\n", add_sum );
-        printf("[sub] Execution time: %f seconds\n", sub_sum );
-        printf("[mul] Execution time: %f seconds\n", mul_sum );
-        printf("[mul_k] Execution time: %f seconds\n", mul_k_sum );
-        printf("[div_bin] Execution time: %f seconds\n", div_sum );
-        printf("[div_word] Execution time: %f seconds\n", word_div_sum);
-        printf("[squ] Execution time: %f seconds\n", squ_sum );
-        printf("[squ_k] Execution time: %f seconds\n", squ_k_sum );
-        printf("[l2r] Execution time: %f seconds\n", l2r_sum);
-        printf("[r2l] Execution time: %f seconds\n", r2l_sum);
-        printf("[Mas] Execution time: %f seconds\n", mas_sum);   
-        printf("[Bar_reduce] Execution time: %f seconds\n", bar_reduce_sum); 
+        printf("[Addition] Execution time: %f seconds\n", add_sum );
+        printf("[Subtraction] Execution time: %f seconds\n", sub_sum );
+        printf("[Multiplication] Execution time: %f seconds\n", mul_sum );
+        printf("[Multiplication_Karatsuba] Execution time: %f seconds\n", mul_k_sum );
+        printf("[Divisioin_binary] Execution time: %f seconds\n", div_sum );
+        printf("[Division_word] Execution time: %f seconds\n", word_div_sum);
+        printf("[Squaring] Execution time: %f seconds\n", squ_sum );
+        printf("[Squaring_Karatsuba] Execution time: %f seconds\n", squ_k_sum );
+        printf("[Letf-to-Right Binary Mod Exponentiation] Execution time: %f seconds\n", l2r_sum);
+        printf("[Right-to-Left Binary Mod Exponentiation] Execution time: %f seconds\n", r2l_sum);
+        printf("[Montgomery Ladder Mod Exponentiation] Execution time: %f seconds\n", mas_sum);   
+        printf("[Barret Reduction] Execution time: %f seconds\n", bar_reduce_sum); 
     }
 
 }
@@ -2398,17 +2313,18 @@ void python_bar_redu_test(const char* filename)
 
 
 /**
- * @brief Test function for RSA operation using Python-generated test data.
+ * @brief Test function for RSA key generation using Python-generated test data.
  * 
- * This function tests the RSA encryption or decryption implementation using 
- * test cases loaded from a Python-generated file. It ensures the correctness 
- * of RSA operations for the provided input parameters.
+ * This function tests the RSA key generation implementation using test cases 
+ * loaded from a Python-generated file. It verifies the correctness of the 
+ * generated keys by checking their properties and validity.
  * 
- * @param[in] filename The name of the file containing Python-generated test data.
+ * @param[in] filename The name of the file containing test data.
+ * @param[in] testnum The number of test cases to execute.
  * 
  * @return void
  */
-void python_rsa_test(const char* filename) 
+void python_rsa_key_gen_test(const char* filename, int testnum)
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2418,24 +2334,16 @@ void python_rsa_test(const char* filename)
 
     fprintf(file, "from sympy import isprime\n");
     fprintf(file, "from sympy import gcd\n\n");
-    for (int i = 0; i < TESTNUM; i++) {
+    for (int i = 0; i < testnum; i++) {
         bigint* n = NULL;
         bigint* e = NULL;
         bigint* p = NULL;
         bigint* q = NULL;
         bigint* d = NULL;
-        bigint* msg = NULL;
-        bigint* c = NULL;
-        bigint* msg_buf = NULL;
-        bigint* zero = NULL;
 
-        int bit_len = T_TEST_DATA_WORD_SIZE * SIZEOFWORD / 2;
-        bi_new(&zero, 1);
+        int bit_len = T_TEST_DATA_WORD_SIZE * SIZEOFWORD;
 
         rsa_key_generation(&n, &e, &p, &q, &d, bit_len);
-        bi_get_random_within_range(&msg, zero, n);
-        rsa_encryption(&c, msg, e, n);
-        rsa_decryption(&msg_buf, c, d, n);
         
         fprintf(file, "p = ");
         bi_fprint(file,p);
@@ -2447,12 +2355,7 @@ void python_rsa_test(const char* filename)
         bi_fprint(file,e);
         fprintf(file, "d = ");
         bi_fprint(file,d);
-        fprintf(file, "msg = ");
-        bi_fprint(file,msg);
-        fprintf(file, "c = ");
-        bi_fprint(file,c);
-        fprintf(file, "msg_buf = ");
-        bi_fprint(file,msg_buf);
+
         fprintf(file, "bit_len = %d\n", bit_len);
         fprintf(file, "p_bit_length = p.bit_length()\n");
         fprintf(file, "q_bit_length = q.bit_length()\n");   
@@ -2464,17 +2367,107 @@ void python_rsa_test(const char* filename)
         fprintf(file, "if (not isprime(q)):\n \t print(f\"[q]: {q:#x} is not prime\")\n");
         fprintf(file, "if (gcd(e, phi_n) != 1):\n \t print(f\"[gcd(e, phi_n)] : gcd({e:#x}, {phi_n:#x})) != 1)\")\n");
         fprintf(file, "if (((e * d) %% phi_n) != 1):\n \t print(f\"[e] : ({e:#x} x {d:#x} mod {phi_n:#x}) != 1)\")\n");
-        fprintf(file, "if (msg != msg_buf):\n \t print(f\"[rsa] : (msg != msg_buf)\")\n");
-
+        
         bi_delete(&n);
         bi_delete(&e);
         bi_delete(&p);
         bi_delete(&q);
         bi_delete(&d);
-        bi_delete(&msg);
-        bi_delete(&c);
-        bi_delete(&msg_buf);
-        bi_delete(&zero);
     }   
     fclose(file);
+}
+
+
+/**
+ * @brief Test function for RSA encryption and decryption using Python-generated test data.
+ * 
+ * This function tests the RSA encryption and decryption implementation using 
+ * test cases loaded from a Python-generated file. It ensures that encrypted 
+ * data can be correctly decrypted to its original form.
+ * 
+ * @param[in] filename The name of the file containing test data.
+ * 
+ * @return void
+ */
+void python_rsa_enc_dec_test(const char* filename)
+{
+    bigint* n = NULL; bigint* e = NULL; bigint* p = NULL;
+    bigint* q = NULL; bigint* d = NULL; bigint* msg = NULL;
+    bigint* c = NULL; bigint* msg_buf = NULL; bigint* zero = NULL;
+
+    bi_new(&zero, 1);
+    char buffer[1024];
+    char n_string[1024];
+    char e_string[1024];
+    char p_string[1024];
+    char q_string[1024];
+    char d_string[1024];
+
+    FILE* python_file = NULL;
+    FILE* rsa_param_file = NULL;
+
+    python_file = fopen(filename, "w");
+    if(python_file == NULL)
+    {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    rsa_param_file = fopen("rsa_2048_params.txt", "r");
+    if (rsa_param_file == NULL) {
+        perror("FILE OPEN ERROR");
+        return;
+    }
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+        fgets(buffer, sizeof(buffer), rsa_param_file);
+        sscanf(buffer, "n = 0x%s", n_string);
+        fgets(buffer, sizeof(buffer), rsa_param_file);
+        sscanf(buffer, "e = 0x%s", e_string);
+        fgets(buffer, sizeof(buffer), rsa_param_file);
+        sscanf(buffer, "p = 0x%s", p_string);
+        fgets(buffer, sizeof(buffer), rsa_param_file);
+        sscanf(buffer, "q = 0x%s", q_string);
+        fgets(buffer, sizeof(buffer), rsa_param_file);
+        sscanf(buffer, "d = 0x%s", d_string);
+
+        bi_set_from_string(&n, n_string, 16);
+        bi_set_from_string(&e, e_string, 16);
+        bi_set_from_string(&p, p_string, 16);
+        bi_set_from_string(&q, q_string, 16);
+        bi_set_from_string(&d, d_string, 16);
+
+        bi_get_random_within_range(&msg, zero, n);
+        rsa_encryption(&c, msg, e, n);
+        rsa_decryption(&msg_buf, c, d, n);
+        
+        fprintf(python_file, "p = ");
+        bi_fprint(python_file,p);
+        fprintf(python_file, "q= ");
+        bi_fprint(python_file,q);
+        fprintf(python_file, "n = ");
+        bi_fprint(python_file,n);
+        fprintf(python_file, "e = ");
+        bi_fprint(python_file,e);
+        fprintf(python_file, "d = ");
+        bi_fprint(python_file,d);
+        fprintf(python_file, "msg = ");
+        bi_fprint(python_file,msg);
+        fprintf(python_file, "c = ");
+        bi_fprint(python_file,c);
+        fprintf(python_file, "msg_buf = ");
+        bi_fprint(python_file,msg_buf);
+        fprintf(python_file, "if (msg != msg_buf):\n \t print(f\"[rsa] : (msg != msg_buf)\")\n");
+    }
+    fclose(python_file);
+    fclose(rsa_param_file);
+
+    bi_delete(&n);
+    bi_delete(&e);
+    bi_delete(&p);
+    bi_delete(&q);
+    bi_delete(&d);
+    bi_delete(&msg);
+    bi_delete(&c);
+    bi_delete(&msg_buf);
+    bi_delete(&zero);
 }

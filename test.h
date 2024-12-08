@@ -11,7 +11,7 @@
 #define T_TEST_WORD_LEN_RANDOM       0
 #define T_USE_RANDOM_WORD_SIZE       0
 #define T_TEST_ALL_CASE              0          //Run All case of operator bigint(ex. pp, nn, np, ..., zz)
-#define T_TEST_AVERAGE               0        //Measure time with testnum average or sum
+#define T_TEST_AVERAGE               1        //Measure time with testnum average or sum
 
 void bignum_add_time_test();
 
@@ -27,9 +27,7 @@ void bignum_squ__vs_mul_time_test();
 
 void bignum_squ_vs_squ_k_time_test();
 
-void miller_rabin_test();
-
-void compare_rsa_time_test();
+void compare_rsa_time_test(int num);
 
 void bignum_time_all_test();
 
@@ -65,6 +63,8 @@ void python_word_div_test(const char* filename);
 
 void python_naive_div_test(const char* filename);
 
-void python_rsa_test(const char* filename);
+void python_rsa_key_gen_test(const char* filename, int testnum);
+
+void python_rsa_enc_dec_test(const char* filename);
 
 #endif
