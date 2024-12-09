@@ -46,6 +46,8 @@
 #define KARA_FLAG_MUL   10
 
 #define MILLER_NUM      10
+
+#define SECURE_SCA      1    //SCA_SECURE: 1, SCA_UNSECURE: 0
 ```
 
 3. Make Executable File Directly.
