@@ -3,7 +3,7 @@
 
 #include "dtype.h"
 
-#define TESTNUM                     1     //number of test case
+#define TESTNUM                     10000     //number of test case
 #define TESTNUM_modexp              1      //number of test case to modexp
 #define T_TEST_DATA_WORD_SIZE       (2048 / SIZEOFWORD)     //test bigint word_len
 
@@ -23,9 +23,13 @@ void bignum_mul_k_time_test();
 
 void bignum_div_time_test();
 
+void bignum_mul_vs_mul_k_time_test();
+
 void bignum_squ__vs_mul_time_test();
 
 void bignum_squ_vs_squ_k_time_test();
+
+void bignum_binary_vs_word_div_test();
 
 void compare_rsa_time_test(int num);
 

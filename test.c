@@ -557,10 +557,10 @@ void bignum_squ__vs_mul_time_test()
 
 
 /**
- * @brief Compares execution time of bigint square vs k-fold squaring.
+ * @brief Compares execution time of bigint square vs karatsuba squaring.
  * 
  * This function benchmarks and compares the performance of a single bigint square 
- * operation against multiple (k-fold) consecutive square operations.
+ * operation against multiple (karatsuba) consecutive square operations.
  * 
  * @return void
  */
@@ -581,7 +581,7 @@ void bignum_squ_vs_squ_k_time_test()
         bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
         bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
 #elif T_TEST_WORD_LEN_RANDOM == 0
-        bi_get_random(&pos_a, POSITIVE, 6);
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
 #endif
         start = clock();
         bi_squ(&p_squ, pos_a);
@@ -603,6 +603,104 @@ void bignum_squ_vs_squ_k_time_test()
     printf("[squ_k] Execution time: %f seconds\n", squ_k_sum / TESTNUM);
 }
 
+/**
+ * @brief Compares execution time of bigint improved multiplication vs karatsuba multiplication.
+ * 
+ * This function benchmarks and compares the performance of a single bigint multiplication 
+ * 
+ * @return void
+ */
+void bignum_mul_vs_mul_k_time_test()
+{
+    clock_t start, end;
+    double mul_time, mul_k_time;
+    double mul_sum = 0; double mul_k_sum = 0; 
+    
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL;
+    bigint *p_mul = NULL;
+
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+        start = clock();
+        bi_mul(&p_mul, pos_a, pos_b);
+        end = clock();
+        mul_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        mul_sum += mul_time;
+
+        start = clock();
+        bi_mul_kara(&p_mul, pos_a, pos_b);
+        end = clock();
+        mul_k_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        mul_k_sum += mul_k_time;
+    }
+
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&p_mul);
+
+    printf("[Improved Multiplication] Execution time: %f seconds\n", mul_sum / TESTNUM);
+    printf("[Karatsuba Squaring] Execution time: %f seconds\n", mul_k_sum / TESTNUM);
+}
+
+/**
+ * @brief Compares execution time of bigint binary long division vs word long division.
+ * 
+ * This function benchmarks and compares the performance of a single bigint multiplication 
+ * 
+ * @return void
+ */
+void bignum_binary_vs_word_div_test()
+{
+    clock_t start, end;
+    double div_time, div_word_time;
+    double div_sum = 0; double div_word_sum = 0; 
+    
+    bigint *pos_a = NULL;
+    bigint *pos_b = NULL; 
+    bigint *quo = NULL;
+    bigint *remainer = NULL;
+    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    {
+#if T_TEST_WORD_LEN_RANDOM == 1
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_c, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+        bi_get_random(&neg_d, NEGATIVE, T_TEST_DATA_WORD_SIZE % 63 + 1);
+#elif T_TEST_WORD_LEN_RANDOM == 0
+        bi_get_random(&pos_a, POSITIVE, T_TEST_DATA_WORD_SIZE);
+        bi_get_random(&pos_b, POSITIVE, T_TEST_DATA_WORD_SIZE);
+#endif
+        start = clock();
+        bi_binary_division(&quo, &remainer, pos_a, pos_b);
+        end = clock();
+        div_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        div_sum += div_time;
+
+        start = clock();
+        bi_word_division(&quo, &remainer, pos_a, pos_b);
+        end = clock();
+        div_word_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        div_word_sum += div_word_time;
+    }
+
+    bi_delete(&pos_a);
+    bi_delete(&pos_b);
+    bi_delete(&quo);
+    bi_delete(&remainer);
+
+    printf("[binary long division] Execution time: %f seconds\n", div_sum / TESTNUM);
+    printf("[word long division] Execution time: %f seconds\n", div_word_sum / TESTNUM);
+}
 
 /**
  * @brief Compares execution time of RSA operations.
