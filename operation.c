@@ -779,7 +779,7 @@ msg bi_squ(OUT bigint** dst, IN const bigint* src1)
 msg bi_squ_kara(OUT bigint** dst, IN const bigint* src)
 {
     if (src->sign == ZERO){
-        (*dst)->sign = ZERO;
+        bi_new(dst,1);
         return SUCCESS;
     }
     int n = src->word_len;

@@ -8,11 +8,13 @@
 #define TESTNUM_modexp              1000      //number of test case to modexp
 
 #if SIZEOFWORD == 8
-    #define T_TEST_DATA_WORD_SIZE (1024 / SIZEOFWORD) // test bigint word_len
+    #define T_TEST_DATA_WORD_SIZE (1024 / SIZEOFWORD) 
 #elif SIZEOFWORD == 32
-    #define T_TEST_DATA_WORD_SIZE (2048 / SIZEOFWORD) // test bigint word_len
+    #define T_TEST_DATA_WORD_SIZE (2048 / SIZEOFWORD) 
+#elif SIZEOFWORD == 64
+    #define T_TEST_DATA_WORD_SIZE (2048 / SIZEOFWORD) 
 #else
-    #error "Unsupported SIZEOFWORD value. Define it as 8 or 32."
+    #error "Unsupported SIZEOFWORD value. Define it as 8 or 32 or 64."
 #endif
 
 //test flags
