@@ -14,6 +14,7 @@ else
     APP_EXT = 
     CFLAGS += -fPIC
 endif
+CFLAGS += -DPROCESS_NAME=\"bigint_app\"
 
 LIB_DIR = $(TARGET_DIR)
 APP_DIR = $(TARGET_DIR)

@@ -613,7 +613,7 @@ void bignum_squ_vs_squ_k_time_test()
  * 
  * @return void
  */
-void compare_rsa_time_test(int num)
+void compare_rsa_time_test(IN int num)
 {
     clock_t start, end;
     double rsa_1024_enc_time, rsa_2048_enc_time, rsa_15360_enc_time;
@@ -1002,7 +1002,7 @@ void bignum_time_all_test(){
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_add_test(const char* filename) {
+void python_add_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -1124,7 +1124,7 @@ void python_add_test(const char* filename) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_sub_test(const char* filename) {
+void python_sub_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -1244,7 +1244,7 @@ void python_sub_test(const char* filename) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_mul_test(const char* filename) {
+void python_mul_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -1363,7 +1363,7 @@ void python_mul_test(const char* filename) {
  * @param testnum The specific test case number to run from the file.
  * @return void
  */
-void python_mul_k_test(const char* filename) {
+void python_mul_k_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -1484,7 +1484,7 @@ void python_mul_k_test(const char* filename) {
  * @param testnum The specific test case number to execute from the file.
  * @return void
  */
-void python_bin_div_test(const char* filename) {
+void python_bin_div_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -1626,7 +1626,7 @@ void python_bin_div_test(const char* filename) {
  * 
  * @return void. Prints an error message if the file cannot be opened.
  */
-void python_word_div_test(const char* filename) 
+void python_word_div_test(IN const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -1775,7 +1775,7 @@ void python_word_div_test(const char* filename)
  * 
  * @return void. Prints an error message if the file cannot be opened.
  */
-void python_naive_div_test(const char* filename) 
+void python_naive_div_test(IN const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -1910,7 +1910,7 @@ void python_naive_div_test(const char* filename)
  * 
  * @return void
  */
-void python_squ_test(const char* filename) {
+void python_squ_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -1961,7 +1961,7 @@ void python_squ_test(const char* filename) {
  * 
  * @return void
  */
-void python_rshift_test(const char* filename) {
+void python_rshift_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -2007,7 +2007,7 @@ void python_rshift_test(const char* filename) {
  * 
  * @return void
  */
-void python_lshift_test(const char* filename) {
+void python_lshift_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -2054,7 +2054,7 @@ void python_lshift_test(const char* filename) {
  * 
  * @return void
  */
-void python_squ_k_test(const char* filename) {
+void python_squ_k_test(IN const char* filename) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("FILE OPEN ERROR");
@@ -2105,7 +2105,7 @@ void python_squ_k_test(const char* filename) {
  * 
  * @return void
  */
-void python_l2r_test(const char* filename) 
+void python_l2r_test(IN const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2157,7 +2157,7 @@ void python_l2r_test(const char* filename)
  * 
  * @return void
  */
-void python_r2l_test(const char* filename) 
+void python_r2l_test(IN const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2209,7 +2209,7 @@ void python_r2l_test(const char* filename)
  * 
  * @return void
  */
-void python_MaS_test(const char* filename) 
+void python_MaS_test(IN const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2261,7 +2261,7 @@ void python_MaS_test(const char* filename)
  * 
  * @return void
  */
-void python_bar_redu_test(const char* filename) 
+void python_bar_redu_test(IN const char* filename) 
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2324,7 +2324,7 @@ void python_bar_redu_test(const char* filename)
  * 
  * @return void
  */
-void python_rsa_key_gen_test(const char* filename, int testnum)
+void python_rsa_key_gen_test(IN const char* filename, IN int testnum)
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -2389,7 +2389,7 @@ void python_rsa_key_gen_test(const char* filename, int testnum)
  * 
  * @return void
  */
-void python_rsa_enc_dec_test(const char* filename)
+void python_rsa_enc_dec_test(IN const char* filename)
 {
     bigint* n = NULL; bigint* e = NULL; bigint* p = NULL;
     bigint* q = NULL; bigint* d = NULL; bigint* msg = NULL;
