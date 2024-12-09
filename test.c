@@ -2115,11 +2115,11 @@ void python_l2r_test(IN const char* filename)
 
     for (int i = 0; i < TESTNUM_modexp; i++) {
         bigint *base = NULL;
-        bi_get_random(&base, POSITIVE, rand() % 63 + 1);
+        bi_get_random(&base, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *exp = NULL;
-        bi_get_random(&exp, POSITIVE, rand() % 5 + 1);
+        bi_get_random(&exp, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *mod = NULL;
-        bi_get_random(&mod, POSITIVE, rand() % 31 + 1); 
+        bi_get_random(&mod, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1); 
 
         bigint *mod_exp_result = NULL;
         bi_mod_exp_l2r(&mod_exp_result, base, exp, mod);
@@ -2167,11 +2167,11 @@ void python_r2l_test(IN const char* filename)
 
     for (int i = 0; i < TESTNUM_modexp; i++) {
         bigint *base = NULL;
-        bi_get_random(&base, POSITIVE, rand() % 63 + 1);
+        bi_get_random(&base, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *exp = NULL;
-        bi_get_random(&exp, POSITIVE, rand() % 5 + 1);
+        bi_get_random(&exp, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *mod = NULL;
-        bi_get_random(&mod, POSITIVE, rand() % 31 + 1);
+        bi_get_random(&mod, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
 
         bigint *mod_exp_result = NULL;
         bi_mod_exp_r2l(&mod_exp_result, base, exp, mod);
@@ -2219,11 +2219,11 @@ void python_MaS_test(IN const char* filename)
 
     for (int i = 0; i < TESTNUM_modexp; i++) {
         bigint *base = NULL;
-        bi_get_random(&base, POSITIVE, rand() % 63 + 1);
+        bi_get_random(&base, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *exp = NULL;
-        bi_get_random(&exp, POSITIVE, rand() % 5 + 1);
+        bi_get_random(&exp, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
         bigint *mod = NULL;
-        bi_get_random(&mod, POSITIVE, rand() % 31 + 1);
+        bi_get_random(&mod, POSITIVE, rand() % T_TEST_DATA_WORD_SIZE + 1);
 
         bigint *mod_exp_result = NULL;
         bi_mod_exp_MaS(&mod_exp_result, base, exp, mod);
@@ -2417,7 +2417,7 @@ void python_rsa_enc_dec_test(IN const char* filename)
         perror("FILE OPEN ERROR");
         return;
     }
-    for (int testnum = 0; testnum < TESTNUM; testnum++)
+    for (int testnum = 0; testnum < TESTNUM_modexp; testnum++)
     {
         fgets(buffer, sizeof(buffer), rsa_param_file);
         sscanf(buffer, "n = 0x%s", n_string);
