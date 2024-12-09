@@ -25,17 +25,37 @@
 ## **✅ How to Run**
 - You can banchmark performance of our bignum algorithm.
 - Using makefile or Libmakefile.mk, you can compile.
+- Setting on test parameters in test.h and word parameter in params.h
   
  ### **➡️ Chose following options to Run**
 
-1. Make Executable File Directly.
+1. Setting parameters in "test.h"
+```c
+#define TESTNUM                     10000     //number of test case
+#define TESTNUM_modexp              1      //number of test case to modexp
+
+(more test flags)
+...
+```
+
+2. Setting Word Size in "params.h"
+```c
+#define SIZEOFWORD  (8 or 32 or 64)
+
+#define KARA_FLAG_SQU   10   //karatsuba word_len flag
+#define KARA_FLAG_MUL   10
+
+#define MILLER_NUM      10
+```
+
+3. Make Executable File Directly.
 ```bash
 make              //basic complie
 ./2024_bigint     //Run   
 ```
 
-2. Make Dynamic Library and Executable File.
-   
+4. Make Dynamic Library and Executable File.
+  
    ❗OSDIR is automatically generated with your OS
 ```bash
 make -f Libmakefile.mk    //make directory and files
