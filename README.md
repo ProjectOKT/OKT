@@ -30,9 +30,13 @@
 ## **✅ How to Run**
 - You can banchmark performance of our bignum algorithm.
 - Using makefile or Libmakefile.mk, you can compile.
-- Setting on test parameters in test.h and word parameter in params.h
-  
+- **Please check your python installed sympy to run RSA TEST!**
+```python
+!pip install sympy
+```
+- Setting on test parameters in test.h and word parameter in params.h  
  ### **➡️ Chose following options to Run**
+
 
 1. Setting parameters in "test.h"
 ```c
