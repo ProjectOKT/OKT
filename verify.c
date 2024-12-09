@@ -5,7 +5,7 @@
 void check_leaks(){
 
     #if defined(__APPLE__) || defined(__MACH__)
-        system("leaks 2024_bigint");
+        system("leaks " PROCESS_NAME);
     #endif
 }
 
