@@ -31,7 +31,7 @@ void bignum_squ_vs_squ_k_time_test();
 
 void bignum_binary_vs_word_div_test();
 
-void compare_rsa_time_test(int num);
+void compare_rsa_time_test(IN int num);
 
 void bignum_time_all_test();
 
