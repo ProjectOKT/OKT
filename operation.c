@@ -862,6 +862,7 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
     }
 
     bigint* quotient_buf = NULL;
+    bigint* temp = NULL;
 
     bi_new(dst, 1);
     (*dst)->sign = POSITIVE;
@@ -871,7 +872,8 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
     {
         for(int bit_index = sizeof(word) * 8 - 1; bit_index >= 0; bit_index--)
         {
-            bi_squ_kara(dst, *dst);
+            bi_squ_kara(&temp, *dst);
+            bi_assign(dst, temp);
             bi_word_division(&quotient_buf, dst, *dst, mod);
             if((exp->a[word_index] >> bit_index) & 0x01)
             {
@@ -881,6 +883,7 @@ msg bi_mod_exp_l2r(OUT bigint** dst, IN const bigint* base, IN const bigint* exp
         }
     }
 
+    bi_delete(&temp);
     bi_delete(&quotient_buf);
 
     return SUCCESS;
