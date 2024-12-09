@@ -12,12 +12,17 @@
    
   👍 **Enable RSA-2048 Algorithm!**
 
+  👍 **Generate Prime by Miller-Rabin and Sage code!**
+
+  **➡️You can run RSA_param_gen.py to generate RSA parameters!**
+   
+
 ## **✅ Environment Details**
 
 | **Attribute**         | **Details**               |
 |------------------------|--------------------------|
 | **Programming Language** |[![Language: C](https://img.shields.io/badge/Language-C-blue)](https://en.wikipedia.org/wiki/C_(programming_language))|
-| **Supported OS**       | [![OS: Mac](https://img.shields.io/badge/OS-MacOS-brightgreen)](https://www.apple.com/macos/), [![OS: Windows](https://img.shields.io/badge/OS-Windows-blue)](https://www.microsoft.com/windows)|
+| **Supported OS**       | [![OS: Mac](https://img.shields.io/badge/OS-MacOS-brightgreen)](https://www.apple.com/macos/), [![OS: Windows](https://img.shields.io/badge/OS-Windows-blue)](https://www.microsoft.com/windows), [![OS: Linux](https://img.shields.io/badge/OS-Linux-yellowgreen)](https://www.linux.org/) |
 | **Compiler**           | GCC, Clang               |
 | **C versions**         | C99                      |
 | **Verify Tools**       | SageMath, Python         |
