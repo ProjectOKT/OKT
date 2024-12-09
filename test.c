@@ -740,15 +740,25 @@ void compare_rsa_time_test(IN int num)
     }
     for (int testnum = 0; testnum < num; testnum++)
     {
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "n = 0x%s", n_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "e = 0x%s", e_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "p = 0x%s", p_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "q = 0x%s", q_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "d = 0x%s", d_string);
 
         bi_set_from_string(&n, n_string, 16);
@@ -779,15 +789,25 @@ void compare_rsa_time_test(IN int num)
     }
     for (int testnum = 0; testnum < TESTNUM; testnum++)
     {
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "n = 0x%s", n_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "e = 0x%s", e_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "p = 0x%s", p_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "q = 0x%s", q_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "d = 0x%s", d_string);
 
         bi_set_from_string(&n, n_string, 16);
@@ -818,15 +838,25 @@ void compare_rsa_time_test(IN int num)
     }
     for (int testnum = 0; testnum < TESTNUM; testnum++)
     {
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "n = 0x%s", n_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "e = 0x%s", e_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "p = 0x%s", p_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "q = 0x%s", q_string);
-        fgets(buffer, sizeof(buffer), file);
+        if (fgets(buffer, sizeof(buffer), file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "d = 0x%s", d_string);
 
         bi_set_from_string(&n, n_string, 16);
@@ -2517,15 +2547,25 @@ void python_rsa_enc_dec_test(IN const char* filename)
     }
     for (int testnum = 0; testnum < TESTNUM_modexp; testnum++)
     {
-        fgets(buffer, sizeof(buffer), rsa_param_file);
+        if (fgets(buffer, sizeof(buffer), rsa_param_file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "n = 0x%s", n_string);
-        fgets(buffer, sizeof(buffer), rsa_param_file);
+        if (fgets(buffer, sizeof(buffer), rsa_param_file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "e = 0x%s", e_string);
-        fgets(buffer, sizeof(buffer), rsa_param_file);
+        if (fgets(buffer, sizeof(buffer), rsa_param_file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "p = 0x%s", p_string);
-        fgets(buffer, sizeof(buffer), rsa_param_file);
+        if (fgets(buffer, sizeof(buffer), rsa_param_file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "q = 0x%s", q_string);
-        fgets(buffer, sizeof(buffer), rsa_param_file);
+        if (fgets(buffer, sizeof(buffer), rsa_param_file) == NULL) {
+            perror("Error reading from file");
+        }
         sscanf(buffer, "d = 0x%s", d_string);
 
         bi_set_from_string(&n, n_string, 16);

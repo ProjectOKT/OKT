@@ -25,11 +25,11 @@ int main()
     /***********************************************************
      * Accuracy Test : generate python file and run test
     ************************************************************/
-    // python_add_test("add_test.py");
-    // printf("add_test.py completed\n");
+    python_add_test("add_test.py");
+    printf("add_test.py completed\n");
 
-    // python_sub_test("sub_test.py");
-    // printf("sub_test.py completed\n");
+    python_sub_test("sub_test.py");
+    printf("sub_test.py completed\n");
 
     python_mul_test("mul_test.py");
     printf("mul_test.py completed\n");
@@ -55,18 +55,18 @@ int main()
     python_r2l_test("r2l_mod_exp_test.py");
     printf("r2l_mod_exp_test.py completed\n");
 
-    // python_MaS_test("montgomery_ladder_mod_exp_test.py");
-    // printf("montgomery_ladder_mod_exp_test.py completed\n");
+    python_MaS_test("montgomery_ladder_mod_exp_test.py");
+    printf("montgomery_ladder_mod_exp_test.py completed\n");
 
-    // python_bar_redu_test("barret_redu_test.py");
-    // printf("barret_redu_test.py completed\n");
+    python_bar_redu_test("barret_redu_test.py");
+    printf("barret_redu_test.py completed\n");
 
     // python_rsa_key_gen_test("rsa_key_gen_test.py", 1);
     // printf("rsa_key_gen_test.py completed\n");
     
-    // python_rsa_enc_dec_test("rsa_enc_dec_test.py");
-    // printf("rsa_enc_dec_test.py completed\n");
-    // py_file_check();
+    python_rsa_enc_dec_test("rsa_enc_dec_test.py");
+    printf("rsa_enc_dec_test.py completed\n");
+    py_file_check();
 
     return 0;
 }
