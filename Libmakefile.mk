@@ -9,7 +9,7 @@ ifeq ($(OS),Windows_NT)
     LIB_EXT = .dll
     APP_EXT = .exe
 else
-    TARGET_DIR = Mac/LinuxOs
+    TARGET_DIR = Mac_LinuxOs
     LIB_EXT = .so
     APP_EXT = 
     CFLAGS += -fPIC
