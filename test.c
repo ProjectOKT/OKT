@@ -2426,7 +2426,7 @@ void python_rsa_key_gen_test(IN const char* filename, IN int testnum)
 {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        perror("파일 열기 실패");
+        perror("FILE OPEN ERROR");
         return;
     }
 

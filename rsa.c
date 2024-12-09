@@ -47,7 +47,11 @@ msg bi_is_composite(IN const bigint* n, IN const bigint* q, IN const bigint* a, 
     buf1->a[0] = 1;
     bi_sub(&n_minus_1, n, buf1);
 
+#if SECURE_SCA == 1
+    bi_mod_exp_MaS(&a_buf, a, q, n);
+#elif
     bi_mod_exp_l2r(&a_buf, a, q, n);
+#endif
     if(a_buf->sign == ZERO)
     {
         bi_delete(&buf1);
@@ -77,7 +81,12 @@ msg bi_is_composite(IN const bigint* n, IN const bigint* q, IN const bigint* a, 
 
             return !COMPOSITE;
         }
-        bi_mod_exp_l2r(&buf2, a_buf, buf1, n);
+#if SECURE_SCA == 1
+    bi_mod_exp_MaS(&buf2, a_buf, buf1, n);
+#elif
+    bi_mod_exp_l2r(&buf2, a_buf, buf1, n);
+#endif
+        
         bi_assign(&a_buf, buf2);
     }
     bi_delete(&buf1);
@@ -305,7 +314,11 @@ msg rsa_decryption(OUT bigint** msg, IN const bigint* ciphertext, IN const bigin
         return FAILED;
     }
     // M = C^d mod N
+#if SECURE_SCA == 1
+    bi_mod_exp_MaS(msg, ciphertext, d, n);
+#elif
     bi_mod_exp_l2r(msg, ciphertext, d, n);
+#endif
 
     return SUCCESS;
 }
